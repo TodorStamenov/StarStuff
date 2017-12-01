@@ -1,0 +1,27 @@
+﻿@model UserDetailsServiceModel
+@{
+    ViewData["Title"] = "Application Details";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>@ViewData["Title"] for User @Model.Username</h2>
+        <img src="@Model.ProfileImage" alt="Avatar" width="250" height="250" />
+        <h3>First Name: @Model.FirstName</h3>
+        <h3>Last Name: @Model.LastName</h3>
+        <h3>Email: @Model.Email</h3>
+        <h3>Phone Number: @Model.PhoneNumber</h3>
+        <h3>Birth Date: @Model.BirthDate.Value.ToShortDateString()</h3>
+        <br />
+        <div class="col-md-2">
+            <form action="/moderator/astronomers/approve/@Model.Id" method="post">
+                <input class="btn btn-success" type="submit" value="Approve" />
+            </form>
+        </div>
+        <div class="col-md-2">
+            <form action="/moderator/astronomers/deny/@Model.Id" method="post">
+                <input class="btn btn-danger" type="submit" value="Deny" />
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+﻿@model ApplyForAstronomerViewModel
+@{
+    ViewData["Title"] = "Apply For Astronomer";
+    ViewData.AddActivePage(ManageNavPages.BecomeAstronomer);
+}
+
+<h4>@ViewData["Title"]</h4>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            If you wanna become astronomer send your application now <button type="submit" class="btn btn-success">Send</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
