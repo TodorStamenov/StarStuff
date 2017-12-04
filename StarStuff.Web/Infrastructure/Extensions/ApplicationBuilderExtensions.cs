@@ -14,9 +14,10 @@
     {
         private const int AdminsCount = 1;
         private const int ModeratorsCount = 3;
-        private const int AstronomersCount = 50;
+        private const int AstronomersCount = 20;
         private const int UsersCount = 20;
         private const int TelescopesCount = 20;
+        private const int JournalsCount = 20;
 
         private static readonly Random random = new Random();
 
@@ -63,6 +64,7 @@
             await SeedUsersAsync(WebConstants.AstronomerRole, AstronomersCount, userManager, db);
 
             await SeedTelescopesAsync(db, TelescopesCount);
+            await SeedJournalsAsync(db, JournalsCount);
         }
 
         private static async Task CreateRoleAsync(string roleName, RoleManager<Role> roleManager, StarStuffDbContext db)
@@ -179,13 +181,36 @@
             {
                 Telescope telescope = new Telescope
                 {
-                    Name = $"Telescope{i}",
+                    Name = $"Telescope Name {i}",
                     Location = $"Telescope Location {i}",
                     MirrorDiameter = i * 1.1,
-                    ImageUrl = "https://www.google.bg/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwiM8J-X3unXAhVBfRoKHauNASYQjRwIBw&url=http%3A%2F%2Fwww.astro.caltech.edu%2Fpalomar%2Fabout%2Ftelescopes%2Foschin.html&psig=AOvVaw2odsQq78wRUyys450C59b3&ust=1512249356430611"
+                    Description = WebConstants.Lorem,
+                    ImageUrl = "http://www.astro.caltech.edu/palomar/about/telescopes/images/SOTTimeLapse.jpg"
                 };
 
                 db.Telescopes.Add(telescope);
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        private static async Task SeedJournalsAsync(StarStuffDbContext db, int journalsCount)
+        {
+            if (db.Journals.Any())
+            {
+                return;
+            }
+
+            for (int i = 1; i <= journalsCount; i++)
+            {
+                Journal journal = new Journal
+                {
+                    Name = $"Journal Name {i}",
+                    Description = WebConstants.Lorem,
+                    ImageUrl = "https://cdn.magzter.com/1462885409/1463047998/images/thumb/390_thumb_1.jpg"
+                };
+
+                db.Journals.Add(journal);
             }
 
             await db.SaveChangesAsync();

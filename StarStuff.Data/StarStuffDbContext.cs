@@ -15,6 +15,8 @@
 
         public DbSet<Telescope> Telescopes { get; set; }
 
+        public DbSet<Journal> Journals { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

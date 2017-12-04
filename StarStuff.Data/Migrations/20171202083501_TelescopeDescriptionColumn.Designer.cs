@@ -4,12 +4,14 @@ namespace StarStuff.Data.Migrations
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
     using System;
 
     [DbContext(typeof(StarStuffDbContext))]
-    partial class StarStuffDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171202083501_TelescopeDescriptionColumn")]
+    partial class TelescopeDescriptionColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,27 +86,6 @@ namespace StarStuff.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("StarStuff.Data.Models.Journal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Description")
-                        .IsRequired();
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(2000);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Journals");
-                });
-
             modelBuilder.Entity("StarStuff.Data.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -138,8 +119,7 @@ namespace StarStuff.Data.Migrations
                         .IsRequired();
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(2000);
+                        .IsRequired();
 
                     b.Property<string>("Location")
                         .IsRequired()

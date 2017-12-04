@@ -2,23 +2,16 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class Telescope
+    public class Journal
     {
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(DataConstants.TelescopeConstants.NameMaxLength)]
+        [MaxLength(DataConstants.JournalConstants.NameMaxLength)]
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(DataConstants.TelescopeConstants.LocationMaxLength)]
-        public string Location { get; set; }
-
-        [Required]
         public string Description { get; set; }
-
-        [Range(DataConstants.TelescopeConstants.MinMirrorDiameter, double.MaxValue)]
-        public double MirrorDiameter { get; set; }
 
         [Required]
         [MinLength(DataConstants.ImageUrlMinLength)]

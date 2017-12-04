@@ -30,6 +30,11 @@ a.disabled {
     pointer-events: none;
 }
 
+.site-image {
+    float: left;
+    margin-right: 15px;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

@@ -1,4 +1,4 @@
-﻿@model UserListViewModel
+﻿@model ListUsersViewModel
 
 @{
     ViewData["Title"] = "All Users";
@@ -61,7 +61,7 @@
                 </a>
             </li>
             @for (int i = 1; i <= Model.TotalPages; i++)
-                {
+            {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : string.Empty)">
                     <a class="page-link @(Model.CurrentPage == i ? "disabled" : string.Empty)" asp-area="Admin" asp-controller="Users" asp-action="All" asp-route-page="@i" asp-route-role="@userRole" asp-route-search="@Model.Search">@i</a>
                 </li>

@@ -1,15 +1,7 @@
-﻿namespace StarStuff.Web.Areas.Admin.Models
+﻿namespace StarStuff.Web.Models
 {
-    using StarStuff.Services.Admin.Models.Roles;
-    using StarStuff.Services.Models.Users;
-    using System.Collections.Generic;
-
-    public class UserListViewModel
+    public class BasePageViewModel
     {
-        public string Search { get; set; }
-
-        public string UserRole { get; set; }
-
         public int CurrentPage { get; set; }
 
         public int TotalPages { get; set; }
@@ -29,9 +21,5 @@
                 return this.CurrentPage >= this.TotalPages ? this.TotalPages : this.CurrentPage + 1;
             }
         }
-
-        public IEnumerable<ListUsersServiceModel> Users { get; set; }
-
-        public IEnumerable<RoleServiceModel> Roles { get; set; }
     }
 }

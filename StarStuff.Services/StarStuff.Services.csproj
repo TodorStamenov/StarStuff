@@ -13,8 +13,4 @@
     <ProjectReference Include="..\StarStuffCommon\StarStuff.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Moderator\Models\" />
-  </ItemGroup>
-
 </Project>

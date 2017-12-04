@@ -1,0 +1,16 @@
+﻿@model JournalDetailsServiceModel
+
+@{
+    ViewData["Title"] = $"{Model.Name} Details";
+}
+
+<div class="row">
+    <h2>@Model.Name</h2>
+    <img src="@Model.ImageUrl" alt="Telescope Image" width="250" class="site-image" />
+    <p>@Model.Description</p>
+    <a class="btn btn-default" href="#">Publications</a>
+    @if (User.IsInRole(WebConstants.ModeratorRole))
+    {
+        <a asp-area="Moderator" asp-controller="Journals" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    }
+</div>

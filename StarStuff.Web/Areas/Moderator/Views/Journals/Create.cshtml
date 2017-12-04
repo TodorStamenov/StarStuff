@@ -1,0 +1,12 @@
+﻿@model JournalFormServiceModel
+
+@{
+    ViewData["Title"] = "Add Journal";
+}
+
+<div class="row">
+    <h2>@ViewData["Title"]</h2>
+    <div class="col-md-4">
+        @Html.Partial("_JournalForm", Model)
+    </div>
+</div>

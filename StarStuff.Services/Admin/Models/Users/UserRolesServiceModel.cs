@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Services.Admin.Models.Users
 {
-    using Admin.Models.Roles;
     using AutoMapper;
+    using Roles;
     using StarStuff.Common.Mapping;
     using StarStuff.Data.Models;
     using System;

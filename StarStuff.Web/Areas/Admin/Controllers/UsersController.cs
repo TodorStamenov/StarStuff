@@ -71,7 +71,7 @@
 
             int pages = (int)Math.Ceiling(this.userService.Total(role, search) / (double)UsersPerPage);
 
-            UserListViewModel model = new UserListViewModel
+            ListUsersViewModel model = new ListUsersViewModel
             {
                 Search = search,
                 CurrentPage = page,

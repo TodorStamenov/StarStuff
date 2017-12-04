@@ -11,6 +11,8 @@
         public const string TempDataErrorMessage = "ErrorMessage";
 
         public const string DataImage = "data:image/jpeg;base64,";
-        public static byte[] DefaultImage { get; } = File.ReadAllBytes($"{Directory.GetCurrentDirectory()}\\wwwroot\\images\\default-user-image.png");
+
+        public static readonly byte[] DefaultImage = File.ReadAllBytes($@"{Directory.GetCurrentDirectory()}\wwwroot\images\default-user-image.png");
+        public static readonly string Lorem = File.ReadAllText($@"{Directory.GetCurrentDirectory()}\wwwroot\Lorem.txt");
     }
 }

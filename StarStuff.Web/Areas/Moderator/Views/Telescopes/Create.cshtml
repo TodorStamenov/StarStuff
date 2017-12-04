@@ -1,7 +1,11 @@
-﻿
+﻿@model TelescopeFormServiceModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add Telescope";
 }
 
-<h2>Create</h2>
-
+<div class="row">
+    <h2>@ViewData["Title"]</h2>
+    <div class="col-md-4">
+        @Html.Partial("_TelescopeForm", Model)
+    </div>
+</div>

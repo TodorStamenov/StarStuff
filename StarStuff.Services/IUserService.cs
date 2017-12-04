@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace StarStuff.Services
+﻿namespace StarStuff.Services
 {
+    using System;
+
     public interface IUserService
     {
         bool Apply(int id);
