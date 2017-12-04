@@ -24,5 +24,9 @@
         public bool SendApplication { get; set; }
 
         public List<UserRole> Roles { get; set; } = new List<UserRole>();
+
+        public List<Pioneers> Discoveries { get; set; } = new List<Pioneers>();
+
+        public List<Observers> Observations { get; set; } = new List<Observers>();
     }
 }

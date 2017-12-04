@@ -23,6 +23,25 @@
             public const int NameMaxLength = 50;
         }
 
+        public static class DiscoveryConstants
+        {
+            public const int StarSystemMaxLength = 255;
+        }
+
+        public static class PlanetConstants
+        {
+            public const int NameMaxLength = 255;
+            public const double MassMinValue = double.Epsilon;
+            public const double MassMaxValue = double.MaxValue;
+        }
+
+        public static class StarConstants
+        {
+            public const int NameMaxLength = 255;
+            public const int TemperatureMinValue = 2400;
+            public const int TemperatureMaxValue = int.MaxValue;
+        }
+
         public const int ImageUrlMinLength = 10;
         public const int ImageUrlMaxLength = 2000;
 

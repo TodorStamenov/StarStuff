@@ -2,10 +2,10 @@
 {
     using Areas.Admin.Models;
     using Infrastructure;
+    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using StarStuff.Services.Admin;
-    using StarStuff.Web.Infrastructure.Extensions;
     using System;
 
     [Area("Admin")]

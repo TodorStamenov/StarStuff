@@ -4,12 +4,14 @@ namespace StarStuff.Data.Migrations
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
     using System;
 
     [DbContext(typeof(StarStuffDbContext))]
-    partial class StarStuffDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171204211507_PlanetsStarsDiscoveriesPublicationsTables")]
+    partial class PlanetsStarsDiscoveriesPublicationsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,8 +91,7 @@ namespace StarStuff.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("DateMade")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("DateMade");
 
                     b.Property<string>("StarSystem")
                         .IsRequired()
@@ -99,9 +100,6 @@ namespace StarStuff.Data.Migrations
                     b.Property<int>("TelescopeId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StarSystem")
-                        .IsUnique();
 
                     b.HasIndex("TelescopeId");
 
@@ -172,9 +170,6 @@ namespace StarStuff.Data.Migrations
 
                     b.HasIndex("DiscoveryId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Planets");
                 });
 
@@ -190,8 +185,7 @@ namespace StarStuff.Data.Migrations
 
                     b.Property<int>("JournalId");
 
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.HasKey("Id");
 
@@ -242,9 +236,6 @@ namespace StarStuff.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DiscoveryId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Stars");
                 });

@@ -1,5 +1,6 @@
 ﻿namespace StarStuff.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class Telescope
@@ -25,5 +26,7 @@
         [MaxLength(DataConstants.ImageUrlMaxLength)]
         [RegularExpression(DataConstants.ImageUrlPattern)]
         public string ImageUrl { get; set; }
+
+        public List<Discovery> Discoveries { get; set; } = new List<Discovery>();
     }
 }

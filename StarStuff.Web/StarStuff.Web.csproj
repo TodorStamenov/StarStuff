@@ -26,7 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Astronomer\Models\" />
+    <Folder Include="Areas\Astronomer\Views\Discoveries\" />
+    <Folder Include="Areas\Astronomer\Views\Stars\" />
+    <Folder Include="Areas\Astronomer\Views\Planets\" />
     <Folder Include="Areas\Moderator\Models\" />
+    <Folder Include="Areas\Moderator\Views\Publications\" />
   </ItemGroup>
 
 </Project>

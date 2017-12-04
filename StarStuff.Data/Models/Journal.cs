@@ -1,5 +1,6 @@
 ﻿namespace StarStuff.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class Journal
@@ -18,5 +19,7 @@
         [MaxLength(DataConstants.ImageUrlMaxLength)]
         [RegularExpression(DataConstants.ImageUrlPattern)]
         public string ImageUrl { get; set; }
+
+        public List<Publication> Publications { get; set; } = new List<Publication>();
     }
 }

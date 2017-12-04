@@ -7,6 +7,7 @@
     using StarStuff.Data;
     using StarStuff.Data.Models;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -14,10 +15,11 @@
     {
         private const int AdminsCount = 1;
         private const int ModeratorsCount = 3;
-        private const int AstronomersCount = 20;
+        private const int AstronomersCount = 50;
         private const int UsersCount = 20;
         private const int TelescopesCount = 20;
         private const int JournalsCount = 20;
+        private const int DiscoveriesCount = 20;
 
         private static readonly Random random = new Random();
 
@@ -65,13 +67,13 @@
 
             await SeedTelescopesAsync(db, TelescopesCount);
             await SeedJournalsAsync(db, JournalsCount);
+            await SeedDiscoveriesAsync(db, DiscoveriesCount);
+            await SeedPublicationsAsync(db);
         }
 
         private static async Task CreateRoleAsync(string roleName, RoleManager<Role> roleManager, StarStuffDbContext db)
         {
-            bool roleExists = await roleManager.RoleExistsAsync(roleName);
-
-            if (!roleExists)
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
                 Role role = new Role
                 {
@@ -84,9 +86,7 @@
 
         private static async Task SeedUsersAsync(int usersCount, UserManager<User> userManager, StarStuffDbContext db)
         {
-            bool hasUsers = db.Users.Any();
-
-            if (hasUsers)
+            if (await db.Users.AnyAsync())
             {
                 return;
             }
@@ -129,7 +129,8 @@
 
         private static async Task SeedUsersAsync(string roleName, int count, UserManager<User> userManager, StarStuffDbContext db)
         {
-            bool hasUsersWithRole = db.Users.Any(u => u.Roles.Any(r => r.Role.Name == roleName));
+            bool hasUsersWithRole = await db.Users
+                .AnyAsync(u => u.Roles.Any(r => r.Role.Name == roleName));
 
             if (hasUsersWithRole)
             {
@@ -172,7 +173,7 @@
 
         private static async Task SeedTelescopesAsync(StarStuffDbContext db, int telescopesCount)
         {
-            if (db.Telescopes.Any())
+            if (await db.Telescopes.AnyAsync())
             {
                 return;
             }
@@ -188,7 +189,7 @@
                     ImageUrl = "http://www.astro.caltech.edu/palomar/about/telescopes/images/SOTTimeLapse.jpg"
                 };
 
-                db.Telescopes.Add(telescope);
+                await db.Telescopes.AddAsync(telescope);
             }
 
             await db.SaveChangesAsync();
@@ -196,7 +197,7 @@
 
         private static async Task SeedJournalsAsync(StarStuffDbContext db, int journalsCount)
         {
-            if (db.Journals.Any())
+            if (await db.Journals.AnyAsync())
             {
                 return;
             }
@@ -210,7 +211,130 @@
                     ImageUrl = "https://cdn.magzter.com/1462885409/1463047998/images/thumb/390_thumb_1.jpg"
                 };
 
-                db.Journals.Add(journal);
+                await db.Journals.AddAsync(journal);
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        private async static Task SeedDiscoveriesAsync(StarStuffDbContext db, int discoveriesCount)
+        {
+            if (await db.Discoveries.AnyAsync())
+            {
+                return;
+            }
+
+            List<int> telescopeIds = await db.Telescopes
+                .Select(t => t.Id)
+                .ToListAsync();
+
+            List<int> astronomerIds = await db.Users
+                .Where(u => u.Roles.Any(r => r.Role.Name == WebConstants.AstronomerRole))
+                .Select(u => u.Id)
+                .ToListAsync();
+
+            for (int i = 1; i <= discoveriesCount; i++)
+            {
+                Discovery discovery = new Discovery
+                {
+                    StarSystem = $"Star System {i}",
+                    DateMade = DateTime.UtcNow
+                        .Date
+                        .AddYears(-i)
+                        .AddDays(-i),
+                    TelescopeId = telescopeIds[random.Next(0, telescopeIds.Count)]
+                };
+
+                int planetsCount = random.Next(0, 10);
+                int starsCount = random.Next(1, 3);
+                int discoverersCount = random.Next(1, 5);
+                int observersCount = random.Next(1, 6);
+
+                for (int j = 1; j <= planetsCount; j++)
+                {
+                    Planet planet = new Planet
+                    {
+                        Name = $"Planet {(i * j) + random.Next(0, 10000)}",
+                        Mass = Math.Round((i + j) * Math.PI, 2)
+                    };
+
+                    discovery.Planets.Add(planet);
+                }
+
+                for (int j = 1; j <= starsCount; j++)
+                {
+                    Star star = new Star
+                    {
+                        Name = $"Star {(i * j) + random.Next(0, 10000)}",
+                        Temperature = random.Next(
+                            DataConstants.StarConstants.TemperatureMinValue,
+                            DataConstants.StarConstants.TemperatureMaxValue)
+                    };
+
+                    discovery.Stars.Add(star);
+                }
+
+                for (int j = 0; j < discoverersCount; j++)
+                {
+                    int pioneerId = astronomerIds[random.Next(0, astronomerIds.Count)];
+
+                    if (discovery.Pioneers.Any(d => d.PioneerId == pioneerId))
+                    {
+                        j--;
+                        continue;
+                    }
+
+                    discovery.Pioneers.Add(new Pioneers
+                    {
+                        PioneerId = pioneerId
+                    });
+                }
+
+                for (int j = 0; j < observersCount; j++)
+                {
+                    int observerId = astronomerIds[random.Next(0, astronomerIds.Count)];
+
+                    if (discovery.Observers.Any(d => d.ObserverId == observerId)
+                        || discovery.Pioneers.Any(d => d.PioneerId == observerId))
+                    {
+                        j--;
+                        continue;
+                    }
+
+                    discovery.Observers.Add(new Observers
+                    {
+                        ObserverId = observerId
+                    });
+                }
+
+                await db.Discoveries.AddAsync(discovery);
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        private async static Task SeedPublicationsAsync(StarStuffDbContext db)
+        {
+            List<int> confirmedDiscoveryIds = await db.Discoveries
+                .Where(d => d.Observers.Count >= 3)
+                .Select(d => d.Id)
+                .ToListAsync();
+
+            List<int> journalIds = await db.Journals
+                .Select(j => j.Id)
+                .ToListAsync();
+
+            for (int i = 0; i < confirmedDiscoveryIds.Count; i++)
+            {
+                Publication publication = new Publication
+                {
+                    Content = WebConstants.Lorem,
+                    DiscoveryId = confirmedDiscoveryIds[random.Next(0, confirmedDiscoveryIds.Count)],
+                    JournalId = journalIds[random.Next(0, journalIds.Count)],
+                    ReleaseDate = DateTime.UtcNow.Date.AddMonths(-i)
+                };
+
+                await db.Publications.AddAsync(publication);
             }
 
             await db.SaveChangesAsync();

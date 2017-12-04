@@ -4,12 +4,14 @@ namespace StarStuff.Data.Migrations
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
     using System;
 
     [DbContext(typeof(StarStuffDbContext))]
-    partial class StarStuffDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171204212936_PublicationDiscoveryDateColumn")]
+    partial class PublicationDiscoveryDateColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,9 +102,6 @@ namespace StarStuff.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StarSystem")
-                        .IsUnique();
-
                     b.HasIndex("TelescopeId");
 
                     b.ToTable("Discoveries");
@@ -172,9 +171,6 @@ namespace StarStuff.Data.Migrations
 
                     b.HasIndex("DiscoveryId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Planets");
                 });
 
@@ -242,9 +238,6 @@ namespace StarStuff.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DiscoveryId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Stars");
                 });

@@ -13,4 +13,9 @@
     <ProjectReference Include="..\StarStuffCommon\StarStuff.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Astronomer\Models\" />
+    <Folder Include="Moderator\Models\Publications\" />
+  </ItemGroup>
+
 </Project>

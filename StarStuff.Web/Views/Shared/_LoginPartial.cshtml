@@ -16,6 +16,9 @@
                         <li class="dropdown-item">
                             <a asp-area="Admin" asp-controller="Users" asp-action="All" class="dropdown-link">Users</a>
                         </li>
+                        <li class="dropdown-item">
+                            <a asp-area="Admin" asp-controller="Logs" asp-action="All" class="dropdown-link">Logs</a>
+                        </li>
                     </ul>
                 </li>
             }
@@ -32,6 +35,23 @@
                         </li>
                         <li class="dropdown-item">
                             <a asp-area="Moderator" asp-controller="Journals" asp-action="Create" class="dropdown-link">Add Journal</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a asp-area="Moderator" asp-controller="Publications" asp-action="Create" class="dropdown-link">Add Publication</a>
+                        </li>
+                    </ul>
+                </li>
+            }
+            @if (User.IsInRole(WebConstants.AstronomerRole))
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="astronomer" aria-expanded="false">Astronomer<span class="caret"></span></a>
+                    <ul class="dropdown-menu " aria-labelledby="astronomer">
+                        <li class="dropdown-item">
+                            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Confirm" class="dropdown-link">Discoveries</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Create" class="dropdown-link">Add Discovery</a>
                         </li>
                     </ul>
                 </li>
