@@ -12,6 +12,8 @@
         [MaxLength(DataConstants.DiscoveryConstants.StarSystemMaxLength)]
         public string StarSystem { get; set; }
 
+        public bool IsConfirmed { get; set; }
+
         public DateTime DateMade { get; set; }
 
         public int TelescopeId { get; set; }

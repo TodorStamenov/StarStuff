@@ -84,6 +84,29 @@ namespace StarStuff.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("StarStuff.Data.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTime>("DateAdded");
+
+                    b.Property<int>("PublicationId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PublicationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("StarStuff.Data.Models.Discovery", b =>
                 {
                     b.Property<int>("Id")
@@ -91,6 +114,8 @@ namespace StarStuff.Data.Migrations
 
                     b.Property<DateTime>("DateMade")
                         .HasColumnType("Date");
+
+                    b.Property<bool>("IsConfirmed");
 
                     b.Property<string>("StarSystem")
                         .IsRequired()
@@ -382,6 +407,19 @@ namespace StarStuff.Data.Migrations
                 {
                     b.HasOne("StarStuff.Data.Models.User")
                         .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("StarStuff.Data.Models.Comment", b =>
+                {
+                    b.HasOne("StarStuff.Data.Models.Publication", "Publication")
+                        .WithMany("Comments")
+                        .HasForeignKey("PublicationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("StarStuff.Data.Models.User", "User")
+                        .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

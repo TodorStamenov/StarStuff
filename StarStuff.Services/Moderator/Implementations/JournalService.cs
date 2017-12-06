@@ -21,6 +21,15 @@
             return this.db.Journals.Count();
         }
 
+        public string GetName(int journalId)
+        {
+            return this.db
+                .Journals
+                .Where(j => j.Id == journalId)
+                .Select(j => j.Name)
+                .FirstOrDefault();
+        }
+
         public int Create(string name, string description, string imageUrl)
         {
             Journal journal = new Journal

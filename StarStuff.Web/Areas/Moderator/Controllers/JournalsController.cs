@@ -8,7 +8,8 @@
 
     public class JournalsController : BaseModeratorController
     {
-        private const string JournalDetailsUrl = "/Journals/Details/{0}";
+        private const string Journals = "Journals";
+        private const string Details = "Details";
 
         private readonly IJournalService journalService;
 
@@ -26,11 +27,14 @@
         [ValidateModelState]
         public IActionResult Create(JournalFormServiceModel model)
         {
-            int id = this.journalService.Create(model.Name, model.Description, model.ImageUrl);
+            int id = this.journalService.Create(
+                model.Name,
+                model.Description,
+                model.ImageUrl);
 
             TempData.AddSuccessMessage("Journal Successfully Added");
 
-            return Redirect(string.Format(JournalDetailsUrl, id));
+            return RedirectToAction(Details, Journals, new { area = string.Empty, id });
         }
 
         public IActionResult Edit(int id)
@@ -49,7 +53,11 @@
         [ValidateModelState]
         public IActionResult Edit(int id, JournalFormServiceModel model)
         {
-            bool success = this.journalService.Edit(id, model.Name, model.Description, model.ImageUrl);
+            bool success = this.journalService.Edit(
+                id,
+                model.Name,
+                model.Description,
+                model.ImageUrl);
 
             if (!success)
             {
@@ -58,7 +66,7 @@
 
             TempData.AddSuccessMessage("Journal Successfully Edited");
 
-            return Redirect(string.Format(JournalDetailsUrl, id));
+            return RedirectToAction(Details, Journals, new { area = string.Empty, id });
         }
     }
 }

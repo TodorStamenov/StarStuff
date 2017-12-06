@@ -21,6 +21,15 @@
             return this.db.Telescopes.Count();
         }
 
+        public string GetName(int telescopeId)
+        {
+            return this.db
+                .Telescopes
+                .Where(t => t.Id == telescopeId)
+                .Select(t => t.Name)
+                .FirstOrDefault();
+        }
+
         public int Create(
             string name,
             string location,

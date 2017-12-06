@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Astronomer\Models\" />
-    <Folder Include="Moderator\Models\Publications\" />
+    <Folder Include="Astronomer\Models\Stars\" />
+    <Folder Include="Astronomer\Models\Planets\" />
   </ItemGroup>
 
 </Project>

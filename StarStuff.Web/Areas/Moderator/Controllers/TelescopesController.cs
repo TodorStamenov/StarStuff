@@ -8,7 +8,8 @@
 
     public class TelescopesController : BaseModeratorController
     {
-        private const string TelescopeDetailsUrl = "/Telescopes/Details/{0}";
+        private const string Details = "Details";
+        private const string Telescopes = "Telescopes";
 
         private readonly ITelescopeService telescopeService;
 
@@ -35,7 +36,7 @@
 
             TempData.AddSuccessMessage("Telescope Successfully Added");
 
-            return Redirect(string.Format(TelescopeDetailsUrl, id));
+            return RedirectToAction(Details, Telescopes, new { area = string.Empty, id });
         }
 
         public IActionResult Edit(int id)
@@ -69,7 +70,7 @@
 
             TempData.AddSuccessMessage("Telescope Successfully Edited");
 
-            return Redirect(string.Format(TelescopeDetailsUrl, id));
+            return RedirectToAction(Details, Telescopes, new { area = string.Empty, id });
         }
     }
 }

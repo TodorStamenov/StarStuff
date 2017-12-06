@@ -18,6 +18,8 @@
             string description,
             string imageUrl);
 
+        string GetName(int journalId);
+
         JournalFormServiceModel GetForm(int id);
 
         JournalDetailsServiceModel Details(int id);

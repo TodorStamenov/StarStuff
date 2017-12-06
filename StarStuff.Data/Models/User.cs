@@ -28,5 +28,7 @@
         public List<Pioneers> Discoveries { get; set; } = new List<Pioneers>();
 
         public List<Observers> Observations { get; set; } = new List<Observers>();
+
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

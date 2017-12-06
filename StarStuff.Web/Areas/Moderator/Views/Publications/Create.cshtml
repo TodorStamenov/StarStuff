@@ -1,0 +1,29 @@
+﻿@model CreatePublicationFormViewModel
+
+@{
+    ViewData["Title"] = "Add Publication";
+}
+
+<div class="row">
+    <h2>@ViewData["Title"]</h2>
+    <div class="col-md-4">
+        <form method="post">
+            <hr />
+            <div class="form-group">
+                <label asp-for="Publication.Content"></label>
+                <textarea asp-for="Publication.Content" class="form-control" rows="20"></textarea>
+                <span asp-validation-for="Publication.Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiscoveryId"></label>
+                <select asp-for="DiscoveryId" asp-items="@Model.Discoveries" class="form-control" rows="20"></select>
+                <span asp-validation-for="DiscoveryId" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">Save Publication</button>
+        </form>
+
+        @section Scripts {
+            @await Html.PartialAsync("_ValidationScriptsPartial")
+        }
+    </div>
+</div>

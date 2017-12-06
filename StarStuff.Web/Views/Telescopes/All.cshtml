@@ -1,11 +1,11 @@
 ﻿@model ListTelescopesViewModel
+
 @{
     ViewData["Title"] = "All Telescopes";
-}
-@{
     string previouseDisabled = Model.CurrentPage == 1 ? "disabled" : string.Empty;
     string nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty;
 }
+
 <div class="row">
     <h2>@ViewData["Title"]</h2>
     @foreach (var telescope in Model.Telescopes)

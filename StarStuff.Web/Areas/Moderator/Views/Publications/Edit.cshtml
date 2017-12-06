@@ -1,0 +1,24 @@
+﻿@model PublicationFormServiceModel
+
+@{
+    ViewData["Title"] = "Edit Publication";
+}
+
+<div class="row">
+    <h2>@ViewData["Title"]</h2>
+    <div class="col-md-4">
+        <form method="post">
+            <hr />
+            <div class="form-group">
+                <label asp-for="Content"></label>
+                <textarea asp-for="Content" class="form-control" rows="20"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">Save Publication</button>
+        </form>
+
+        @section Scripts {
+            @await Html.PartialAsync("_ValidationScriptsPartial")
+        }
+    </div>
+</div>

@@ -1,6 +1,7 @@
 ﻿namespace StarStuff.Data.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class Publication
@@ -19,5 +20,7 @@
         public int DiscoveryId { get; set; }
 
         public Discovery Discovery { get; set; }
+
+        public List<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

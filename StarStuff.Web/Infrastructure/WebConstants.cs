@@ -14,5 +14,6 @@
 
         public static readonly byte[] DefaultImage = File.ReadAllBytes($@"{Directory.GetCurrentDirectory()}\wwwroot\images\default-user-image.png");
         public static readonly string Lorem = File.ReadAllText($@"{Directory.GetCurrentDirectory()}\wwwroot\Lorem.txt");
+        public static readonly string CommentContent = File.ReadAllText($@"{Directory.GetCurrentDirectory()}\wwwroot\Comment.txt");
     }
 }

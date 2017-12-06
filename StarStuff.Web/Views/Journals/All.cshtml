@@ -1,11 +1,11 @@
 ﻿@model ListJournalsViewModel
+
 @{
     ViewData["Title"] = "All Journals";
-}
-@{
     string previouseDisabled = Model.CurrentPage == 1 ? "disabled" : string.Empty;
     string nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty;
 }
+
 <div class="row">
     <h2>@ViewData["Title"]</h2>
     @foreach (var journal in Model.Journals)

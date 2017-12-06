@@ -7,6 +7,8 @@
     {
         int Total();
 
+        string GetName(int telescopeId);
+
         int Create(
             string name,
             string location,

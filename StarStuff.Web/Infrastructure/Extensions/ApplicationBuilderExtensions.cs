@@ -19,7 +19,7 @@
         private const int UsersCount = 20;
         private const int TelescopesCount = 20;
         private const int JournalsCount = 20;
-        private const int DiscoveriesCount = 20;
+        private const int DiscoveriesCount = 200;
 
         private static readonly Random random = new Random();
 
@@ -69,6 +69,7 @@
             await SeedJournalsAsync(db, JournalsCount);
             await SeedDiscoveriesAsync(db, DiscoveriesCount);
             await SeedPublicationsAsync(db);
+            await SeedCommentsAsync(db);
         }
 
         private static async Task CreateRoleAsync(string roleName, RoleManager<Role> roleManager, StarStuffDbContext db)
@@ -237,10 +238,10 @@
             {
                 Discovery discovery = new Discovery
                 {
-                    StarSystem = $"Star System {i}",
+                    StarSystem = $"StarSystem{CreateGuid()}",
                     DateMade = DateTime.UtcNow
                         .Date
-                        .AddYears(-i)
+                        .AddMonths(-i)
                         .AddDays(-i),
                     TelescopeId = telescopeIds[random.Next(0, telescopeIds.Count)]
                 };
@@ -248,13 +249,13 @@
                 int planetsCount = random.Next(0, 10);
                 int starsCount = random.Next(1, 3);
                 int discoverersCount = random.Next(1, 5);
-                int observersCount = random.Next(1, 6);
+                int observersCount = random.Next(0, 6);
 
                 for (int j = 1; j <= planetsCount; j++)
                 {
                     Planet planet = new Planet
                     {
-                        Name = $"Planet {(i * j) + random.Next(0, 10000)}",
+                        Name = $"Planet{CreateGuid()}",
                         Mass = Math.Round((i + j) * Math.PI, 2)
                     };
 
@@ -265,7 +266,7 @@
                 {
                     Star star = new Star
                     {
-                        Name = $"Star {(i * j) + random.Next(0, 10000)}",
+                        Name = $"Star{CreateGuid()}",
                         Temperature = random.Next(
                             DataConstants.StarConstants.TemperatureMinValue,
                             DataConstants.StarConstants.TemperatureMaxValue)
@@ -307,6 +308,11 @@
                     });
                 }
 
+                if (observersCount >= 3)
+                {
+                    discovery.IsConfirmed = true;
+                }
+
                 await db.Discoveries.AddAsync(discovery);
             }
 
@@ -315,29 +321,91 @@
 
         private async static Task SeedPublicationsAsync(StarStuffDbContext db)
         {
-            List<int> confirmedDiscoveryIds = await db.Discoveries
-                .Where(d => d.Observers.Count >= 3)
-                .Select(d => d.Id)
+            if (await db.Publications.AnyAsync())
+            {
+                return;
+            }
+
+            var discoveries = await db.Discoveries
+                .Where(d => d.IsConfirmed)
+                .Select(d => new
+                {
+                    d.Id,
+                    d.DateMade
+                })
                 .ToListAsync();
 
             List<int> journalIds = await db.Journals
                 .Select(j => j.Id)
                 .ToListAsync();
 
-            for (int i = 0; i < confirmedDiscoveryIds.Count; i++)
+            foreach (var discovery in discoveries)
             {
                 Publication publication = new Publication
                 {
                     Content = WebConstants.Lorem,
-                    DiscoveryId = confirmedDiscoveryIds[random.Next(0, confirmedDiscoveryIds.Count)],
+                    DiscoveryId = discovery.Id,
                     JournalId = journalIds[random.Next(0, journalIds.Count)],
-                    ReleaseDate = DateTime.UtcNow.Date.AddMonths(-i)
+                    ReleaseDate = discovery.DateMade.AddMonths(5)
                 };
 
                 await db.Publications.AddAsync(publication);
             }
 
             await db.SaveChangesAsync();
+        }
+
+        private async static Task SeedCommentsAsync(StarStuffDbContext db)
+        {
+            if (await db.Comments.AnyAsync())
+            {
+                return;
+            }
+
+            var publications = await db.Publications
+                .Select(p => new
+                {
+                    p.Id,
+                    p.ReleaseDate
+                })
+                .ToListAsync();
+
+            List<int> usersIds = await db.Users
+                .Select(u => u.Id)
+                .ToListAsync();
+
+            foreach (var publication in publications)
+            {
+                int commentsCount = random.Next(10, 41);
+
+                for (int i = 0; i < commentsCount; i++)
+                {
+                    Comment comment = new Comment
+                    {
+                        Content = WebConstants.CommentContent,
+                        DateAdded = publication
+                            .ReleaseDate
+                            .AddDays(i)
+                            .AddHours(i)
+                            .AddMinutes(i),
+                        PublicationId = publication.Id,
+                        UserId = usersIds[random.Next(0, usersIds.Count)]
+                    };
+
+                    await db.Comments.AddAsync(comment);
+                }
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        private static string CreateGuid()
+        {
+            return Guid.NewGuid()
+                .ToString()
+                .Replace("-", string.Empty)
+                .Substring(0, 10)
+                .ToUpper();
         }
     }
 }
