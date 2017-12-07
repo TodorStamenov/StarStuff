@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class CreatePublicationFormViewModel
+    public class PublicationFormViewModel
     {
         public PublicationFormServiceModel Publication { get; set; }
 

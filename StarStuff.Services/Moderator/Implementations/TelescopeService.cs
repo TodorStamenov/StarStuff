@@ -96,6 +96,14 @@
                 .FirstOrDefault();
         }
 
+        public IEnumerable<TelescopeServiceModel> TelescopeDropdown()
+        {
+            return this.db
+                .Telescopes
+                .ProjectTo<TelescopeServiceModel>()
+                .ToList();
+        }
+
         public IEnumerable<ListTelescopesServiceModel> All(int page, int pageSize)
         {
             return this.db

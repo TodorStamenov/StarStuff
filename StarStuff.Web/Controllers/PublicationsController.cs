@@ -80,7 +80,7 @@
             return View(model);
         }
 
-        public IActionResult ByJournal(int page, int journalId)
+        public IActionResult ByJournal(int id, int page)
         {
             if (page <= 0)
             {
@@ -89,11 +89,11 @@
 
             ListPublicationsByJournalViewModel model = new ListPublicationsByJournalViewModel
             {
-                JournalId = journalId,
-                JournalName = this.journalService.GetName(journalId),
+                JournalId = id,
+                JournalName = this.journalService.GetName(id),
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(this.publicationService.TotalByJournal(journalId) / (double)PublicationsPerPage),
-                Publications = this.publicationService.AllByJournal(journalId, page, PublicationsPerPage)
+                TotalPages = (int)Math.Ceiling(this.publicationService.TotalByJournal(id) / (double)PublicationsPerPage),
+                Publications = this.publicationService.AllByJournal(id, page, PublicationsPerPage)
             };
 
             if (model.Publications == null)
@@ -104,7 +104,7 @@
             return View(model);
         }
 
-        public IActionResult ByTelescope(int page, int telescopeId)
+        public IActionResult ByTelescope(int id, int page)
         {
             if (page <= 0)
             {
@@ -113,11 +113,11 @@
 
             ListPublicationsByTelescopeViewModel model = new ListPublicationsByTelescopeViewModel
             {
-                TelescopeId = telescopeId,
-                TelescopeName = this.telescopeService.GetName(telescopeId),
+                TelescopeId = id,
+                TelescopeName = this.telescopeService.GetName(id),
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(this.publicationService.TotalByTelescope(telescopeId) / (double)PublicationsPerPage),
-                Publications = this.publicationService.AllByTelescope(telescopeId, page, PublicationsPerPage)
+                TotalPages = (int)Math.Ceiling(this.publicationService.TotalByTelescope(id) / (double)PublicationsPerPage),
+                Publications = this.publicationService.AllByTelescope(id, page, PublicationsPerPage)
             };
 
             if (model.Publications == null)

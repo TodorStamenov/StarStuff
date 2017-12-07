@@ -17,8 +17,8 @@
         private const int ModeratorsCount = 3;
         private const int AstronomersCount = 50;
         private const int UsersCount = 20;
-        private const int TelescopesCount = 20;
-        private const int JournalsCount = 20;
+        private const int TelescopesCount = 11;
+        private const int JournalsCount = 11;
         private const int DiscoveriesCount = 200;
 
         private static readonly Random random = new Random();
@@ -248,8 +248,8 @@
 
                 int planetsCount = random.Next(0, 10);
                 int starsCount = random.Next(1, 3);
-                int discoverersCount = random.Next(1, 5);
-                int observersCount = random.Next(0, 6);
+                int discoverersCount = random.Next(1, 6);
+                int observersCount = random.Next(0, 4);
 
                 for (int j = 1; j <= planetsCount; j++)
                 {

@@ -1,0 +1,142 @@
+﻿@model DiscoveryDetailsViewModel
+@{
+    ViewData["Title"] = "Discovery Details";
+}
+
+<div class="row">
+    <h2>@ViewData["Title"]</h2>
+    <h3>Star System Name: @Model.Discovery.StarSystem</h3>
+    <h3>Telescope Name: <a asp-area="" asp-controller="Telescopes" asp-action="Details" asp-route-id="@Model.Discovery.TelescopeId">@Model.Discovery.TelescopeName</a></h3>
+    <h3>Discovery Date: @Model.Discovery.DateMade.ToShortDateString()</h3>
+    @if (!(Model.IsObserver || Model.IsPioneer) && !Model.Discovery.IsConfirmed)
+    {
+        <form method="post" asp-area="Astronomer" asp-controller="Discoveries" asp-action="Confirm" asp-route-id="@Model.Discovery.Id">
+            <input class="btn btn-success" type="submit" value="Confirm" />
+        </form>
+    }
+    @if (Model.IsPioneer)
+    {
+        <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Edit" asp-route-id="@Model.Discovery.Id" class="btn btn-warning btn-sm">Edit</a>
+    }
+
+    @if (User.IsInRole(WebConstants.ModeratorRole))
+    {
+        <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Delete" asp-route-id="@Model.Discovery.Id" class="btn btn-danger btn-sm">Delete</a>
+    }
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <h4>Stars</h4>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Temperature in Kelvin</th>
+                    @if (Model.IsPioneer)
+                    {
+                        <th>Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var star in Model.Stars)
+                {
+                    <tr>
+                        <td>@star.Name</td>
+                        <td>@star.Temperature</td>
+                        @if (Model.IsPioneer)
+                        {
+                            <td>
+                                <a class="btn btn-warning btn-xs" href="#">Edit</a>
+                                <a class="btn btn-danger btn-xs" href="#">Delete</a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (Model.IsPioneer && Model.Stars.Count() < 2)
+        {
+            <a class="btn btn-success btn-sm" asp-area="Astronomer" asp-controller="Stars" asp-action="Create" asp-route-id="@Model.Discovery.Id">Add Star</a>
+        }
+    </div>
+    <div class="col-md-6">
+        <h4>Planets</h4>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Relative Mass</th>
+                    @if (Model.IsPioneer)
+                    {
+                        <th>Actions</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var planet in Model.Planets)
+                {
+                    <tr>
+                        <td>@planet.Name</td>
+                        <td>@planet.Mass</td>
+                        @if (Model.IsPioneer)
+                        {
+                            <td>
+                                <a class="btn btn-warning btn-xs" href="#">Edit</a>
+                                <a class="btn btn-danger btn-xs" href="#">Delete</a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @if (Model.IsPioneer)
+        {
+            <a class="btn btn-success btn-sm" asp-area="Astronomer" asp-controller="Planets" asp-action="Create" asp-route-id="@Model.Discovery.Id">Add Planet</a>
+        }
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <h4>Pioneers</h4>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pioneer in Model.Pioneers)
+                {
+                    <tr>
+                        <td>@pioneer.FirstName</td>
+                        <td>@pioneer.LastName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h4>Observers</h4>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var observer in Model.Observers)
+                {
+                    <tr>
+                        <td>@observer.FirstName</td>
+                        <td>@observer.LastName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

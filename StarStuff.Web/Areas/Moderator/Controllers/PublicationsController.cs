@@ -20,7 +20,10 @@
         private readonly IDiscoveryService discoveryService;
         private readonly IJournalService journalService;
 
-        public PublicationsController(IPublicationService publicationService, IDiscoveryService discoveryService, IJournalService journalService)
+        public PublicationsController(
+            IPublicationService publicationService,
+            IDiscoveryService discoveryService,
+            IJournalService journalService)
         {
             this.publicationService = publicationService;
             this.discoveryService = discoveryService;
@@ -29,7 +32,7 @@
 
         public IActionResult Create(int id)
         {
-            CreatePublicationFormViewModel model = new CreatePublicationFormViewModel
+            PublicationFormViewModel model = new PublicationFormViewModel
             {
                 Discoveries = this.GetDiscoveries(id)
             };
@@ -38,7 +41,7 @@
         }
 
         [HttpPost]
-        public IActionResult Create(int id, CreatePublicationFormViewModel model)
+        public IActionResult Create(int id, PublicationFormViewModel model)
         {
             if (!ModelState.IsValid)
             {

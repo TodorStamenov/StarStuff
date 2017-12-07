@@ -2,9 +2,6 @@
 
 @{
     ViewData["Title"] = "All Users";
-}
-
-@{
     string previouseDisabled = Model.CurrentPage == 1 ? "disabled" : string.Empty;
     string nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty;
     string userRole = Model.UserRole != null ? Model.UserRole : string.Empty;

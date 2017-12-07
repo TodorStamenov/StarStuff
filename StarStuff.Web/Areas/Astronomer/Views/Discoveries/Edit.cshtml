@@ -1,0 +1,23 @@
+﻿@model DiscoveryFormServiceModel
+@{
+    ViewData["Title"] = "Edit Discovery";
+}
+
+<div class="row">
+    <h2>@ViewData["Title"]</h2>
+    <div class="col-md-4">
+        <form method="post">
+            <hr />
+            <div class="form-group">
+                <label asp-for="StarSystem"></label>
+                <input asp-for="StarSystem" class="form-control" />
+                <span asp-validation-for="StarSystem" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">Save Discovery</button>
+        </form>
+    </div>
+
+    @section Scripts {
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+    }
+</div>

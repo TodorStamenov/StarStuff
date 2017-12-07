@@ -29,5 +29,6 @@
         TelescopeDetailsServiceModel Details(int id);
 
         IEnumerable<ListTelescopesServiceModel> All(int page, int pageSize);
+        IEnumerable<TelescopeServiceModel> TelescopeDropdown();
     }
 }

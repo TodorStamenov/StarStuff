@@ -33,8 +33,14 @@
 
         public int Create(string content, int discoveryId, int journalId)
         {
-            bool hasJournal = this.db.Journals.Any(j => j.Id == journalId);
-            bool hasDiscovery = this.db.Discoveries.Any(d => d.Id == discoveryId);
+            bool hasJournal = this.db
+                .Journals
+                .Any(j => j.Id == journalId);
+
+            bool hasDiscovery = this.db
+                .Discoveries
+                .Any(d => d.Id == discoveryId
+                    && d.IsConfirmed);
 
             if (!hasJournal || !hasDiscovery)
             {
@@ -47,17 +53,6 @@
                     && p.DiscoveryId == discoveryId);
 
             if (hasPublication)
-            {
-                return -1;
-            }
-
-            bool isConfirmed = this.db
-                .Discoveries
-                .Where(d => d.Id == discoveryId)
-                .Select(d => d.IsConfirmed)
-                .FirstOrDefault();
-
-            if (!isConfirmed)
             {
                 return -1;
             }
