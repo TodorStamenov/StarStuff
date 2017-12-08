@@ -7,8 +7,10 @@
     using StarStuff.Data.Models;
     using StarStuff.Services.Models.Users;
     using System;
+    using Infrastructure.Extensions;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.EntityFrameworkCore;
 
     public class AdminUserService : IAdminUserService
     {
@@ -26,7 +28,7 @@
                 .Where(r => r.Name == roleName)
                 .Select(r => new
                 {
-                    Id = r.Id,
+                    r.Id,
                     InRole = r.Users.Any(u => u.UserId == userId)
                 })
                 .FirstOrDefault();
@@ -56,7 +58,7 @@
                 .Where(r => r.Name == roleName)
                 .Select(r => new
                 {
-                    Id = r.Id,
+                    r.Id,
                     InRole = r.Users.Any(u => u.UserId == userId)
                 })
                 .FirstOrDefault();
@@ -78,20 +80,11 @@
 
         public int Total(string role, string search)
         {
-            IQueryable<User> usersQuery = this.Users();
-
-            if (role != null)
-            {
-                usersQuery = this.RolesQuery(role, usersQuery);
-            }
-
-            if (search != null)
-            {
-                search = search.ToLower();
-                usersQuery = this.SearchUsers(search, usersQuery);
-            }
-
-            return usersQuery.Count();
+            return this.db
+                .Users
+                .Filter(search)
+                .InRole(role)
+                .Count();
         }
 
         public UserRolesServiceModel Roles(int id)
@@ -113,44 +106,16 @@
 
         public IEnumerable<ListUsersServiceModel> All(int page, string role, string search, int usersPerPage)
         {
-            IQueryable<User> usersQuery = this.Users();
-
-            if (role != null)
-            {
-                usersQuery = this.RolesQuery(role, usersQuery);
-            }
-
-            if (search != null)
-            {
-                usersQuery = this.SearchUsers(search, usersQuery);
-            }
-
-            return usersQuery
-                .OrderBy(u => u.UserName)
+            return this.db
+                .Users
+                .Include(u => u.Roles)
+                .Filter(search)
+                .InRole(role)
+                .ProjectTo<ListUsersServiceModel>()
+                .OrderBy(u => u.Username)
                 .Skip((page - 1) * usersPerPage)
                 .Take(usersPerPage)
-                .ProjectTo<ListUsersServiceModel>()
                 .ToList();
-        }
-
-        public IQueryable<User> Users()
-        {
-            return this.db.Users.AsQueryable();
-        }
-
-        private IQueryable<User> RolesQuery(string role, IQueryable<User> usersQuery)
-        {
-            return usersQuery
-                .Where(u => u.Roles.Any(r => r.Role.Name == role));
-        }
-
-        private IQueryable<User> SearchUsers(string search, IQueryable<User> usersQuery)
-        {
-            return usersQuery
-                    .Where(u => u.UserName.ToLower().Contains(search)
-                    || u.FirstName.ToLower().Contains(search)
-                    || u.LastName.ToLower().Contains(search)
-                    || u.Email.ToLower().Contains(search));
         }
     }
 }

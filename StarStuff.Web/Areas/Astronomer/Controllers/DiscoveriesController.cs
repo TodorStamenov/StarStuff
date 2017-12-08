@@ -1,15 +1,16 @@
 ﻿namespace StarStuff.Web.Areas.Astronomer.Controllers
 {
-    using Areas.Astronomer.Models.Discoveries;
+    using Data.Models;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using StarStuff.Data.Models;
-    using StarStuff.Services.Astronomer;
-    using StarStuff.Services.Astronomer.Models.Discoveries;
-    using StarStuff.Services.Moderator;
+    using Models.Discoveries;
+    using Services.Astronomer;
+    using Services.Astronomer.Models.Astronomers;
+    using Services.Astronomer.Models.Discoveries;
+    using Services.Moderator;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -160,29 +161,62 @@
             return RedirectToAction(nameof(All));
         }
 
-        public IActionResult All(int page, bool? confirmed = null)
+        public IActionResult Mine(int page, bool? confirmed, string astronomer)
         {
             if (page <= 0)
             {
                 page = 1;
             }
 
+            AstronomerType astronomerType = AstronomerType.All;
+
+            if (astronomer?.ToLower() == "pioneer")
+            {
+                astronomerType = AstronomerType.Pioneer;
+            }
+            else if (astronomer?.ToLower() == "observer")
+            {
+                astronomerType = AstronomerType.Observer;
+            }
+
+            int userId = int.Parse(this.userManager.GetUserId(User));
+            int totalEntries = this.discoveryService.Total(confirmed, astronomerType, userId);
+
+            ListMyDiscoveriesViewModel model = new ListMyDiscoveriesViewModel
+            {
+                Confirmed = confirmed,
+                CurrentPage = page,
+                AstronomerType = astronomerType.ToString(),
+                TotalPages = this.GetTotalPages(totalEntries),
+                Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, userId, astronomerType, confirmed)
+            };
+
+            return View(model);
+        }
+
+        public IActionResult All(int page, bool? confirmed)
+        {
+            if (page <= 0)
+            {
+                page = 1;
+            }
+
+            int totalEntries = this.discoveryService.Total(confirmed);
+
             ListDiscoveriesViewModel model = new ListDiscoveriesViewModel
             {
                 Confirmed = confirmed,
                 CurrentPage = page,
-                TotalPages = this.GetTotalPages(confirmed),
+                TotalPages = this.GetTotalPages(totalEntries),
                 Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, confirmed)
             };
 
             return View(model);
         }
 
-        private int GetTotalPages(bool? confirmed = null)
+        private int GetTotalPages(int totalEntries)
         {
-            int total = this.discoveryService.Total(confirmed);
-
-            return (int)Math.Ceiling(total / (double)DiscoveriesPerPage);
+            return (int)Math.Ceiling(totalEntries / (double)DiscoveriesPerPage);
         }
 
         private IEnumerable<SelectListItem> GetTelescopes()

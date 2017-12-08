@@ -45,10 +45,13 @@
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="astronomer" aria-expanded="false">Astronomer<span class="caret"></span></a>
                     <ul class="dropdown-menu " aria-labelledby="astronomer">
                         <li class="dropdown-item">
-                            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="All" class="dropdown-link">Discoveries</a>
+                            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Create" class="dropdown-link">Add Discovery</a>
                         </li>
                         <li class="dropdown-item">
-                            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Create" class="dropdown-link">Add Discovery</a>
+                            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="All" class="dropdown-link">All Discoveries</a>
+                        </li>
+                        <li class="dropdown-item">
+                            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Mine" class="dropdown-link">My Discoveries</a>
                         </li>
                     </ul>
                 </li>

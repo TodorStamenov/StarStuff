@@ -1,7 +1,7 @@
 ﻿@model ListDiscoveriesViewModel
 
 @{
-    ViewData["Title"] = $"All {(Model.Confirmed == null ? string.Empty : Model.Confirmed.Value ? "Confirmed " : "Unconfirmed ")}Discoveries";
+    ViewData["Title"] = $"All {(Model.Confirmed == null ? string.Empty : Model.Confirmed.Value ? "Confirmed " : "Not Confirmed ")}Discoveries";
     string previouseDisabled = Model.CurrentPage == 1 ? "disabled" : string.Empty;
     string nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty;
 }
@@ -10,43 +10,8 @@
     <h2>@ViewData["Title"]</h2>
     <a class="btn btn-primary" asp-area="Astronomer" asp-controller="Discoveries" asp-action="All">All</a>
     <a class="btn btn-primary" asp-area="Astronomer" asp-controller="Discoveries" asp-action="All" asp-route-confirmed="true">Confirmed</a>
-    <a class="btn btn-primary" asp-area="Astronomer" asp-controller="Discoveries" asp-action="All" asp-route-confirmed="false">Unconfirmed</a>
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Star System</th>
-                <th>Stars</th>
-                <th>Planets</th>
-                <th>Is Confirmed</th>
-                <th>Date Made</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var discovery in Model.Discoveries)
-            {
-                <tr>
-                    <td>@discovery.StarSystem</td>
-                    <td>@discovery.Stars</td>
-                    <td>@discovery.Planets</td>
-                    <td>
-                        @if (discovery.IsConfirmed)
-                        {
-                            <span class="glyphicon glyphicon-ok text-success"></span>
-                        }
-                        else
-                        {
-                            <span class="glyphicon glyphicon-remove text-danger"></span>
-                        }
-                    </td>
-                    <td>@discovery.DateMade.ToShortDateString()</td>
-                    <td>
-                        <a class="btn btn-primary" asp-area="Astronomer" asp-controller="Discoveries" asp-action="Details" asp-route-id="@discovery.Id">Details</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <a class="btn btn-primary" asp-area="Astronomer" asp-controller="Discoveries" asp-action="All" asp-route-confirmed="false">Not Confirmed</a>
+    @Html.Partial("_DiscoveriesTable", Model.Discoveries)
 </div>
 @if (Model.Discoveries.Any())
 {

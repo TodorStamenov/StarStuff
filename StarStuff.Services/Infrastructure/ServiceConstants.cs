@@ -1,4 +1,4 @@
-﻿namespace StarStuff.Services
+﻿namespace StarStuff.Services.Infrastructure
 {
     public static class ServiceConstants
     {

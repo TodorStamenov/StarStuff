@@ -5,6 +5,14 @@
 
     public interface IPlanetService
     {
+        bool Create(int discoveryId, string name, double mass);
+
+        bool Edit(int id, string name, double mass);
+
+        bool Delete(int id);
+
+        PlanetFormServiceModel GetForm(int id);
+
         IEnumerable<ListPlanetsServiceModel> Planets(int discoveryId);
     }
 }

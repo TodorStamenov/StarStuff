@@ -1,11 +1,17 @@
 ﻿namespace StarStuff.Services.Implementations
 {
+    using AutoMapper.QueryableExtensions;
+    using Data;
+    using Data.Models;
+    using Models.Users;
     using System;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class UserService : IUserService
     {
+        private const string Astronomer = "Astronomer";
+
         private readonly StarStuffDbContext db;
 
         public UserService(StarStuffDbContext db)
@@ -69,6 +75,28 @@
             this.db.SaveChanges();
 
             return true;
+        }
+
+        public int TotalAstronomers()
+        {
+            return this.db
+                .Users
+                .Count(u => u.Roles.Any(r => r.Role.Name == Astronomer));
+        }
+
+        public IEnumerable<ListAstronomersServiceModel> Astronomers(int page, int pageSize)
+        {
+            return this.db
+                .Users
+                .Where(u => u.Roles.Any(r => r.Role.Name == Astronomer))
+                .OrderByDescending(a => a.Discoveries.Count)
+                .ThenByDescending(a => a.Observations.Count)
+                .ThenBy(a => a.FirstName)
+                .ThenBy(a => a.LastName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<ListAstronomersServiceModel>()
+                .ToList();
         }
     }
 }

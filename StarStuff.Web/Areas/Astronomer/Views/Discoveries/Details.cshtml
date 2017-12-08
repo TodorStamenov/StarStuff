@@ -11,18 +11,20 @@
     @if (!(Model.IsObserver || Model.IsPioneer) && !Model.Discovery.IsConfirmed)
     {
         <form method="post" asp-area="Astronomer" asp-controller="Discoveries" asp-action="Confirm" asp-route-id="@Model.Discovery.Id">
-            <input class="btn btn-success" type="submit" value="Confirm" />
+            <input class="btn btn-success btn-sm" type="submit" value="Confirm" />
         </form>
     }
-    @if (Model.IsPioneer)
-    {
-        <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Edit" asp-route-id="@Model.Discovery.Id" class="btn btn-warning btn-sm">Edit</a>
-    }
+    <div class="pull-right">
+        @if (Model.IsPioneer)
+        {
+            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Edit" asp-route-id="@Model.Discovery.Id" class="btn btn-warning btn-sm">Edit</a>
+        }
 
-    @if (User.IsInRole(WebConstants.ModeratorRole))
-    {
-        <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Delete" asp-route-id="@Model.Discovery.Id" class="btn btn-danger btn-sm">Delete</a>
-    }
+        @if (User.IsInRole(WebConstants.ModeratorRole))
+        {
+            <a asp-area="Astronomer" asp-controller="Discoveries" asp-action="Delete" asp-route-id="@Model.Discovery.Id" class="btn btn-danger btn-sm">Delete</a>
+        }
+    </div>
 </div>
 <hr />
 <div class="row">
@@ -48,8 +50,8 @@
                         @if (Model.IsPioneer)
                         {
                             <td>
-                                <a class="btn btn-warning btn-xs" href="#">Edit</a>
-                                <a class="btn btn-danger btn-xs" href="#">Delete</a>
+                                <a class="btn btn-warning btn-xs" asp-area="Astronomer" asp-controller="Stars" asp-action="Edit" asp-route-id="@star.Id" asp-route-discoveryId="@Model.Discovery.Id">Edit</a>
+                                <a class="btn btn-danger btn-xs" asp-area="Astronomer" asp-controller="Stars" asp-action="Delete" asp-route-id="@star.Id" asp-route-discoveryId="@Model.Discovery.Id">Delete</a>
                             </td>
                         }
                     </tr>
@@ -83,8 +85,8 @@
                         @if (Model.IsPioneer)
                         {
                             <td>
-                                <a class="btn btn-warning btn-xs" href="#">Edit</a>
-                                <a class="btn btn-danger btn-xs" href="#">Delete</a>
+                                <a class="btn btn-warning btn-xs" asp-area="Astronomer" asp-controller="Planets" asp-action="Edit" asp-route-id="@planet.Id" asp-route-discoveryId="@Model.Discovery.Id">Edit</a>
+                                <a class="btn btn-danger btn-xs" asp-area="Astronomer" asp-controller="Planets" asp-action="Delete" asp-route-id="@planet.Id" asp-route-discoveryId="@Model.Discovery.Id">Delete</a>
                             </td>
                         }
                     </tr>

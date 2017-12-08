@@ -1,9 +1,10 @@
 ﻿namespace StarStuff.Services.Implementations
 {
     using AutoMapper.QueryableExtensions;
+    using Data;
+    using Data.Models;
+    using Infrastructure;
     using Models.Comments;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;

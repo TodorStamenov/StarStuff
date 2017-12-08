@@ -25,9 +25,4 @@
     <ProjectReference Include="..\StarStuffCommon\StarStuff.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Astronomer\Views\Stars\" />
-    <Folder Include="Areas\Astronomer\Views\Planets\" />
-  </ItemGroup>
-
 </Project>

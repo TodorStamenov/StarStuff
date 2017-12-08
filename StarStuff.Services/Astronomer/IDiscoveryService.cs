@@ -10,7 +10,9 @@
 
         bool IsObserver(int discoveryId, int observerId);
 
-        int Total(bool? confirmed = null);
+        int Total(bool? confirmed);
+
+        int Total(bool? confirmed, AstronomerType astronomerType, int astronomerId);
 
         int Create(string starSystem, int telescopeId, int astronomerId);
 
@@ -29,6 +31,8 @@
         IEnumerable<DiscoveryServiceModel> DiscoveryDropdown(int journalId);
 
         IEnumerable<ListDiscoveriesServiceModel> All(int page, int pageSize, bool? confirmed = null);
+
+        IEnumerable<ListDiscoveriesServiceModel> All(int page, int pageSize, int astronomerId, AstronomerType astronomerType, bool? confirmed);
 
         DiscoveryFormServiceModel GetForm(int id);
     }

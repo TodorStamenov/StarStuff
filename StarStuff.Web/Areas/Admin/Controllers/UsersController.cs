@@ -62,7 +62,7 @@
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }
 
-        public IActionResult All(string role, int page, string search)
+        public IActionResult All(int page, string role, string search)
         {
             if (page < 1)
             {

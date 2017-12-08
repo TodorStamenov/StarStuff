@@ -1,6 +1,7 @@
 ﻿namespace StarStuff.Services.Astronomer.Implementations
 {
     using AutoMapper.QueryableExtensions;
+    using Infrastructure.Extensions;
     using Models.Astronomers;
     using Models.Discoveries;
     using StarStuff.Data;
@@ -18,18 +19,21 @@
             this.db = db;
         }
 
-        public int Total(bool? confirmed = null)
+        public int Total(bool? confirmed)
         {
-            IQueryable<Discovery> discoveriesQuery =
-                this.db.Discoveries.AsQueryable();
+            return this.db
+                .Discoveries
+                .Confirmed(confirmed)
+                .Count();
+        }
 
-            if (confirmed != null)
-            {
-                discoveriesQuery = discoveriesQuery
-                    .Where(d => d.IsConfirmed == confirmed.Value);
-            }
-
-            return discoveriesQuery.Count();
+        public int Total(bool? confirmed, AstronomerType astronomerType, int astronomerId)
+        {
+            return this.db
+                .Discoveries
+                .Confirmed(confirmed)
+                .ByAstronomerType(astronomerId, astronomerType)
+                .Count();
         }
 
         public bool IsPioneer(int discoveryId, int pioneerId)
@@ -205,17 +209,28 @@
 
         public IEnumerable<ListDiscoveriesServiceModel> All(int page, int pageSize, bool? confirmed = null)
         {
-            IQueryable<Discovery> discoveriesQuery =
-                this.db.Discoveries.AsQueryable();
-
-            if (confirmed != null)
-            {
-                discoveriesQuery = discoveriesQuery
-                    .Where(d => d.IsConfirmed == confirmed.Value);
-            }
-
-            return discoveriesQuery
+            return this.db
+                .Discoveries
                 .OrderByDescending(d => d.DateMade)
+                .Confirmed(confirmed)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<ListDiscoveriesServiceModel>()
+                .ToList();
+        }
+
+        public IEnumerable<ListDiscoveriesServiceModel> All(
+            int page,
+            int pageSize,
+            int astronomerId,
+            AstronomerType astronomerType,
+            bool? confirmed)
+        {
+            return this.db
+                .Discoveries
+                .OrderByDescending(d => d.DateMade)
+                .Confirmed(confirmed)
+                .ByAstronomerType(astronomerId, astronomerType)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ProjectTo<ListDiscoveriesServiceModel>()

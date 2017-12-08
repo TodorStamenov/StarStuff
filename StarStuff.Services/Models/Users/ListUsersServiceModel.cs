@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Services.Models.Users
 {
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data.Models;
 
     public class ListUsersServiceModel : IMapFrom<User>
     {
