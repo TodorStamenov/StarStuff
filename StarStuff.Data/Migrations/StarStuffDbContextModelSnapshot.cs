@@ -151,7 +151,28 @@ namespace StarStuff.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Journals");
+                });
+
+            modelBuilder.Entity("StarStuff.Data.Models.Log", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("LogType");
+
+                    b.Property<string>("TableName");
+
+                    b.Property<DateTime>("TimeStamp");
+
+                    b.Property<string>("User");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("StarStuff.Data.Models.Observers", b =>
@@ -297,6 +318,9 @@ namespace StarStuff.Data.Migrations
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Telescopes");
                 });

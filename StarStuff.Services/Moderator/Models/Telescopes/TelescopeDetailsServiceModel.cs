@@ -1,8 +1,8 @@
 ﻿namespace StarStuff.Services.Moderator.Models.Telescopes
 {
     using AutoMapper;
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data.Models;
     using System.Linq;
 
     public class TelescopeDetailsServiceModel : ListTelescopesServiceModel, ICustomMapping

@@ -28,6 +28,8 @@
 
         public DbSet<Comment> Comments { get; set; }
 
+        public DbSet<Log> Logs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -41,6 +43,7 @@
             builder.ApplyConfiguration(new JournalConfiguration());
             builder.ApplyConfiguration(new StarConfiguration());
             builder.ApplyConfiguration(new PlanetConfiguration());
+            builder.ApplyConfiguration(new TelescopeConfiguration());
         }
     }
 }

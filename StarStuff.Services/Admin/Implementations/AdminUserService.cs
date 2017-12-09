@@ -1,16 +1,17 @@
 ﻿namespace StarStuff.Services.Admin.Implementations
 {
     using AutoMapper.QueryableExtensions;
+    using Data;
+    using Data.Models;
+    using Infrastructure.Extensions;
+    using Microsoft.EntityFrameworkCore;
+    using Models.Logs;
     using Models.Roles;
     using Models.Users;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
-    using StarStuff.Services.Models.Users;
+    using Services.Models.Users;
     using System;
-    using Infrastructure.Extensions;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.EntityFrameworkCore;
 
     public class AdminUserService : IAdminUserService
     {
@@ -19,6 +20,20 @@
         public AdminUserService(StarStuffDbContext db)
         {
             this.db = db;
+        }
+
+        public void Log(string username, LogType logType, string tableName)
+        {
+            Log log = new Log
+            {
+                User = username,
+                LogType = logType,
+                TableName = tableName,
+                TimeStamp = DateTime.UtcNow
+            };
+
+            this.db.Logs.Add(log);
+            this.db.SaveChanges();
         }
 
         public bool AddToRole(int userId, string roleName)
@@ -78,6 +93,14 @@
             return true;
         }
 
+        public int Total(string search)
+        {
+            return this.db
+                .Logs
+                .Where(l => l.User.ToLower().Contains(search.ToLower()))
+                .Count();
+        }
+
         public int Total(string role, string search)
         {
             return this.db
@@ -94,6 +117,18 @@
                 .Where(u => u.Id == id)
                 .ProjectTo<UserRolesServiceModel>()
                 .FirstOrDefault();
+        }
+
+        public IEnumerable<ListLogsServiceModel> Logs(int page, int itemsPerPage, string search)
+        {
+            return this.db
+                .Logs
+                .Where(l => l.User.ToLower().Contains(search.ToLower()))
+                .OrderByDescending(l => l.TimeStamp)
+                .Skip((page - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ProjectTo<ListLogsServiceModel>()
+                .ToList();
         }
 
         public IEnumerable<RoleServiceModel> AllRoles()

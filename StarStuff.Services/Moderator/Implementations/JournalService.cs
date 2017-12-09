@@ -1,9 +1,9 @@
 ﻿namespace StarStuff.Services.Moderator.Implementations
 {
     using AutoMapper.QueryableExtensions;
+    using Data;
+    using Data.Models;
     using Models.Journals;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -14,6 +14,11 @@
         public JournalService(StarStuffDbContext db)
         {
             this.db = db;
+        }
+
+        public bool Exists(string name)
+        {
+            return this.db.Journals.Any(j => j.Name == name);
         }
 
         public int Total()
@@ -49,7 +54,9 @@
         {
             Journal journal = this.db.Journals.Find(id);
 
-            if (journal == null)
+            if (journal == null
+                || (journal.Name != name
+                    && this.db.Journals.Any(j => j.Name == name)))
             {
                 return false;
             }

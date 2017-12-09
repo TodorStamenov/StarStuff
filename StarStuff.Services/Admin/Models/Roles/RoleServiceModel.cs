@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Services.Admin.Models.Roles
 {
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data.Models;
 
     public class RoleServiceModel : IMapFrom<Role>
     {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StarStuff.Web.Models.Manage
+﻿namespace StarStuff.Web.Models.Manage
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class SetPasswordViewModel
     {
         [Required]

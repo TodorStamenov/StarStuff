@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Services.Astronomer.Models.Stars
 {
-    using StarStuff.Data;
+    using Data;
     using System.ComponentModel.DataAnnotations;
 
     public class StarFormServiceModel

@@ -1,11 +1,11 @@
 ﻿namespace StarStuff.Web.Infrastructure.Extensions
 {
+    using Data;
+    using Data.Models;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;

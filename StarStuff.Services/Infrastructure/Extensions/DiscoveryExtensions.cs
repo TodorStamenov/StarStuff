@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Services.Infrastructure.Extensions
 {
-    using StarStuff.Data.Models;
-    using StarStuff.Services.Astronomer.Models.Astronomers;
+    using Astronomer.Models.Astronomers;
+    using Data.Models;
     using System.Linq;
 
     public static class DiscoveryExtensions

@@ -1,11 +1,11 @@
 ﻿namespace StarStuff.Web.Controllers
 {
+    using Data.Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models.Publications;
-    using StarStuff.Data.Models;
-    using StarStuff.Services;
-    using StarStuff.Services.Moderator;
+    using Services;
+    using Services.Moderator;
     using System;
 
     public class PublicationsController : Controller

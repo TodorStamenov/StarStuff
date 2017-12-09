@@ -1,8 +1,8 @@
 ﻿namespace StarStuff.Services.Moderator.Models.Publications
 {
     using AutoMapper;
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data.Models;
 
     public class ListPublicationsServiceModel : IMapFrom<Publication>, ICustomMapping
     {

@@ -1,5 +1,8 @@
 ﻿namespace StarStuff.Web.Areas.Astronomer.Controllers
 {
+    using Data.Models;
+    using Infrastructure;
+    using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Services.Astronomer;
@@ -8,6 +11,8 @@
     public class PlanetsController : BaseAstronomerController
     {
         private const string Discoveries = "Discoveries";
+        private const string Planet = "Planet";
+        private const string Planets = "Planets";
 
         private readonly IPlanetService planetService;
 
@@ -23,14 +28,23 @@
 
         [HttpPost]
         [ValidateModelState]
+        [Log(LogType.Create, Planets)]
         public IActionResult Create(int id, PlanetFormServiceModel model)
         {
+            if (this.planetService.Exists(model.Name))
+            {
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Planet));
+                return View(model);
+            }
+
             bool success = this.planetService.Create(id, model.Name, model.Mass);
 
             if (!success)
             {
                 return BadRequest();
             }
+
+            TempData.AddSuccessMessage("Planet Successfully Created");
 
             return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id });
         }
@@ -49,14 +63,33 @@
 
         [HttpPost]
         [ValidateModelState]
+        [Log(LogType.Edit, Planets)]
         public IActionResult Edit(int id, int discoveryId, PlanetFormServiceModel model)
         {
+            string oldName = this.planetService.GetName(id);
+
+            if (oldName == null)
+            {
+                return BadRequest();
+            }
+
+            string newName = model.Name;
+
+            if (this.planetService.Exists(newName)
+                && oldName != newName)
+            {
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Planet));
+                return View(model);
+            }
+
             bool success = this.planetService.Edit(id, model.Name, model.Mass);
 
             if (!success)
             {
                 return BadRequest();
             }
+
+            TempData.AddSuccessMessage("Planet Successfully Edited");
 
             return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId });
         }
@@ -68,6 +101,7 @@
 
         [HttpPost]
         [ActionName(nameof(Delete))]
+        [Log(LogType.Delete, Planets)]
         public IActionResult DeletePost(int id, int discoveryId)
         {
             bool success = this.planetService.Delete(id);
@@ -76,6 +110,8 @@
             {
                 return BadRequest();
             }
+
+            TempData.AddSuccessMessage("Planet Successfully Deleted");
 
             return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId });
         }

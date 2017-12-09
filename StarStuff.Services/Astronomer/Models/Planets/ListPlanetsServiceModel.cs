@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Services.Astronomer.Models.Planets
 {
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data.Models;
 
     public class ListPlanetsServiceModel : IMapFrom<Planet>
     {

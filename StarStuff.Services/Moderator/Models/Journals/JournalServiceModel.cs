@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Services.Moderator.Models.Journals
 {
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data.Models;
 
     public class JournalServiceModel : IMapFrom<Journal>
     {

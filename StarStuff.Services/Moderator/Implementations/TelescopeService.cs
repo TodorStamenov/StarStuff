@@ -1,9 +1,9 @@
 ﻿namespace StarStuff.Services.Moderator.Implementations
 {
     using AutoMapper.QueryableExtensions;
+    using Data;
+    using Data.Models;
     using Models.Telescopes;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -14,6 +14,11 @@
         public TelescopeService(StarStuffDbContext db)
         {
             this.db = db;
+        }
+
+        public bool Exists(string name)
+        {
+            return this.db.Telescopes.Any(t => t.Name == name);
         }
 
         public int Total()
@@ -62,7 +67,9 @@
         {
             Telescope telescope = this.db.Telescopes.Find(id);
 
-            if (telescope == null)
+            if (telescope == null
+                || (telescope.Name != name
+                    && this.db.Telescopes.Any(t => t.Name == name)))
             {
                 return false;
             }

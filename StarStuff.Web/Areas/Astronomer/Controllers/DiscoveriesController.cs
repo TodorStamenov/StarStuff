@@ -1,12 +1,14 @@
 ﻿namespace StarStuff.Web.Areas.Astronomer.Controllers
 {
     using Data.Models;
+    using Infrastructure;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Discoveries;
+    using Services;
     using Services.Astronomer;
     using Services.Astronomer.Models.Astronomers;
     using Services.Astronomer.Models.Discoveries;
@@ -18,11 +20,14 @@
     public class DiscoveriesController : BaseAstronomerController
     {
         private const int DiscoveriesPerPage = 20;
+        private const string Discoveries = "Discoveries";
+        private const string StarSystem = "Star System";
 
         private readonly IDiscoveryService discoveryService;
         private readonly IPlanetService planetService;
         private readonly IStarService starService;
         private readonly ITelescopeService telescopeService;
+        private readonly IUserService userService;
         private readonly UserManager<User> userManager;
 
         public DiscoveriesController(
@@ -30,12 +35,14 @@
             IPlanetService planetService,
             IStarService starService,
             ITelescopeService telescopeService,
+            IUserService userService,
             UserManager<User> userManager)
         {
             this.discoveryService = discoveryService;
             this.planetService = planetService;
             this.starService = starService;
             this.telescopeService = telescopeService;
+            this.userService = userService;
             this.userManager = userManager;
         }
 
@@ -80,27 +87,45 @@
 
         public IActionResult Create()
         {
+            int userId = int.Parse(this.userManager.GetUserId(User));
+
             DiscoveryFormViewModel model = new DiscoveryFormViewModel
             {
-                Telescopes = this.GetTelescopes()
+                Telescopes = this.GetTelescopes(),
+                Astronomers = this.GetAstronomers(userId)
             };
 
             return View(model);
         }
 
         [HttpPost]
+        [Log(LogType.Create, Discoveries)]
         public IActionResult Create(DiscoveryFormViewModel model)
         {
+            int userId = int.Parse(this.userManager.GetUserId(User));
+
             if (!ModelState.IsValid)
             {
                 model.Telescopes = this.GetTelescopes();
+                model.Astronomers = this.GetAstronomers(userId);
                 return View(model);
             }
 
-            int userId = int.Parse(this.userManager.GetUserId(User));
+            if (this.discoveryService.Exists(model.Discovery.StarSystem))
+            {
+                model.Telescopes = this.GetTelescopes();
+                model.Astronomers = this.GetAstronomers(userId);
 
-            int id = this.discoveryService
-                .Create(model.Discovery.StarSystem, model.TelescopeId, userId);
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, StarSystem));
+
+                return View(model);
+            }
+
+            int id = this.discoveryService.Create(
+                model.Discovery.StarSystem,
+                model.TelescopeId,
+                userId,
+                model.AstronomerIds);
 
             if (id <= 0)
             {
@@ -126,8 +151,25 @@
 
         [HttpPost]
         [ValidateModelState]
+        [Log(LogType.Edit, Discoveries)]
         public IActionResult Edit(int id, DiscoveryFormServiceModel model)
         {
+            string oldName = this.discoveryService.GetName(id);
+
+            if (oldName == null)
+            {
+                return BadRequest();
+            }
+
+            string newName = model.StarSystem;
+
+            if (this.discoveryService.Exists(newName)
+                && oldName != newName)
+            {
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, StarSystem));
+                return View(model);
+            }
+
             bool success = this.discoveryService.Edit(id, model.StarSystem);
 
             if (!success)
@@ -147,6 +189,7 @@
 
         [HttpPost]
         [ActionName(nameof(Delete))]
+        [Log(LogType.Delete, Discoveries)]
         public IActionResult DeletePost(int id)
         {
             bool success = this.discoveryService.Delete(id);
@@ -217,6 +260,17 @@
         private int GetTotalPages(int totalEntries)
         {
             return (int)Math.Ceiling(totalEntries / (double)DiscoveriesPerPage);
+        }
+
+        private IEnumerable<SelectListItem> GetAstronomers(int astronomerId)
+        {
+            return this.userService
+                .Astronomers(astronomerId)
+                .Select(a => new SelectListItem
+                {
+                    Text = $"{a.FirstName} {a.LastName}",
+                    Value = a.Id.ToString()
+                });
         }
 
         private IEnumerable<SelectListItem> GetTelescopes()

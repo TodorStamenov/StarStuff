@@ -1,14 +1,17 @@
 ﻿namespace StarStuff.Web.Areas.Moderator.Controllers
 {
+    using Data.Models;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using StarStuff.Data.Models;
-    using StarStuff.Services.Models.Users;
-    using StarStuff.Services.Moderator;
+    using Services.Models.Users;
+    using Services.Moderator;
     using System.Collections.Generic;
 
     public class AstronomersController : BaseModeratorController
     {
+        private const string Users = "Users";
+
         private readonly IModeratorUserService userService;
         private readonly UserManager<User> userManager;
 
@@ -27,6 +30,7 @@
         }
 
         [HttpPost]
+        [Log(LogType.Approve, Users)]
         public IActionResult Approve(int id)
         {
             this.userService.Approve(id);
@@ -35,6 +39,7 @@
         }
 
         [HttpPost]
+        [Log(LogType.Deny, Users)]
         public IActionResult Deny(int id)
         {
             this.userService.Deny(id);

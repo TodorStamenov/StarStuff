@@ -16,9 +16,15 @@
             this.db = db;
         }
 
+        public bool Exists(string name)
+        {
+            return this.db.Stars.Any(s => s.Name == name);
+        }
+
         public bool Create(int discoveryId, string name, int temperature)
         {
-            if (!this.db.Discoveries.Any(d => d.Id == discoveryId))
+            if (!this.db.Discoveries.Any(d => d.Id == discoveryId)
+                || this.db.Stars.Any(s => s.Name == name))
             {
                 return false;
             }
@@ -40,7 +46,9 @@
         {
             Star star = this.db.Stars.Find(id);
 
-            if (star == null)
+            if (star == null
+                || (star.Name != name
+                    && this.db.Stars.Any(s => s.Name == name)))
             {
                 return false;
             }
@@ -66,6 +74,15 @@
             this.db.SaveChanges();
 
             return true;
+        }
+
+        public string GetName(int id)
+        {
+            return this.db
+                .Stars
+                .Where(s => s.Id == id)
+                .Select(s => s.Name)
+                .FirstOrDefault();
         }
 
         public StarFormServiceModel GetForm(int id)

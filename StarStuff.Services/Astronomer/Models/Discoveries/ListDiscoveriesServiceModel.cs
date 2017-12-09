@@ -1,8 +1,8 @@
 ﻿namespace StarStuff.Services.Astronomer.Models.Discoveries
 {
     using AutoMapper;
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data.Models;
     using System;
 
     public class ListDiscoveriesServiceModel : DiscoveryServiceModel, ICustomMapping

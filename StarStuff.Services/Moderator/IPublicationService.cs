@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Services.Moderator
 {
-    using Moderator.Models.Publications;
+    using Models.Publications;
     using System.Collections.Generic;
 
     public interface IPublicationService

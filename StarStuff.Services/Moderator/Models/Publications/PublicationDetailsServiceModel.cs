@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Services.Moderator.Models.Publications
 {
     using AutoMapper;
-    using StarStuff.Data.Models;
+    using Data.Models;
     using System;
 
     public class PublicationDetailsServiceModel : ListPublicationsServiceModel

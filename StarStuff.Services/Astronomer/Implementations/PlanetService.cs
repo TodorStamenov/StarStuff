@@ -16,9 +16,15 @@
             this.db = db;
         }
 
+        public bool Exists(string name)
+        {
+            return this.db.Planets.Any(p => p.Name == name);
+        }
+
         public bool Create(int discoveryId, string name, double mass)
         {
-            if (!this.db.Discoveries.Any(d => d.Id == discoveryId))
+            if (!this.db.Discoveries.Any(d => d.Id == discoveryId)
+                || this.db.Planets.Any(p => p.Name == name))
             {
                 return false;
             }
@@ -40,7 +46,9 @@
         {
             Planet planet = this.db.Planets.Find(id);
 
-            if (planet == null)
+            if (planet == null
+                || (planet.Name != name
+                    && this.db.Planets.Any(p => p.Name == name)))
             {
                 return false;
             }
@@ -66,6 +74,15 @@
             this.db.SaveChanges();
 
             return true;
+        }
+
+        public string GetName(int id)
+        {
+            return this.db
+                .Planets
+                .Where(p => p.Id == id)
+                .Select(p => p.Name)
+                .FirstOrDefault();
         }
 
         public PlanetFormServiceModel GetForm(int id)

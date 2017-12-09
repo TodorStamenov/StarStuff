@@ -1,5 +1,3 @@
-using System;
-
 namespace StarStuff.Web.Models
 {
     public class ErrorViewModel

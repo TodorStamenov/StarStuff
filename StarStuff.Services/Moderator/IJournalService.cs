@@ -5,6 +5,8 @@
 
     public interface IJournalService
     {
+        bool Exists(string name);
+
         int Total();
 
         int Create(

@@ -1,13 +1,14 @@
 ﻿namespace StarStuff.Web.Areas.Moderator.Controllers
 {
-    using Areas.Moderator.Models.Publications;
+    using Data.Models;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using StarStuff.Services.Astronomer;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Publications;
+    using Models.Publications;
+    using Services.Astronomer;
+    using Services.Moderator;
+    using Services.Moderator.Models.Publications;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -41,6 +42,7 @@
         }
 
         [HttpPost]
+        [Log(LogType.Create, Publications)]
         public IActionResult Create(int id, PublicationFormViewModel model)
         {
             if (!ModelState.IsValid)
@@ -78,6 +80,7 @@
 
         [HttpPost]
         [ValidateModelState]
+        [Log(LogType.Edit, Publications)]
         public IActionResult Edit(int id, PublicationFormServiceModel model)
         {
             bool success = this.publicationService.Edit(

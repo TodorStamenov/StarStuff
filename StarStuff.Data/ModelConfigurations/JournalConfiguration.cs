@@ -12,6 +12,10 @@
                 .HasMany(j => j.Publications)
                 .WithOne(p => p.Journal)
                 .HasForeignKey(p => p.JournalId);
+
+            builder
+                .HasIndex(j => j.Name)
+                .IsUnique(true);
         }
     }
 }

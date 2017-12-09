@@ -1,13 +1,16 @@
 ﻿namespace StarStuff.Web.Areas.Moderator.Controllers
 {
+    using Data.Models;
+    using Infrastructure;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Journals;
+    using Services.Moderator;
+    using Services.Moderator.Models.Journals;
 
     public class JournalsController : BaseModeratorController
     {
+        private const string Journal = "Journal";
         private const string Journals = "Journals";
         private const string Details = "Details";
 
@@ -25,8 +28,15 @@
 
         [HttpPost]
         [ValidateModelState]
+        [Log(LogType.Create, Journals)]
         public IActionResult Create(JournalFormServiceModel model)
         {
+            if (this.journalService.Exists(model.Name))
+            {
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Journal));
+                return View(model);
+            }
+
             int id = this.journalService.Create(
                 model.Name,
                 model.Description,
@@ -51,8 +61,25 @@
 
         [HttpPost]
         [ValidateModelState]
+        [Log(LogType.Edit, Journals)]
         public IActionResult Edit(int id, JournalFormServiceModel model)
         {
+            string oldName = this.journalService.GetName(id);
+
+            if (oldName == null)
+            {
+                return BadRequest();
+            }
+
+            string newName = model.Name;
+
+            if (this.journalService.Exists(newName)
+                && oldName != newName)
+            {
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Journal));
+                return View(model);
+            }
+
             bool success = this.journalService.Edit(
                 id,
                 model.Name,

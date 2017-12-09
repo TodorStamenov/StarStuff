@@ -1,11 +1,11 @@
 ﻿namespace StarStuff.Services.Astronomer.Implementations
 {
     using AutoMapper.QueryableExtensions;
+    using Data;
+    using Data.Models;
     using Infrastructure.Extensions;
     using Models.Astronomers;
     using Models.Discoveries;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -17,6 +17,11 @@
         public DiscoveryService(StarStuffDbContext db)
         {
             this.db = db;
+        }
+
+        public bool Exists(string starSystem)
+        {
+            return this.db.Discoveries.Any(d => d.StarSystem == starSystem);
         }
 
         public int Total(bool? confirmed)
@@ -48,13 +53,22 @@
                 .Find<Observers>(observerId, discoveryId) != null;
         }
 
-        public int Create(string starSystem, int telescopeId, int astronomerId)
+        public int Create(string starSystem, int telescopeId, int astronomerId, IEnumerable<int> astronomerIds)
         {
-            if (!this.db.Telescopes.Any(t => t.Id == telescopeId)
-                || this.db.Discoveries.Any(d => d.StarSystem == starSystem))
+            if (this.db.Discoveries.Any(d => d.StarSystem == starSystem)
+                || !this.db.Telescopes.Any(t => t.Id == telescopeId))
             {
                 return -1;
             }
+
+            List<int> pioneerIds = new List<int>();
+
+            if (astronomerIds != null)
+            {
+                pioneerIds.AddRange(astronomerIds);
+            }
+
+            pioneerIds.Add(astronomerId);
 
             Discovery discovery = new Discovery
             {
@@ -63,12 +77,13 @@
                 TelescopeId = telescopeId
             };
 
-            Pioneers pioneer = new Pioneers
+            foreach (var pioneerId in pioneerIds.Distinct())
             {
-                PioneerId = astronomerId
-            };
-
-            discovery.Pioneers.Add(pioneer);
+                discovery.Pioneers.Add(new Pioneers
+                {
+                    PioneerId = pioneerId
+                });
+            }
 
             this.db.Discoveries.Add(discovery);
             this.db.SaveChanges();
@@ -81,7 +96,8 @@
             Discovery discovery = this.db.Discoveries.Find(id);
 
             if (discovery == null
-                || this.db.Discoveries.Any(d => d.StarSystem == starSystem))
+                || (discovery.StarSystem != starSystem
+                    && this.db.Discoveries.Any(d => d.StarSystem == starSystem)))
             {
                 return false;
             }
@@ -151,6 +167,15 @@
             this.db.SaveChanges();
 
             return true;
+        }
+
+        public string GetName(int id)
+        {
+            return this.db
+                .Discoveries
+                .Where(d => d.Id == id)
+                .Select(d => d.StarSystem)
+                .FirstOrDefault();
         }
 
         public DiscoveryDetailsServiceModel Details(int id)

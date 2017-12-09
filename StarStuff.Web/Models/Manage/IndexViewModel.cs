@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Models.Manage
 {
+    using Data;
     using Microsoft.AspNetCore.Http;
-    using StarStuff.Data;
     using System;
     using System.ComponentModel.DataAnnotations;
 

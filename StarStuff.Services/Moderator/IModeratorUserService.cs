@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Services.Moderator
 {
-    using StarStuff.Services.Models.Users;
+    using Services.Models.Users;
     using System.Collections.Generic;
 
     public interface IModeratorUserService

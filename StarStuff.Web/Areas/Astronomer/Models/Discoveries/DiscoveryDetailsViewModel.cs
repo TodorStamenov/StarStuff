@@ -1,9 +1,9 @@
 ﻿namespace StarStuff.Web.Areas.Astronomer.Models.Discoveries
 {
-    using StarStuff.Services.Astronomer.Models.Astronomers;
-    using StarStuff.Services.Astronomer.Models.Discoveries;
-    using StarStuff.Services.Astronomer.Models.Planets;
-    using StarStuff.Services.Astronomer.Models.Stars;
+    using Services.Astronomer.Models.Astronomers;
+    using Services.Astronomer.Models.Discoveries;
+    using Services.Astronomer.Models.Planets;
+    using Services.Astronomer.Models.Stars;
     using System.Collections.Generic;
 
     public class DiscoveryDetailsViewModel

@@ -1,4 +1,4 @@
-﻿namespace StarStuff.Services.Models.Users
+﻿namespace StarStuff.Services.Models.Astronomers
 {
     using AutoMapper;
     using Common.Mapping;

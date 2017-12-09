@@ -1,10 +1,10 @@
 ﻿namespace StarStuff.Services.Admin.Models.Users
 {
     using AutoMapper;
+    using Common.Mapping;
+    using Data.Models;
     using Infrastructure;
     using Roles;
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;

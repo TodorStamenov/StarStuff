@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Infrastructure.Mapping
 {
     using AutoMapper;
-    using StarStuff.Common.Mapping;
+    using Common.Mapping;
     using System;
     using System.Collections.Generic;
     using System.Linq;

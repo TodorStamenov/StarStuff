@@ -2,8 +2,8 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Models.Telescopes;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Telescopes;
+    using Services.Moderator;
+    using Services.Moderator.Models.Telescopes;
     using System;
 
     public class TelescopesController : Controller

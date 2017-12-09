@@ -1,9 +1,9 @@
 ﻿namespace StarStuff.Services.Moderator.Implementations
 {
     using AutoMapper.QueryableExtensions;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
-    using StarStuff.Services.Models.Users;
+    using Data;
+    using Data.Models;
+    using Services.Models.Users;
     using System.Collections.Generic;
     using System.Linq;
 

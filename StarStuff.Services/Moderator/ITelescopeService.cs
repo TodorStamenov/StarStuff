@@ -5,6 +5,8 @@
 
     public interface ITelescopeService
     {
+        bool Exists(string name);
+
         int Total();
 
         string GetName(int telescopeId);
@@ -28,7 +30,8 @@
 
         TelescopeDetailsServiceModel Details(int id);
 
-        IEnumerable<ListTelescopesServiceModel> All(int page, int pageSize);
         IEnumerable<TelescopeServiceModel> TelescopeDropdown();
+
+        IEnumerable<ListTelescopesServiceModel> All(int page, int pageSize);
     }
 }

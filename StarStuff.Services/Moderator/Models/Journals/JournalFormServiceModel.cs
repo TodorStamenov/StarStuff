@@ -1,8 +1,8 @@
 ﻿namespace StarStuff.Services.Moderator.Models.Journals
 {
-    using StarStuff.Common.Mapping;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
+    using Common.Mapping;
+    using Data;
+    using Data.Models;
     using System.ComponentModel.DataAnnotations;
 
     public class JournalFormServiceModel : IMapFrom<Journal>

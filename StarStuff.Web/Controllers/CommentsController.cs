@@ -1,14 +1,14 @@
 ﻿namespace StarStuff.Web.Controllers
 {
+    using Data.Models;
     using Infrastructure;
+    using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using StarStuff.Data.Models;
-    using StarStuff.Services;
-    using StarStuff.Services.Models.Comments;
-    using StarStuff.Web.Infrastructure.Extensions;
+    using Services;
+    using Services.Models.Comments;
 
     [Authorize]
     public class CommentsController : Controller

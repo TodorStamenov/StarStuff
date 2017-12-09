@@ -1,4 +1,4 @@
-﻿namespace StarStuff.Web.Models
+﻿namespace StarStuff.Web.Infrastructure
 {
     public class BasePageViewModel
     {

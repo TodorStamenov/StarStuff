@@ -1,11 +1,12 @@
 ﻿namespace StarStuff.Web.Areas.Admin.Controllers
 {
-    using Areas.Admin.Models;
+    using Models.Logs;
+    using Models.Users;
     using Infrastructure;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using StarStuff.Services.Admin;
+    using Services.Admin;
     using System;
 
     [Area("Admin")]
@@ -13,6 +14,7 @@
     public class UsersController : Controller
     {
         private const int UsersPerPage = 10;
+        private const int LogsPerPage = 10;
 
         private readonly IAdminUserService userService;
 
@@ -62,6 +64,28 @@
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }
 
+        public IActionResult Logs(int page, string search)
+        {
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            search = search ?? string.Empty;
+
+            int totalLogs = this.userService.Total(search);
+
+            ListLogsViewModel model = new ListLogsViewModel
+            {
+                Search = search,
+                CurrentPage = page,
+                TotalPages = this.GetToltalPages(totalLogs),
+                Logs = this.userService.Logs(page, LogsPerPage, search),
+            };
+
+            return View(model);
+        }
+
         public IActionResult All(int page, string role, string search)
         {
             if (page < 1)
@@ -69,19 +93,24 @@
                 page = 1;
             }
 
-            int pages = (int)Math.Ceiling(this.userService.Total(role, search) / (double)UsersPerPage);
+            int totalUsers = this.userService.Total(role, search);
 
             ListUsersViewModel model = new ListUsersViewModel
             {
                 Search = search,
                 CurrentPage = page,
                 UserRole = role,
-                TotalPages = pages,
+                TotalPages = this.GetToltalPages(totalUsers),
                 Users = this.userService.All(page, role, search, UsersPerPage),
                 Roles = this.userService.AllRoles(),
             };
 
             return View(model);
+        }
+
+        private int GetToltalPages(int totalEntries)
+        {
+            return (int)Math.Ceiling(totalEntries / (double)UsersPerPage);
         }
     }
 }

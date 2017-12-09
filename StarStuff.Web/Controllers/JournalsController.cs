@@ -2,8 +2,8 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using Models.Journals;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Journals;
+    using Services.Moderator;
+    using Services.Moderator.Models.Journals;
     using System;
 
     public class JournalsController : Controller

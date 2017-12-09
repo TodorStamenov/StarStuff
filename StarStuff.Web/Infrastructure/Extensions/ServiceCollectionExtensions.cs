@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Infrastructure.Extensions
 {
-    using StarStuff.Services;
     using Microsoft.Extensions.DependencyInjection;
+    using Services;
     using System.Linq;
     using System.Reflection;
 

@@ -1,6 +1,7 @@
 ﻿namespace StarStuff.Web.Models.Telescopes
 {
-    using StarStuff.Services.Moderator.Models.Telescopes;
+    using Infrastructure;
+    using Services.Moderator.Models.Telescopes;
     using System.Collections.Generic;
 
     public class ListTelescopesViewModel : BasePageViewModel

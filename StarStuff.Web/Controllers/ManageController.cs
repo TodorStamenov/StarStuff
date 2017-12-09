@@ -1,16 +1,16 @@
 ﻿namespace StarStuff.Web.Controllers
 {
+    using Data;
+    using Data.Models;
+    using Infrastructure;
+    using Infrastructure.Extensions;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using StarStuff.Data;
-    using StarStuff.Data.Models;
-    using StarStuff.Services;
-    using StarStuff.Web.Infrastructure;
-    using StarStuff.Web.Infrastructure.Extensions;
-    using StarStuff.Web.Infrastructure.Filters;
-    using StarStuff.Web.Models.Manage;
+    using Models.Manage;
+    using Services;
     using System;
     using System.Text;
     using System.Threading.Tasks;
