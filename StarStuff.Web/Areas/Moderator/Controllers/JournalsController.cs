@@ -42,6 +42,11 @@
                 model.Description,
                 model.ImageUrl);
 
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
             TempData.AddSuccessMessage("Journal Successfully Added");
 
             return RedirectToAction(Details, Journals, new { area = string.Empty, id });

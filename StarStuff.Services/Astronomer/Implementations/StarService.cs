@@ -3,6 +3,7 @@
     using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Models;
+    using Infrastructure;
     using Models.Stars;
     using System.Collections.Generic;
     using System.Linq;
@@ -25,6 +26,17 @@
         {
             if (!this.db.Discoveries.Any(d => d.Id == discoveryId)
                 || this.db.Stars.Any(s => s.Name == name))
+            {
+                return false;
+            }
+
+            int discoveryStars = this.db
+                .Discoveries
+                .Where(d => d.Id == discoveryId)
+                .Select(d => d.Stars.Count)
+                .FirstOrDefault();
+
+            if (discoveryStars >= ServiceConstants.MaxStarsPerDiscovery)
             {
                 return false;
             }

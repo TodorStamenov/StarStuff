@@ -6,9 +6,7 @@
         <div class="panel-heading">
             <h3 class="panel-title">
                 <a asp-area="" asp-controller="Publications" asp-action="Details" asp-route-id="@publication.Id">@publication.StarSystemName</a>
-                By
-                <a asp-area="" asp-controller="Journals" asp-action="Details" asp-route-id="@publication.JournalId">@publication.JournalName</a>
-                Journal
+                Star System
                 @if (User.IsInRole(WebConstants.ModeratorRole))
                 {
                     <a asp-area="Moderator" asp-controller="Publications" asp-action="Edit" asp-route-id="@publication.Id" class="btn btn-warning btn-xs pull-right">Edit</a>

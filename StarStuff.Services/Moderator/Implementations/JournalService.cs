@@ -37,6 +37,11 @@
 
         public int Create(string name, string description, string imageUrl)
         {
+            if (this.db.Journals.Any(j => j.Name == name))
+            {
+                return -1;
+            }
+
             Journal journal = new Journal
             {
                 Name = name,

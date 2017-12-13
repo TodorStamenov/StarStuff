@@ -4,6 +4,8 @@
 
     public class WebConstants
     {
+        public const int MaxStarsPerDiscovery = 3;
+
         public const string AdminRole = "Administrator";
         public const string ModeratorRole = "Moderator";
         public const string AstronomerRole = "Astronomer";

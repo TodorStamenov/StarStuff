@@ -12,6 +12,8 @@
 
         bool IsObserver(int discoveryId, int observerId);
 
+        int TotalStars(int discoveryId);
+
         int Total(bool? confirmed);
 
         int Total(bool? confirmed, AstronomerType astronomerType, int astronomerId);

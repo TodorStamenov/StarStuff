@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarStuff.Web", "StarStuff.Web\StarStuff.Web.csproj", "{CC388506-9766-4C91-9022-F11FA8BAE73A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarStuff.Web", "StarStuff.Web\StarStuff.Web.csproj", "{CC388506-9766-4C91-9022-F11FA8BAE73A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarStuff.Data", "StarStuff.Data\StarStuff.Data.csproj", "{0DAB6619-6467-45B5-A5FE-E9A1F967E8D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarStuff.Data", "StarStuff.Data\StarStuff.Data.csproj", "{0DAB6619-6467-45B5-A5FE-E9A1F967E8D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarStuff.Services", "StarStuff.Services\StarStuff.Services.csproj", "{D8FD6C58-C40A-4AD7-A978-3E03ECB3A7D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarStuff.Services", "StarStuff.Services\StarStuff.Services.csproj", "{D8FD6C58-C40A-4AD7-A978-3E03ECB3A7D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarStuff.Common", "StarStuffCommon\StarStuff.Common.csproj", "{5FCE38EB-4D2E-4753-89C3-B8F371C2EB80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarStuff.Common", "StarStuffCommon\StarStuff.Common.csproj", "{5FCE38EB-4D2E-4753-89C3-B8F371C2EB80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarStuff.Test", "StarStuff.Test\StarStuff.Test.csproj", "{7C7A5DDE-BEB4-4572-B39F-0FB56276E847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5FCE38EB-4D2E-4753-89C3-B8F371C2EB80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FCE38EB-4D2E-4753-89C3-B8F371C2EB80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FCE38EB-4D2E-4753-89C3-B8F371C2EB80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C7A5DDE-BEB4-4572-B39F-0FB56276E847}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C7A5DDE-BEB4-4572-B39F-0FB56276E847}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C7A5DDE-BEB4-4572-B39F-0FB56276E847}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C7A5DDE-BEB4-4572-B39F-0FB56276E847}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

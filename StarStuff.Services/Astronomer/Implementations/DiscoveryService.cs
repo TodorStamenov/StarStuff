@@ -6,6 +6,7 @@
     using Infrastructure.Extensions;
     using Models.Astronomers;
     using Models.Discoveries;
+    using StarStuff.Services.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -51,6 +52,15 @@
         {
             return this.db
                 .Find<Observers>(observerId, discoveryId) != null;
+        }
+
+        public int TotalStars(int discoveryId)
+        {
+            return this.db
+                .Discoveries
+                .FirstOrDefault(d => d.Id == discoveryId)
+                .Stars
+                .Count;
         }
 
         public int Create(string starSystem, int telescopeId, int astronomerId, IEnumerable<int> astronomerIds)

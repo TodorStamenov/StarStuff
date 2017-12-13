@@ -4,6 +4,7 @@
     using Data;
     using Data.Models;
     using Models.Publications;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -61,7 +62,8 @@
             {
                 Content = content,
                 JournalId = journalId,
-                DiscoveryId = discoveryId
+                DiscoveryId = discoveryId,
+                ReleaseDate = DateTime.UtcNow.Date
             };
 
             this.db.Publications.Add(publication);

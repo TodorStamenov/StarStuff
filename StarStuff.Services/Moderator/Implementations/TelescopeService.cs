@@ -42,6 +42,11 @@
             double mirrorDiameter,
             string imageUrl)
         {
+            if (this.db.Telescopes.Any(t => t.Name == name))
+            {
+                return -1;
+            }
+
             Telescope telescope = new Telescope
             {
                 Name = name,

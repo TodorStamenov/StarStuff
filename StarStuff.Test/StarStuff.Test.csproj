@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Web\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StarStuff.Data\StarStuff.Data.csproj" />
+    <ProjectReference Include="..\StarStuff.Services\StarStuff.Services.csproj" />
+    <ProjectReference Include="..\StarStuff.Web\StarStuff.Web.csproj" />
+    <ProjectReference Include="..\StarStuffCommon\StarStuff.Common.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -15,10 +15,12 @@
         private const string Stars = "Stars";
 
         private readonly IStarService starService;
+        private readonly IDiscoveryService discoveryService;
 
-        public StarsController(IStarService starService)
+        public StarsController(IStarService starService, IDiscoveryService discoveryService)
         {
             this.starService = starService;
+            this.discoveryService = discoveryService;
         }
 
         public IActionResult Create()
@@ -34,6 +36,12 @@
             if (this.starService.Exists(model.Name))
             {
                 TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Star));
+                return View(model);
+            }
+
+            if (this.discoveryService.TotalStars(id) >= WebConstants.MaxStarsPerDiscovery)
+            {
+                TempData.AddErrorMessage($"Maximum allowed Stars count per Discovery is {WebConstants.MaxStarsPerDiscovery}");
                 return View(model);
             }
 

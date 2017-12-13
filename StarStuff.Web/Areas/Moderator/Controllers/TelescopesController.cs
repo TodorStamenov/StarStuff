@@ -44,6 +44,11 @@
                 model.MirrorDiameter,
                 model.ImageUrl);
 
+            if (id <= 0)
+            {
+                return BadRequest();
+            }
+
             TempData.AddSuccessMessage("Telescope Successfully Added");
 
             return RedirectToAction(Details, Telescopes, new { area = string.Empty, id });

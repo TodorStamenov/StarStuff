@@ -247,7 +247,7 @@
                 };
 
                 int planetsCount = random.Next(0, 10);
-                int starsCount = random.Next(1, 3);
+                int starsCount = random.Next(1, 4);
                 int discoverersCount = random.Next(1, 6);
                 int observersCount = random.Next(0, 4);
 

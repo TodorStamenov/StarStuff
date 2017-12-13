@@ -1,17 +1,36 @@
 ﻿namespace StarStuff.Services.Moderator.Models.Publications
 {
     using AutoMapper;
+    using Common.Mapping;
     using Data.Models;
     using System;
 
-    public class PublicationDetailsServiceModel : ListPublicationsServiceModel
+    public class PublicationDetailsServiceModel : IMapFrom<Publication>, ICustomMapping
     {
+        public int Id { get; set; }
+
+        public string StarSystemName { get; set; }
+
+        public string Content { get; set; }
+
+        public int TelescopeId { get; set; }
+
+        public string TelescopeName { get; set; }
+
+        public int JournalId { get; set; }
+
+        public string JournalName { get; set; }
+
+        public int CommentsCount { get; set; }
+
         public DateTime ReleaseDate { get; set; }
 
-        public override void ConfigureMapping(Profile mapper)
+        public void ConfigureMapping(Profile mapper)
         {
             mapper.CreateMap<Publication, PublicationDetailsServiceModel>()
                 .ForMember(p => p.StarSystemName, cfg => cfg.MapFrom(p => p.Discovery.StarSystem))
+                .ForMember(p => p.TelescopeName, cfg => cfg.MapFrom(p => p.Discovery.Telescope.Name))
+                .ForMember(p => p.TelescopeId, cfg => cfg.MapFrom(p => p.Discovery.TelescopeId))
                 .ForMember(p => p.CommentsCount, cfg => cfg.MapFrom(p => p.Comments.Count))
                 .ForMember(p => p.JournalName, cfg => cfg.MapFrom(p => p.Journal.Name));
         }
