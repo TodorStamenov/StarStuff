@@ -36,7 +36,7 @@
                 .Select(d => d.Stars.Count)
                 .FirstOrDefault();
 
-            if (discoveryStars >= ServiceConstants.MaxStarsPerDiscovery)
+            if (discoveryStars >= DataConstants.DiscoveryConstants.MaxStarsPerDiscovery)
             {
                 return false;
             }

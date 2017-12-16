@@ -10,7 +10,6 @@
 
     public class TelescopesController : BaseModeratorController
     {
-        private const string Details = "Details";
         private const string Telescope = "Telescope";
         private const string Telescopes = "Telescopes";
 
@@ -49,7 +48,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Telescope Successfully Added");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Telescope, WebConstants.Added));
 
             return RedirectToAction(Details, Telescopes, new { area = string.Empty, id });
         }
@@ -100,7 +99,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Telescope Successfully Edited");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Telescope, WebConstants.Edited));
 
             return RedirectToAction(Details, Telescopes, new { area = string.Empty, id });
         }

@@ -25,7 +25,10 @@
 
         public static class DiscoveryConstants
         {
+            public const int MaxStarsPerDiscovery = 3;
             public const int StarSystemMaxLength = 255;
+
+            public const string MaxStarsPerDiscoveryErrorMessage = "Maximum allowed Stars count per Discovery is {0}";
         }
 
         public static class PlanetConstants

@@ -8,7 +8,7 @@
     using System.Linq;
     using Xunit;
 
-    public class StarServiceTest : BaseTest
+    public class StarServiceTest : BaseServiceTest
     {
         [Fact]
         public void Exists_WithExistingName_ShouldReturnTrue()

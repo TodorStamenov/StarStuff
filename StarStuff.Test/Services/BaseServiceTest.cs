@@ -1,12 +1,12 @@
-﻿namespace StarStuff.Test
+﻿namespace StarStuff.Test.Services
 {
     using Microsoft.EntityFrameworkCore;
     using StarStuff.Data;
     using System;
 
-    public abstract class BaseTest
+    public abstract class BaseServiceTest
     {
-        protected BaseTest()
+        protected BaseServiceTest()
         {
             TestStartup.Initialize();
         }
@@ -16,8 +16,8 @@
             get
             {
                 DbContextOptions<StarStuffDbContext> options = new DbContextOptionsBuilder<StarStuffDbContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .Options;
+                   .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                   .Options;
 
                 return new StarStuffDbContext(options);
             }

@@ -10,7 +10,6 @@
 
     public class PlanetsController : BaseAstronomerController
     {
-        private const string Discoveries = "Discoveries";
         private const string Planet = "Planet";
         private const string Planets = "Planets";
 
@@ -44,9 +43,9 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Planet Successfully Created");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Planet, WebConstants.Added));
 
-            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id });
+            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id, area = WebConstants.AstronomerArea });
         }
 
         public IActionResult Edit(int id, int discoveryId)
@@ -89,9 +88,9 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Planet Successfully Edited");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Planet, WebConstants.Edited));
 
-            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId });
+            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId, area = WebConstants.AstronomerArea });
         }
 
         public IActionResult Delete(int id, int discoveryId)
@@ -111,9 +110,9 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Planet Successfully Deleted");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Planet, WebConstants.Deleted));
 
-            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId });
+            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId, area = WebConstants.AstronomerArea });
         }
     }
 }

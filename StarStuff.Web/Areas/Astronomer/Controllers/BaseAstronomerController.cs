@@ -4,9 +4,10 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Astronomer")]
+    [Area(WebConstants.AstronomerArea)]
     [Authorize(Roles = WebConstants.AstronomerRole)]
     public class BaseAstronomerController : Controller
     {
+        protected const string Discoveries = "Discoveries";
     }
 }

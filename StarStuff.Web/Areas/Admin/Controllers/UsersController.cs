@@ -9,7 +9,7 @@
     using Services.Admin;
     using System;
 
-    [Area("Admin")]
+    [Area(WebConstants.AdminArea)]
     [Authorize(Roles = WebConstants.AdminRole)]
     public class UsersController : Controller
     {

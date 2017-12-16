@@ -20,7 +20,7 @@
     public class DiscoveriesController : BaseAstronomerController
     {
         private const int DiscoveriesPerPage = 20;
-        private const string Discoveries = "Discoveries";
+        private const string Discovery = "Discovery";
         private const string StarSystem = "Star System";
 
         private readonly IDiscoveryService discoveryService;
@@ -132,7 +132,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Discovery Successfully Added");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Discovery, WebConstants.Added));
 
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -177,7 +177,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Discovery Successfully Edited");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Discovery, WebConstants.Edited));
 
             return RedirectToAction(nameof(Details), new { id });
         }
@@ -199,7 +199,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Discovery Successfully Deleted");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Discovery, WebConstants.Deleted));
 
             return RedirectToAction(nameof(All));
         }

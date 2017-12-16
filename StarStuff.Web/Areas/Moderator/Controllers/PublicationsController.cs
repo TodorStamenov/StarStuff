@@ -9,13 +9,14 @@
     using Services.Astronomer;
     using Services.Moderator;
     using Services.Moderator.Models.Publications;
+    using StarStuff.Web.Infrastructure;
     using System.Collections.Generic;
     using System.Linq;
 
     public class PublicationsController : BaseModeratorController
     {
+        private const string Publication = "Publication";
         private const string Publications = "Publications";
-        private const string Details = "Details";
 
         private readonly IPublicationService publicationService;
         private readonly IDiscoveryService discoveryService;
@@ -61,7 +62,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Publication Successfully Added");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Publication, WebConstants.Added));
 
             return RedirectToAction(Details, Publications, new { id = publicationId, area = string.Empty });
         }
@@ -92,7 +93,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Publication Successfully Edited");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Publication, WebConstants.Edited));
 
             return RedirectToAction(Details, Publications, new { id, area = string.Empty });
         }

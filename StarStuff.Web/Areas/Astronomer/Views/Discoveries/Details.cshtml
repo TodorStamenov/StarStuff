@@ -58,7 +58,7 @@
                 }
             </tbody>
         </table>
-        @if (Model.IsPioneer && Model.Stars.Count() < WebConstants.MaxStarsPerDiscovery)
+        @if (Model.IsPioneer && Model.Stars.Count() < DataConstants.DiscoveryConstants.MaxStarsPerDiscovery)
         {
             <a class="btn btn-success btn-sm" asp-area="Astronomer" asp-controller="Stars" asp-action="Create" asp-route-id="@Model.Discovery.Id">Add Star</a>
         }

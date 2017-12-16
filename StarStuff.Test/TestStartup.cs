@@ -5,14 +5,18 @@
 
     public class TestStartup
     {
+        private static object sync = new object();
         private static bool testsInitialized = false;
 
         public static void Initialize()
         {
-            if (!testsInitialized)
+            lock (sync)
             {
-                Mapper.Initialize(config => config.AddProfile<AutoMapperProfile>());
-                testsInitialized = true;
+                if (!testsInitialized)
+                {
+                    Mapper.Initialize(config => config.AddProfile<AutoMapperProfile>());
+                    testsInitialized = true;
+                }
             }
         }
     }

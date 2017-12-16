@@ -8,7 +8,7 @@
     using System.Linq;
     using Xunit;
 
-    public class TelescopeServiceTest : BaseTest
+    public class TelescopeServiceTest : BaseServiceTest
     {
         [Fact]
         public void Exists_WithExistingName_ShouldReturnTrue()

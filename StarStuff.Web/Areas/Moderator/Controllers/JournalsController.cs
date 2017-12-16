@@ -12,7 +12,6 @@
     {
         private const string Journal = "Journal";
         private const string Journals = "Journals";
-        private const string Details = "Details";
 
         private readonly IJournalService journalService;
 
@@ -47,7 +46,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Journal Successfully Added");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Journal, WebConstants.Added));
 
             return RedirectToAction(Details, Journals, new { area = string.Empty, id });
         }
@@ -96,7 +95,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Journal Successfully Edited");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Journal, WebConstants.Edited));
 
             return RedirectToAction(Details, Journals, new { area = string.Empty, id });
         }

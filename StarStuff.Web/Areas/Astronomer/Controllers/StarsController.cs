@@ -1,5 +1,6 @@
 ﻿namespace StarStuff.Web.Areas.Astronomer.Controllers
 {
+    using Data;
     using Data.Models;
     using Infrastructure;
     using Infrastructure.Extensions;
@@ -10,7 +11,6 @@
 
     public class StarsController : BaseAstronomerController
     {
-        private const string Discoveries = "Discoveries";
         private const string Star = "Star";
         private const string Stars = "Stars";
 
@@ -39,9 +39,12 @@
                 return View(model);
             }
 
-            if (this.discoveryService.TotalStars(id) >= WebConstants.MaxStarsPerDiscovery)
+            if (this.discoveryService.TotalStars(id) >= DataConstants.DiscoveryConstants.MaxStarsPerDiscovery)
             {
-                TempData.AddErrorMessage($"Maximum allowed Stars count per Discovery is {WebConstants.MaxStarsPerDiscovery}");
+                TempData.AddErrorMessage(string.Format(
+                    DataConstants.DiscoveryConstants.MaxStarsPerDiscoveryErrorMessage,
+                    DataConstants.DiscoveryConstants.MaxStarsPerDiscovery));
+
                 return View(model);
             }
 
@@ -52,9 +55,9 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Star Successfully Created");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Star, WebConstants.Added));
 
-            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id });
+            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id, area = WebConstants.AstronomerArea });
         }
 
         public IActionResult Edit(int id, int discoveryId)
@@ -74,14 +77,14 @@
         [Log(LogType.Edit, Stars)]
         public IActionResult Edit(int id, int discoveryId, StarFormServiceModel model)
         {
-            string oldName = model.Name;
+            string oldName = this.starService.GetName(id);
 
             if (oldName == null)
             {
                 return BadRequest();
             }
 
-            string newName = this.starService.GetName(id);
+            string newName = model.Name;
 
             if (this.starService.Exists(newName)
                 && oldName != newName)
@@ -97,9 +100,9 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Star Successfully Edited");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Star, WebConstants.Edited));
 
-            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId });
+            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId, area = WebConstants.AstronomerArea });
         }
 
         public IActionResult Delete(int id, int discoveryId)
@@ -119,9 +122,9 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Star Successfully Deleted");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Star, WebConstants.Deleted));
 
-            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId });
+            return RedirectToAction(nameof(DiscoveriesController.Details), Discoveries, new { id = discoveryId, area = WebConstants.AstronomerArea });
         }
     }
 }

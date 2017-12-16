@@ -9,7 +9,7 @@
     using System.Linq;
     using Xunit;
 
-    public class PublicationServiceTest : BaseTest
+    public class PublicationServiceTest : BaseServiceTest
     {
         [Fact]
         public void Total_ShouldReturnPublicationsCount()
