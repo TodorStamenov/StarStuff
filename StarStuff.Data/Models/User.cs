@@ -30,5 +30,7 @@
         public List<Observers> Observations { get; set; } = new List<Observers>();
 
         public List<Comment> Comments { get; set; } = new List<Comment>();
+
+        public List<Publication> Publications { get; set; } = new List<Publication>();
     }
 }

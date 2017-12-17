@@ -48,6 +48,7 @@
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseDatabaseMigration();
+            app.UseSeedRoles();
             app.UseSeedDatabase();
 
             if (env.IsDevelopment())
@@ -58,7 +59,7 @@
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/home/error");
             }
 
             app.UseStaticFiles();

@@ -16,6 +16,12 @@
                 .HasMany(u => u.Comments)
                 .WithOne(c => c.User)
                 .HasForeignKey(c => c.UserId);
+
+            builder
+                .HasMany(u => u.Publications)
+                .WithOne(p => p.Author)
+                .HasForeignKey(p => p.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

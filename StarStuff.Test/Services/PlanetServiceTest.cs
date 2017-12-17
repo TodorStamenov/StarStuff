@@ -171,7 +171,7 @@
         }
 
         [Fact]
-        public void Edit_WithNotValidId_ShouldReturnFalse()
+        public void Edit_WithNotExistingId_ShouldReturnFalse()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -203,7 +203,6 @@
         }
 
         [Fact]
-        // TODO: TEST
         public void Edit_WithSameName_ShouldEditPlanet()
         {
             // Arrange
@@ -247,7 +246,7 @@
         }
 
         [Fact]
-        public void Delete_WithValidId_ShouldReturnTrue()
+        public void Delete_WithExistingId_ShouldReturnTrue()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -262,7 +261,7 @@
         }
 
         [Fact]
-        public void Delete_WithValidId_ShouldRemovePlanet()
+        public void Delete_WithExistingId_ShouldRemovePlanet()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -279,7 +278,7 @@
         }
 
         [Fact]
-        public void Delete_WithNotValidId_ShouldReturnFalse()
+        public void Delete_WithNotExistingId_ShouldReturnFalse()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -294,7 +293,7 @@
         }
 
         [Fact]
-        public void GetName_WithValidId_ShouldReturnValidName()
+        public void GetName_WithExistingId_ShouldReturnValidName()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -310,7 +309,7 @@
         }
 
         [Fact]
-        public void GetName_WithNotValidId_ShouldReturnNull()
+        public void GetName_WithNotExistingId_ShouldReturnNull()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -325,7 +324,7 @@
         }
 
         [Fact]
-        public void GetForm_WithValidId_ShouldReturnCorrectResult()
+        public void GetForm_WithExistingId_ShouldReturnCorrectResult()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -341,7 +340,7 @@
         }
 
         [Fact]
-        public void GetForm_WithNotValidId_ShouldReturnNull()
+        public void GetForm_WithNotExistingId_ShouldReturnNull()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -356,7 +355,7 @@
         }
 
         [Fact]
-        public void Planets_WithValidDiscoveryId_ShouldReturnAllPlanets()
+        public void Planets_WithExistingDiscoveryId_ShouldReturnAllPlanets()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -386,7 +385,7 @@
         }
 
         [Fact]
-        public void Planets_WithInvalidDiscoveryId_ShouldReturnEmptyCollection()
+        public void Planets_WithNotExistingDiscoveryId_ShouldReturnEmptyCollection()
         {
             // Arrange
             StarStuffDbContext db = this.Database;

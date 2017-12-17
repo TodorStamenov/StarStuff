@@ -30,8 +30,8 @@
 
         public bool Create(int publicationId, int userId, string content)
         {
-            if (!this.db.Publications
-                .Any(p => p.Id == publicationId))
+            if (!this.db.Publications.Any(p => p.Id == publicationId)
+                || !this.db.Users.Any(u => u.Id == userId))
             {
                 return false;
             }

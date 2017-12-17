@@ -16,6 +16,8 @@
         <br />
         Release Date: @Model.Publication.ReleaseDate.ToShortDateString()
         <br />
+        Published By: @Model.Publication.AuthorName
+        <br />
         @if (User.IsInRole(WebConstants.ModeratorRole))
         {
             <a asp-area="Moderator" asp-controller="Publications" asp-action="Edit" asp-route-id="@Model.Publication.Id" class="btn btn-warning btn-xs">Edit</a>

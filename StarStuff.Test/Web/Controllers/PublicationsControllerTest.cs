@@ -42,7 +42,10 @@
                 .Returns(false);
 
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
-            mockHttpContext.Setup(m => m.User).Returns(claimsMock.Object);
+
+            mockHttpContext
+                .Setup(m => m.User)
+                .Returns(claimsMock.Object);
 
             PublicationsController publicationsController =
                 new PublicationsController(commentService.Object, null, null, publicationService.Object, null)
@@ -337,6 +340,7 @@
             actual.TelescopeId.Should().Be(expected.TelescopeId);
             actual.TelescopeName.Should().Be(expected.TelescopeName);
             actual.StarSystemName.Should().Be(expected.StarSystemName);
+            actual.AuthorName.Should().Be(expected.AuthorName);
             actual.CommentsCount.Should().Be(expected.CommentsCount);
             actual.ReleaseDate.Year.Should().Be(expected.ReleaseDate.Year);
             actual.ReleaseDate.Month.Should().Be(expected.ReleaseDate.Month);
@@ -349,6 +353,7 @@
             actual.Content.Should().Be(expected.Content);
             actual.IsOwner.Should().Be(expected.IsOwner);
             actual.ProfileImage.Should().Be(expected.ProfileImage);
+            actual.IsOwner.Should().Be(expected.IsOwner);
             actual.DateAdded.Year.Should().Be(expected.DateAdded.Year);
             actual.DateAdded.Month.Should().Be(expected.DateAdded.Month);
             actual.DateAdded.Day.Should().Be(expected.DateAdded.Day);
@@ -366,6 +371,7 @@
                 JournalName = "Test Journal Name",
                 TelescopeId = 1,
                 TelescopeName = "Test Telescope Name",
+                AuthorName = "Test Author Name",
                 StarSystemName = "Test Star System Name",
                 CommentsCount = 20,
                 ReleaseDate = DateTime.UtcNow.AddMonths(-1)
@@ -430,7 +436,7 @@
                     Username = $"Test Username {i}",
                     ProfileImage = $"Test Profile Image {i}",
                     DateAdded = DateTime.UtcNow.AddDays(-i).AddHours(-i).AddMinutes(-i),
-                    IsOwner = false
+                    IsOwner = true
                 });
             }
 

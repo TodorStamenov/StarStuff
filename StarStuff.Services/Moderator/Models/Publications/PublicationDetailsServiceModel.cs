@@ -21,6 +21,8 @@
 
         public string JournalName { get; set; }
 
+        public string AuthorName { get; set; }
+
         public int CommentsCount { get; set; }
 
         public DateTime ReleaseDate { get; set; }
@@ -32,7 +34,8 @@
                 .ForMember(p => p.TelescopeName, cfg => cfg.MapFrom(p => p.Discovery.Telescope.Name))
                 .ForMember(p => p.TelescopeId, cfg => cfg.MapFrom(p => p.Discovery.TelescopeId))
                 .ForMember(p => p.CommentsCount, cfg => cfg.MapFrom(p => p.Comments.Count))
-                .ForMember(p => p.JournalName, cfg => cfg.MapFrom(p => p.Journal.Name));
+                .ForMember(p => p.JournalName, cfg => cfg.MapFrom(p => p.Journal.Name))
+                .ForMember(p => p.AuthorName, cfg => cfg.MapFrom(p => p.Author.UserName));
         }
     }
 }

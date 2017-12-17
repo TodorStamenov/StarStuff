@@ -249,7 +249,7 @@
         }
 
         [Fact]
-        public void Edit_WithNotValidId_ShouldReturnFalse()
+        public void Edit_WithNotExistingId_ShouldReturnFalse()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -290,7 +290,7 @@
         }
 
         [Fact]
-        public void Delete_WithValidId_ShouldReturnTrue()
+        public void Delete_WithExistingId_ShouldReturnTrue()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -307,7 +307,7 @@
         }
 
         [Fact]
-        public void Delete_WithValidId_ShouldRemoveStar()
+        public void Delete_WithExistingId_ShouldRemoveStar()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -324,7 +324,7 @@
         }
 
         [Fact]
-        public void Delete_WithNotValidId_ShouldReturnFalse()
+        public void Delete_WithNotExistingId_ShouldReturnFalse()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -340,7 +340,7 @@
         }
 
         [Fact]
-        public void GetName_WithValidId_ShouldReturnValidName()
+        public void GetName_WithExistingId_ShouldReturnValidName()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -357,7 +357,7 @@
         }
 
         [Fact]
-        public void GetName_WithNotValidId_ShouldReturnNull()
+        public void GetName_WithNotExistingId_ShouldReturnNull()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -371,7 +371,7 @@
         }
 
         [Fact]
-        public void GetForm_WithValidId_ShouldReturnStar()
+        public void GetForm_WithExistingId_ShouldReturnStar()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -390,7 +390,7 @@
         }
 
         [Fact]
-        public void GetForm_WithNotValidId_ShouldReturnNull()
+        public void GetForm_WithNotExistingId_ShouldReturnNull()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -404,7 +404,7 @@
         }
 
         [Fact]
-        public void Stars_WithValidDiscoveryId_ShouldReturnStars()
+        public void Stars_WithExistingDiscoveryId_ShouldReturnStars()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -434,7 +434,7 @@
         }
 
         [Fact]
-        public void Stars_WithNotValidDiscoveryId_ShouldReturnEmptyCollection()
+        public void Stars_WithNotExistingDiscoveryId_ShouldReturnEmptyCollection()
         {
             // Arrange
             StarStuffDbContext db = this.Database;

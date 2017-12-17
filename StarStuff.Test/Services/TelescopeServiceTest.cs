@@ -60,7 +60,7 @@
         }
 
         [Fact]
-        public void GetName_WithValidId_ShouldReturnValidName()
+        public void GetName_WithExistingId_ShouldReturnValidName()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -79,7 +79,7 @@
         }
 
         [Fact]
-        public void GetName_WithNotValidId_ShouldReturnNull()
+        public void GetName_WithNotExistingId_ShouldReturnNull()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -311,7 +311,7 @@
         }
 
         [Fact]
-        public void Edit_WithNotValidId_ShouldReturnFalse()
+        public void Edit_WithNotExistingId_ShouldReturnFalse()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -335,7 +335,7 @@
         }
 
         [Fact]
-        public void Details_WithValidId_ShouldReturnTelescope()
+        public void Details_WithExistingId_ShouldReturnTelescope()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -354,7 +354,7 @@
         }
 
         [Fact]
-        public void Details_WithNotValidId_ShouldReturnNull()
+        public void Details_WithNotExistingId_ShouldReturnNull()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -369,7 +369,7 @@
         }
 
         [Fact]
-        public void GetForm_WithValidId_ShouldReturnTelescope()
+        public void GetForm_WithExistingId_ShouldReturnTelescope()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -388,7 +388,7 @@
         }
 
         [Fact]
-        public void GetForm_WithNotValidId_ShouldReturnNull()
+        public void GetForm_WithNotExistingId_ShouldReturnNull()
         {
             // Arrange
             StarStuffDbContext db = this.Database;

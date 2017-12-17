@@ -11,7 +11,7 @@
 
         int TotalByTelescope(int telescopeId);
 
-        int Create(string content, int discoveryId, int journalId);
+        int Create(string content, int discoveryId, int journalId, int authorId);
 
         bool Edit(int id, string content);
 

@@ -380,8 +380,8 @@
         {
             result.ActionName.Should().Be(Details);
             result.ControllerName.Should().Be(Telescopes);
-            result.RouteValues[Id] = telescopeId;
-            result.RouteValues[Area] = string.Empty;
+            result.RouteValues[Id].Should().Be(telescopeId);
+            result.RouteValues[Area].Should().Be(string.Empty);
         }
 
         private TelescopeFormServiceModel GetTelescopeFormModel()

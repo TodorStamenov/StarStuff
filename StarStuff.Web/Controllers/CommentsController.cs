@@ -57,8 +57,7 @@
 
             bool canEdit = this.commentService.CanEdit(id, userId);
 
-            if (!canEdit
-                && !User.IsInRole(WebConstants.ModeratorRole))
+            if (!canEdit && !User.IsInRole(WebConstants.ModeratorRole))
             {
                 return Unauthorized();
             }
@@ -81,8 +80,7 @@
 
             bool canEdit = this.commentService.CanEdit(id, userId);
 
-            if (!canEdit
-                && !User.IsInRole(WebConstants.ModeratorRole))
+            if (!canEdit && !User.IsInRole(WebConstants.ModeratorRole))
             {
                 return Unauthorized();
             }

@@ -33,6 +33,30 @@
             return app;
         }
 
+        public static IApplicationBuilder UseSeedRoles(this IApplicationBuilder app)
+        {
+            using (IServiceScope serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                StarStuffDbContext db = serviceScope.ServiceProvider.GetService<StarStuffDbContext>();
+
+                UserManager<User> userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
+                RoleManager<Role> roleManager = serviceScope.ServiceProvider.GetService<RoleManager<Role>>();
+
+                Task.Run(async () =>
+                {
+                    await CreateRoleAsync(WebConstants.AdminRole, roleManager, db);
+                    await CreateRoleAsync(WebConstants.ModeratorRole, roleManager, db);
+                    await CreateRoleAsync(WebConstants.AstronomerRole, roleManager, db);
+
+                    await SeedUsersAsync(WebConstants.AdminRole, AdminsCount, userManager, db);
+                })
+                .GetAwaiter()
+                .GetResult();
+            }
+
+            return app;
+        }
+
         public static IApplicationBuilder UseSeedDatabase(this IApplicationBuilder app)
         {
             using (IServiceScope serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
@@ -55,13 +79,8 @@
 
         private static async Task SeedAsync(StarStuffDbContext db, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            await CreateRoleAsync(WebConstants.AdminRole, roleManager, db);
-            await CreateRoleAsync(WebConstants.ModeratorRole, roleManager, db);
-            await CreateRoleAsync(WebConstants.AstronomerRole, roleManager, db);
-
             await SeedUsersAsync(UsersCount, userManager, db);
 
-            await SeedUsersAsync(WebConstants.AdminRole, AdminsCount, userManager, db);
             await SeedUsersAsync(WebConstants.ModeratorRole, ModeratorsCount, userManager, db);
             await SeedUsersAsync(WebConstants.AstronomerRole, AstronomersCount, userManager, db);
 
@@ -339,6 +358,11 @@
                 .Select(j => j.Id)
                 .ToListAsync();
 
+            List<int> moderatorIds = await db.Users
+                .Where(u => u.Roles.Any(r => r.Role.Name == WebConstants.ModeratorRole))
+                .Select(u => u.Id)
+                .ToListAsync();
+
             foreach (var discovery in discoveries)
             {
                 Publication publication = new Publication
@@ -346,6 +370,7 @@
                     Content = WebConstants.Lorem,
                     DiscoveryId = discovery.Id,
                     JournalId = journalIds[random.Next(0, journalIds.Count)],
+                    AuthorId = moderatorIds[random.Next(0, moderatorIds.Count)],
                     ReleaseDate = discovery.DateMade.AddMonths(5)
                 };
 

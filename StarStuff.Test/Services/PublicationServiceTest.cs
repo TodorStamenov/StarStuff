@@ -93,7 +93,7 @@
         }
 
         [Fact]
-        public void Create_WithExistingJournalAndDiscovery_ShouldReturnPublicationId()
+        public void Create_WithExistingJournalUserAndDiscovery_ShouldReturnPublicationId()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -102,29 +102,23 @@
             const int discoveryId = 1;
             const int journalId = 1;
             const int publicationId = 1;
+            const int authorId = 1;
 
-            Journal journal = new Journal { Id = journalId };
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId,
-                IsConfirmed = true
-            };
+            this.SeedJournal(db);
+            this.SeedUser(db);
+            this.SeedDiscovery(db, true);
 
-            db.Journals.Add(journal);
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
-
-            Publication publication = this.GetFakePublications().FirstOrDefault(p => p.Id == publicationId);
+            Publication publication = this.GetFakePublications().First();
 
             // Act
-            int actual = publicationService.Create(publication.Content, discoveryId, journalId);
+            int actual = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.Equal(publicationId, actual);
         }
 
         [Fact]
-        public void Create_WithExistingJournalAndDiscovery_ShouldAddPublication()
+        public void Create_WithExistingUserJournalAndDiscovery_ShouldAddPublication()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -133,17 +127,11 @@
             const int discoveryId = 1;
             const int journalId = 1;
             const int publicationId = 1;
+            const int authorId = 1;
 
-            Journal journal = new Journal { Id = journalId };
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId,
-                IsConfirmed = true
-            };
-
-            db.Journals.Add(journal);
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
+            this.SeedJournal(db);
+            this.SeedUser(db);
+            this.SeedDiscovery(db, true);
 
             Publication expected = new Publication
             {
@@ -155,7 +143,7 @@
             };
 
             // Act
-            publicationService.Create(expected.Content, discoveryId, journalId);
+            publicationService.Create(expected.Content, discoveryId, journalId, authorId);
             Publication actual = db.Publications.Find(publicationId);
 
             // Assert
@@ -171,21 +159,15 @@
 
             const int journalId = 1;
             const int discoveryId = 1;
-            const int publicationId = 1;
+            const int authorId = 1;
 
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId,
-                IsConfirmed = true
-            };
+            this.SeedUser(db);
+            this.SeedDiscovery(db, true);
 
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
-
-            Publication publication = this.GetFakePublications().FirstOrDefault(p => p.Id == publicationId);
+            Publication publication = this.GetFakePublications().First();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId);
+            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -200,17 +182,38 @@
 
             const int discoveryId = 1;
             const int journalId = 1;
-            const int publicationId = 1;
+            const int authorId = 1;
 
-            Journal journal = new Journal { Id = journalId };
+            this.SeedUser(db);
+            this.SeedJournal(db);
 
-            db.Journals.Add(journal);
-            db.SaveChanges();
-
-            Publication publication = this.GetFakePublications().FirstOrDefault(p => p.Id == publicationId);
+            Publication publication = this.GetFakePublications().First();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId);
+            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
+
+            // Assert
+            Assert.True(result <= 0);
+        }
+
+        [Fact]
+        public void Create_WithNotExistingUser_ShouldReturnNegativeId()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+
+            const int discoveryId = 1;
+            const int journalId = 1;
+            const int authorId = 1;
+
+            this.SeedJournal(db);
+            this.SeedDiscovery(db, true);
+
+            Publication publication = this.GetFakePublications().First();
+
+            // Act
+            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -225,22 +228,16 @@
 
             const int discoveryId = 1;
             const int journalId = 1;
-            const int publicationId = 1;
+            const int authorId = 1;
 
-            Journal journal = new Journal { Id = journalId };
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId
-            };
+            this.SeedJournal(db);
+            this.SeedUser(db);
+            this.SeedDiscovery(db, false);
 
-            db.Journals.Add(journal);
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
-
-            Publication publication = this.GetFakePublications().FirstOrDefault(p => p.Id == publicationId);
+            Publication publication = this.GetFakePublications().First();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId);
+            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -255,27 +252,21 @@
 
             const int discoveryId = 1;
             const int journalId = 1;
+            const int authorId = 1;
 
-            Journal journal = new Journal { Id = journalId };
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId
-            };
+            this.SeedJournal(db);
+            this.SeedUser(db);
+            this.SeedDiscovery(db, true);
 
-            Publication publication = new Publication
-            {
-                Content = "Test Content",
-                DiscoveryId = discoveryId,
-                JournalId = journalId
-            };
+            Publication publication = GetFakePublications().First();
+            publication.DiscoveryId = discoveryId;
+            publication.JournalId = journalId;
 
-            db.Journals.Add(journal);
-            db.Discoveries.Add(discovery);
             db.Publications.Add(publication);
             db.SaveChanges();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId);
+            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -291,7 +282,7 @@
 
             const int publicationId = 1;
 
-            Publication publication = this.GetFakePublications().FirstOrDefault(p => p.Id == publicationId);
+            Publication publication = this.GetFakePublications().First();
 
             // Act
             bool result = publicationService.Edit(publicationId, publication.Content);
@@ -336,7 +327,7 @@
 
             const int publicationId = 1;
 
-            Publication publication = this.GetFakePublications().FirstOrDefault(p => p.Id == publicationId);
+            Publication publication = this.GetFakePublications().First();
 
             // Act
             bool result = publicationService.Edit(publicationId, publication.Content);
@@ -355,7 +346,7 @@
 
             const int publicationId = 1;
 
-            Publication expected = this.GetFakePublications().FirstOrDefault(p => p.Id == publicationId);
+            Publication expected = this.GetFakePublications().First();
 
             // Act
             PublicationFormServiceModel actual = publicationService.GetForm(publicationId);
@@ -391,8 +382,10 @@
             const int journalId = 1;
             const int discoveryId = 1;
             const int telescopeId = 1;
+            const int authorId = 1;
 
-            Journal journal = new Journal { Id = journalId };
+            this.SeedJournal(db);
+            this.SeedUser(db);
 
             Discovery discovery = new Discovery
             {
@@ -416,9 +409,9 @@
             {
                 publication.DiscoveryId = discoveryId;
                 publication.JournalId = journalId;
+                publication.AuthorId = authorId;
             }
 
-            db.Journals.Add(journal);
             db.Telescopes.Add(telescope);
             db.Publications.AddRange(publications);
             db.SaveChanges();
@@ -443,8 +436,9 @@
             const int discoveryId = 1;
             const int telescopeId = 1;
 
-            Journal journal = new Journal { Id = journalId };
+            this.SeedJournal(db);
             Discovery discovery = new Discovery { Id = discoveryId };
+
             Telescope telescope = new Telescope
             {
                 Id = telescopeId,
@@ -462,7 +456,6 @@
                 publication.JournalId = journalId;
             }
 
-            db.Journals.Add(journal);
             db.Telescopes.Add(telescope);
             db.Publications.AddRange(publications);
             db.SaveChanges();
@@ -622,6 +615,29 @@
                 && expected.Content == actual.Content;
         }
 
+        private void SeedDiscovery(StarStuffDbContext db, bool confirmed)
+        {
+            db.Discoveries.Add(new Discovery
+            {
+                Id = 1,
+                IsConfirmed = confirmed
+            });
+
+            db.SaveChanges();
+        }
+
+        private void SeedJournal(StarStuffDbContext db)
+        {
+            db.Journals.Add(new Journal { Id = 1 });
+            db.SaveChanges();
+        }
+
+        private void SeedUser(StarStuffDbContext db)
+        {
+            db.Users.Add(new User { Id = 1 });
+            db.SaveChanges();
+        }
+
         private void SeedDatabase(StarStuffDbContext db)
         {
             db.Publications.AddRange(this.GetFakePublications());
@@ -642,7 +658,7 @@
                 });
             }
 
-            return publications;
+            return publications.OrderByDescending(p => p.ReleaseDate).ToList();
         }
     }
 }

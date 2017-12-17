@@ -3,6 +3,7 @@
     using Data.Models;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Publications;
@@ -21,15 +22,18 @@
         private readonly IPublicationService publicationService;
         private readonly IDiscoveryService discoveryService;
         private readonly IJournalService journalService;
+        private readonly UserManager<User> userManager;
 
         public PublicationsController(
             IPublicationService publicationService,
             IDiscoveryService discoveryService,
-            IJournalService journalService)
+            IJournalService journalService,
+            UserManager<User> userManager)
         {
             this.publicationService = publicationService;
             this.discoveryService = discoveryService;
             this.journalService = journalService;
+            this.userManager = userManager;
         }
 
         public IActionResult Create(int id)
@@ -52,10 +56,13 @@
                 return View(model);
             }
 
+            int authorId = int.Parse(this.userManager.GetUserId(User));
+
             int publicationId = this.publicationService.Create(
                 model.Publication.Content,
                 model.DiscoveryId,
-                id);
+                id,
+                authorId);
 
             if (publicationId <= 0)
             {

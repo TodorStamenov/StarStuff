@@ -32,7 +32,7 @@
             return this.db.Publications.Count(p => p.Discovery.TelescopeId == telescopeId);
         }
 
-        public int Create(string content, int discoveryId, int journalId)
+        public int Create(string content, int discoveryId, int journalId, int authorId)
         {
             bool hasJournal = this.db
                 .Journals
@@ -43,7 +43,13 @@
                 .Any(d => d.Id == discoveryId
                     && d.IsConfirmed);
 
-            if (!hasJournal || !hasDiscovery)
+            bool hasModerator = this.db
+                .Users
+                .Any(u => u.Id == authorId);
+
+            if (!hasJournal
+                || !hasDiscovery
+                || !hasModerator)
             {
                 return -1;
             }
@@ -63,6 +69,7 @@
                 Content = content,
                 JournalId = journalId,
                 DiscoveryId = discoveryId,
+                AuthorId = authorId,
                 ReleaseDate = DateTime.UtcNow.Date
             };
 

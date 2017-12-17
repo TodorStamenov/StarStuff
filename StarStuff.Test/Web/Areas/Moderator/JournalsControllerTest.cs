@@ -371,8 +371,8 @@
         {
             result.ActionName.Should().Be(Details);
             result.ControllerName.Should().Be(Journals);
-            result.RouteValues[Id] = journalId;
-            result.RouteValues[Area] = string.Empty;
+            result.RouteValues[Id].Should().Be(journalId);
+            result.RouteValues[Area].Should().Be(string.Empty);
         }
 
         private JournalFormServiceModel GetJournalFormModel()

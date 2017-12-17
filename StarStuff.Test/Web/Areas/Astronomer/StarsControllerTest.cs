@@ -452,8 +452,8 @@
         {
             result.ActionName.Should().Be(nameof(DiscoveriesController.Details));
             result.ControllerName.Should().Be(Discoveries);
-            result.RouteValues[Id] = discoveryId;
-            result.RouteValues[Area] = WebConstants.AstronomerArea;
+            result.RouteValues[Id].Should().Be(discoveryId);
+            result.RouteValues[Area].Should().Be(WebConstants.AstronomerArea);
         }
 
         private StarFormServiceModel GetStarFormModel()
