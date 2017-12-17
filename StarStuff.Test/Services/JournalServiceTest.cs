@@ -19,7 +19,7 @@
             this.SeedDatabase(db);
 
             // Act
-            string name = this.GetFakeJournals().FirstOrDefault(s => s.Id == 1).Name;
+            string name = this.GetFakeJournals().FirstOrDefault(j => j.Id == 1).Name;
             bool result = journalService.Exists(name);
 
             // Assert
@@ -34,7 +34,7 @@
             JournalService journalService = new JournalService(db);
 
             // Act
-            string name = this.GetFakeJournals().FirstOrDefault(s => s.Id == 1).Name;
+            string name = this.GetFakeJournals().FirstOrDefault(j => j.Id == 1).Name;
             bool result = journalService.Exists(name);
 
             // Assert

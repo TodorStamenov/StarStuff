@@ -4,6 +4,7 @@
     using Infrastructure;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
+    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,7 +14,6 @@
     using Services.Astronomer.Models.Astronomers;
     using Services.Astronomer.Models.Discoveries;
     using Services.Moderator;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -223,14 +223,14 @@
             }
 
             int userId = int.Parse(this.userManager.GetUserId(User));
-            int totalEntries = this.discoveryService.Total(confirmed, astronomerType, userId);
+            int totalDiscoveries = this.discoveryService.Total(confirmed, astronomerType, userId);
 
             ListMyDiscoveriesViewModel model = new ListMyDiscoveriesViewModel
             {
                 Confirmed = confirmed,
                 CurrentPage = page,
                 AstronomerType = astronomerType.ToString(),
-                TotalPages = this.GetTotalPages(totalEntries),
+                TotalPages = ControllerHelpers.GetTotalPages(totalDiscoveries, DiscoveriesPerPage),
                 Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, userId, astronomerType, confirmed)
             };
 
@@ -244,22 +244,17 @@
                 page = 1;
             }
 
-            int totalEntries = this.discoveryService.Total(confirmed);
+            int totalDiscoveries = this.discoveryService.Total(confirmed);
 
             ListDiscoveriesViewModel model = new ListDiscoveriesViewModel
             {
                 Confirmed = confirmed,
                 CurrentPage = page,
-                TotalPages = this.GetTotalPages(totalEntries),
+                TotalPages = ControllerHelpers.GetTotalPages(totalDiscoveries, DiscoveriesPerPage),
                 Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, confirmed)
             };
 
             return View(model);
-        }
-
-        private int GetTotalPages(int totalEntries)
-        {
-            return (int)Math.Ceiling(totalEntries / (double)DiscoveriesPerPage);
         }
 
         private IEnumerable<SelectListItem> GetAstronomers(int astronomerId)

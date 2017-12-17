@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Web.Models.Telescopes
 {
-    using Infrastructure;
+    using Infrastructure.Helpers;
     using Services.Moderator.Models.Telescopes;
     using System.Collections.Generic;
 

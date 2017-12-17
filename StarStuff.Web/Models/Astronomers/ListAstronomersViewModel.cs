@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Web.Models.Astronomers
 {
-    using Infrastructure;
+    using Infrastructure.Helpers;
     using Services.Models.Astronomers;
     using System.Collections.Generic;
 

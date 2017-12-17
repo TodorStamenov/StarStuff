@@ -13,6 +13,7 @@
     [Authorize]
     public class CommentsController : Controller
     {
+        private const string Comment = "Comment";
         private const string Publications = "Publications";
 
         private readonly ICommentService commentService;
@@ -42,7 +43,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Comment Successfully Added");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Added));
 
             return RedirectToAction(
                 nameof(PublicationsController.Details),
@@ -93,7 +94,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Comment Successfully Edited");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Edited));
 
             return RedirectToAction(
                 nameof(PublicationsController.Details),
@@ -119,7 +120,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage("Comment Successfully Deleted");
+            TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Deleted));
 
             return RedirectToAction(
                 nameof(PublicationsController.Details),

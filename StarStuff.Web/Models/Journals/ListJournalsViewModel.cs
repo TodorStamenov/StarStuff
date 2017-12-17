@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Web.Models.Journals
 {
-    using Infrastructure;
+    using Infrastructure.Helpers;
     using Services.Moderator.Models.Journals;
     using System.Collections.Generic;
 

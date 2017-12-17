@@ -1,13 +1,13 @@
 ﻿namespace StarStuff.Web.Areas.Admin.Controllers
 {
-    using Models.Logs;
-    using Models.Users;
     using Infrastructure;
     using Infrastructure.Extensions;
+    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Models.Logs;
+    using Models.Users;
     using Services.Admin;
-    using System;
 
     [Area(WebConstants.AdminArea)]
     [Authorize(Roles = WebConstants.AdminRole)]
@@ -79,14 +79,14 @@
             {
                 Search = search,
                 CurrentPage = page,
-                TotalPages = this.GetToltalPages(totalLogs),
+                TotalPages = ControllerHelpers.GetTotalPages(totalLogs, LogsPerPage),
                 Logs = this.userService.Logs(page, LogsPerPage, search),
             };
 
             return View(model);
         }
 
-        public IActionResult All(int page, string role, string search)
+        public IActionResult Users(int page, string role, string search)
         {
             if (page < 1)
             {
@@ -100,17 +100,12 @@
                 Search = search,
                 CurrentPage = page,
                 UserRole = role,
-                TotalPages = this.GetToltalPages(totalUsers),
+                TotalPages = ControllerHelpers.GetTotalPages(totalUsers, UsersPerPage),
                 Users = this.userService.All(page, role, search, UsersPerPage),
                 Roles = this.userService.AllRoles(),
             };
 
             return View(model);
-        }
-
-        private int GetToltalPages(int totalEntries)
-        {
-            return (int)Math.Ceiling(totalEntries / (double)UsersPerPage);
         }
     }
 }

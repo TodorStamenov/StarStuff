@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Web.Areas.Admin.Models.Logs
 {
-    using Infrastructure;
+    using Infrastructure.Helpers;
     using Services.Admin.Models.Logs;
     using System.Collections.Generic;
 

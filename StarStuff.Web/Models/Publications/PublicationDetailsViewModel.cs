@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Web.Models.Publications
 {
-    using Infrastructure;
+    using Infrastructure.Helpers;
     using Services.Models.Comments;
     using Services.Moderator.Models.Publications;
     using System.Collections.Generic;

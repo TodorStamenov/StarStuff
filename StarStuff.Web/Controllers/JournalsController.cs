@@ -1,10 +1,10 @@
 ﻿namespace StarStuff.Web.Controllers
 {
+    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Models.Journals;
     using Services.Moderator;
     using Services.Moderator.Models.Journals;
-    using System;
 
     public class JournalsController : Controller
     {
@@ -36,10 +36,12 @@
                 page = 1;
             }
 
+            int totalJournals = this.journalService.Total();
+
             ListJournalsViewModel model = new ListJournalsViewModel
             {
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(this.journalService.Total() / (double)JournalsPerPage),
+                TotalPages = ControllerHelpers.GetTotalPages(totalJournals, JournalsPerPage),
                 Journals = this.journalService.All(page, JournalsPerPage)
             };
 
