@@ -6,6 +6,8 @@
 
     public class UserRoleEditViewModel
     {
+        public bool IsUserLocked { get; set; }
+
         public UserRolesServiceModel User { get; set; }
 
         public IEnumerable<RoleServiceModel> Roles { get; set; }

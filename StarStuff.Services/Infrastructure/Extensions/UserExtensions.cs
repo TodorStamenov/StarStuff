@@ -7,7 +7,7 @@
     {
         public static IQueryable<User> InRole(this IQueryable<User> users, string role)
         {
-            if (role != null)
+            if (!string.IsNullOrEmpty(role))
             {
                 return users
                     .Where(u => u.Roles
@@ -19,7 +19,7 @@
 
         public static IQueryable<User> Filter(this IQueryable<User> users, string searchTerm)
         {
-            if (searchTerm != null)
+            if (!string.IsNullOrEmpty(searchTerm))
             {
                 return users
                     .Where(u => u.UserName.ToLower().Contains(searchTerm));

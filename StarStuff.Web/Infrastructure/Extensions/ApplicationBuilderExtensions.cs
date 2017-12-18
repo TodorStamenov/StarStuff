@@ -106,7 +106,7 @@
 
         private static async Task SeedUsersAsync(int usersCount, UserManager<User> userManager, StarStuffDbContext db)
         {
-            if (await db.Users.AnyAsync())
+            if (await db.Users.AnyAsync(u => !u.Roles.Any()))
             {
                 return;
             }

@@ -25,7 +25,7 @@
 
         public IActionResult Astronomers(int page)
         {
-            if (page < 1)
+            if (page <= 0)
             {
                 page = 1;
             }
