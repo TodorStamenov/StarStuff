@@ -19,7 +19,7 @@
             this.SeedDatabase(db);
 
             // Act
-            string name = this.GetFakeStars().FirstOrDefault(s => s.Id == 1).Name;
+            string name = this.GetFakeStars().First().Name;
             bool result = starService.Exists(name);
 
             // Assert
@@ -33,7 +33,7 @@
             StarStuffDbContext db = this.Database;
             StarService starService = new StarService(db);
 
-            string name = this.GetFakeStars().FirstOrDefault(s => s.Id == 1).Name;
+            string name = this.GetFakeStars().First().Name;
 
             // Act
             bool result = starService.Exists(name);
@@ -50,13 +50,12 @@
             StarService starService = new StarService(db);
 
             const int discoveryId = 1;
-            Discovery discovery = new Discovery { Id = discoveryId };
+            this.SeedDiscovery(db);
 
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
+            Star star = this.GetFakeStars().First();
 
             // Act
-            bool result = starService.Create(discoveryId, "Not Existing Name", 200000);
+            bool result = starService.Create(discoveryId, star.Name, star.Temperature);
 
             // Assert
             Assert.True(result);
@@ -72,12 +71,9 @@
             const int discoveryId = 1;
             const int starId = 1;
 
-            Discovery discovery = new Discovery { Id = discoveryId };
+            this.SeedDiscovery(db);
 
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
-
-            Star expected = this.GetFakeStars().FirstOrDefault(s => s.Id == starId);
+            Star expected = this.GetFakeStars().First();
 
             // Act
             starService.Create(discoveryId, expected.Name, expected.Temperature);
@@ -96,9 +92,8 @@
             StarService starService = new StarService(db);
 
             const int discoveryId = 1;
-            const int starId = 1;
 
-            Star expected = this.GetFakeStars().FirstOrDefault(s => s.Id == starId);
+            Star expected = this.GetFakeStars().First();
 
             // Act
             bool result = starService.Create(discoveryId, expected.Name, expected.Temperature);
@@ -116,14 +111,10 @@
             this.SeedDatabase(db);
 
             const int discoveryId = 1;
-            const int starId = 1;
 
-            Discovery discovery = new Discovery { Id = discoveryId };
+            this.SeedDiscovery(db);
 
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
-
-            Star star = this.GetFakeStars().FirstOrDefault(s => s.Id == starId);
+            Star star = this.GetFakeStars().First();
 
             // Act
             bool result = starService.Create(discoveryId, star.Name, star.Temperature);
@@ -141,14 +132,7 @@
 
             const int discoveryId = 1;
 
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId,
-                Stars = this.GetFakeStars().OrderBy(s => s.Id).Take(3).ToList()
-            };
-
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
+            this.SeedDiscovery(db, 3);
 
             Star star = this.GetFakeStars().FirstOrDefault(s => s.Id == 4);
 
@@ -167,12 +151,12 @@
             StarService starService = new StarService(db);
             this.SeedDatabase(db);
 
-            const int starId = 1;
-
-            Star star = this.GetFakeStars().FirstOrDefault(s => s.Id == starId);
+            Star star = this.GetFakeStars().First();
+            star.Name = "Not Existing Name";
+            star.Temperature = 111111;
 
             // Act
-            bool result = starService.Edit(star.Id, "Not Existing Name", 400000);
+            bool result = starService.Edit(star.Id, star.Name, star.Temperature);
 
             // Assert
             Assert.True(result);
@@ -188,12 +172,9 @@
 
             const int starId = 1;
 
-            Star expected = new Star
-            {
-                Id = starId,
-                Name = "Not Existing Name",
-                Temperature = 400000
-            };
+            Star expected = this.GetFakeStars().First();
+            expected.Name = "Not Existing Name";
+            expected.Temperature = 111111;
 
             // Act
             starService.Edit(starId, expected.Name, expected.Temperature);
@@ -211,12 +192,11 @@
             StarService starService = new StarService(db);
             this.SeedDatabase(db);
 
-            const int starId = 1;
-
-            Star star = this.GetFakeStars().FirstOrDefault(s => s.Id == 1);
+            Star star = this.GetFakeStars().First();
+            star.Temperature = 111111;
 
             // Act
-            bool result = starService.Edit(starId, star.Name, 500000);
+            bool result = starService.Edit(star.Id, star.Name, star.Temperature);
 
             // Assert
             Assert.True(result);
@@ -230,19 +210,12 @@
             StarService starService = new StarService(db);
             this.SeedDatabase(db);
 
-            const int starId = 1;
-
-            string name = GetFakeStars().FirstOrDefault(s => s.Id == starId).Name;
-            Star expected = new Star
-            {
-                Id = starId,
-                Name = name,
-                Temperature = 500000
-            };
+            Star expected = this.GetFakeStars().First();
+            expected.Temperature = 111111;
 
             // Act
-            starService.Edit(starId, expected.Name, expected.Temperature);
-            Star actual = db.Stars.Find(starId);
+            starService.Edit(expected.Id, expected.Name, expected.Temperature);
+            Star actual = db.Stars.Find(expected.Id);
 
             // Assert
             Assert.True(this.CompareStars(expected, actual));
@@ -257,11 +230,7 @@
 
             const int starId = 1;
 
-            Star star = new Star
-            {
-                Name = "Not Existing Name",
-                Temperature = 400000
-            };
+            Star star = this.GetFakeStars().First();
 
             // Act
             bool result = starService.Edit(starId, star.Name, star.Temperature);
@@ -271,7 +240,7 @@
         }
 
         [Fact]
-        public void Edit_WithExistingName_ShouldReturnFalse()
+        public void Edit_WithExistingNewName_ShouldReturnFalse()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -295,7 +264,7 @@
             // Arrange
             StarStuffDbContext db = this.Database;
             StarService starService = new StarService(db);
-            this.SeedDatabase(db);
+            this.SeedDiscovery(db, 2);
 
             const int starId = 1;
 
@@ -312,15 +281,18 @@
             // Arrange
             StarStuffDbContext db = this.Database;
             StarService starService = new StarService(db);
-            this.SeedDatabase(db);
+            int starsCount = this.GetFakeStars().Count;
+            int starId = 1;
 
-            const int starId = 1;
+            this.SeedDiscovery(db, starsCount);
 
             // Act
             starService.Delete(starId);
+            Star star = db.Stars.Find(starId);
 
             // Assert
-            Assert.Equal(9, db.Stars.Count());
+            Assert.Null(star);
+            Assert.Equal(starsCount - 1, db.Stars.Count());
         }
 
         [Fact]
@@ -330,10 +302,43 @@
             StarStuffDbContext db = this.Database;
             StarService starService = new StarService(db);
 
-            const int starId = 1;
+            int starsCount = this.GetFakeStars().Count;
+            this.SeedDiscovery(db, starsCount);
 
             // Act
-            bool result = starService.Delete(starId);
+            bool result = starService.Delete(starsCount + 1);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void Delete_WithNotExistingId_ShouldNotRemoveStar()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            StarService starService = new StarService(db);
+
+            int starsCount = this.GetFakeStars().Count;
+            this.SeedDiscovery(db, starsCount);
+
+            // Act
+            starService.Delete(11);
+
+            // Assert
+            Assert.Equal(starsCount, db.Stars.Count());
+        }
+
+        [Fact]
+        public void Delete_LastStar_ShouldReturnFalse()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            StarService starService = new StarService(db);
+            this.SeedDiscovery(db, 1);
+
+            // Act
+            bool result = starService.Delete(1);
 
             // Assert
             Assert.False(result);
@@ -347,7 +352,7 @@
             StarService starService = new StarService(db);
             this.SeedDatabase(db);
 
-            Star star = this.GetFakeStars().FirstOrDefault(s => s.Id == 1);
+            Star star = this.GetFakeStars().First();
 
             // Act
             string actual = starService.GetName(star.Id);
@@ -380,7 +385,7 @@
 
             const int starId = 1;
 
-            Star expected = this.GetFakeStars().FirstOrDefault(s => s.Id == starId);
+            Star expected = this.GetFakeStars().First();
 
             // Act
             StarFormServiceModel actual = starService.GetForm(starId);
@@ -422,7 +427,7 @@
             db.SaveChanges();
 
             // Act
-            IEnumerable<ListStarsServiceModel> stars = starService.Stars(discoveryId);
+            IEnumerable<ListStarsServiceModel> stars = starService.Stars(discoveryId).OrderBy(s => s.Id);
 
             // Assert
             foreach (var expected in this.GetFakeStars())
@@ -475,6 +480,17 @@
             db.SaveChanges();
         }
 
+        private void SeedDiscovery(StarStuffDbContext db, int starsCount = 0)
+        {
+            db.Discoveries.Add(new Discovery
+            {
+                Id = 1,
+                Stars = this.GetFakeStars().Take(starsCount).ToList()
+            });
+
+            db.SaveChanges();
+        }
+
         private List<Star> GetFakeStars()
         {
             List<Star> stars = new List<Star>();
@@ -485,11 +501,11 @@
                 {
                     Id = i,
                     Name = $"Star Name {i}",
-                    Temperature = 300000
+                    Temperature = i * 100000
                 });
             }
 
-            return stars;
+            return stars.OrderBy(s => s.Id).ToList();
         }
     }
 }

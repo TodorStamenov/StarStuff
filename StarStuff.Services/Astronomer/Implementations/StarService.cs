@@ -3,7 +3,6 @@
     using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Models;
-    using Infrastructure;
     using Models.Stars;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,19 +23,20 @@
 
         public bool Create(int discoveryId, string name, int temperature)
         {
-            if (!this.db.Discoveries.Any(d => d.Id == discoveryId)
-                || this.db.Stars.Any(s => s.Name == name))
-            {
-                return false;
-            }
-
-            int discoveryStars = this.db
+            var discoveryInfo = this.db
                 .Discoveries
                 .Where(d => d.Id == discoveryId)
-                .Select(d => d.Stars.Count)
+                .Select(d => new
+                {
+                    StarsCount = d.Stars.Count
+                })
                 .FirstOrDefault();
 
-            if (discoveryStars >= DataConstants.DiscoveryConstants.MaxStarsPerDiscovery)
+            bool hasStar = this.db.Stars.Any(s => s.Name == name);
+
+            if (discoveryInfo == null
+                || hasStar
+                || discoveryInfo.StarsCount >= DataConstants.DiscoveryConstants.MaxStarsPerDiscovery)
             {
                 return false;
             }
@@ -78,6 +78,20 @@
             Star star = this.db.Stars.Find(id);
 
             if (star == null)
+            {
+                return false;
+            }
+
+            var discoveryInfo = this.db
+                .Discoveries
+                .Where(d => d.Stars.Any(s => s.Id == id))
+                .Select(d => new
+                {
+                    IsLastStar = d.Stars.Count == 1
+                })
+                .FirstOrDefault();
+
+            if (discoveryInfo.IsLastStar)
             {
                 return false;
             }

@@ -6,6 +6,7 @@
     public class StarFormServiceModel
     {
         [Required]
+        [Display(Name = "Star Name")]
         [StringLength(DataConstants.StarConstants.NameMaxLength)]
         public string Name { get; set; }
 

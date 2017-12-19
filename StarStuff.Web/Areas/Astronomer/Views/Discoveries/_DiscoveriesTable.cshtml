@@ -4,9 +4,11 @@
     <thead>
         <tr>
             <th>Star System</th>
-            <th>Stars</th>
-            <th>Planets</th>
-            <th>Is Confirmed</th>
+            <th>Distance</th>
+            <th class="text-center">Stars</th>
+            <th class="text-center">Planets</th>
+            <th class="text-center">Is Confirmed</th>
+            <th class="text-center">Has Publication</th>
             <th>Date Made</th>
             <th></th>
         </tr>
@@ -16,10 +18,21 @@
         {
             <tr>
                 <td>@discovery.StarSystem</td>
-                <td>@discovery.Stars</td>
-                <td>@discovery.Planets</td>
-                <td>
+                <td>@discovery.Distance</td>
+                <td class="text-center">@discovery.Stars</td>
+                <td class="text-center">@discovery.Planets</td>
+                <td class="text-center">
                     @if (discovery.IsConfirmed)
+                    {
+                        <span class="glyphicon glyphicon-ok text-success"></span>
+                    }
+                    else
+                    {
+                        <span class="glyphicon glyphicon-remove text-danger"></span>
+                    }
+                </td>
+                <td class="text-center">
+                    @if (discovery.HasPublication)
                     {
                         <span class="glyphicon glyphicon-ok text-success"></span>
                     }

@@ -12,6 +12,11 @@
         [MaxLength(DataConstants.DiscoveryConstants.StarSystemMaxLength)]
         public string StarSystem { get; set; }
 
+        [Range(
+            DataConstants.DiscoveryConstants.MinStarSystemDistance,
+            DataConstants.DiscoveryConstants.MaxStarSystemDistance)]
+        public long Distance { get; set; }
+
         public bool IsConfirmed { get; set; }
 
         public DateTime DateMade { get; set; }

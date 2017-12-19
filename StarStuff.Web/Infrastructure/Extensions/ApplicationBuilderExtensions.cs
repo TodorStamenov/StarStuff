@@ -19,7 +19,7 @@
         private const int UsersCount = 20;
         private const int TelescopesCount = 11;
         private const int JournalsCount = 11;
-        private const int DiscoveriesCount = 200;
+        private const int DiscoveriesCount = 750;
 
         private static readonly Random random = new Random();
 
@@ -258,12 +258,15 @@
                 Discovery discovery = new Discovery
                 {
                     StarSystem = $"StarSystem{CreateGuid()}",
+                    Distance = random.Next(0, int.MaxValue),
                     DateMade = DateTime.UtcNow
                         .Date
                         .AddMonths(-i)
                         .AddDays(-i),
                     TelescopeId = telescopeIds[random.Next(0, telescopeIds.Count)]
                 };
+
+                discovery.Distance *= random.Next(1, 6);
 
                 int planetsCount = random.Next(0, 10);
                 int starsCount = random.Next(1, 4);
@@ -365,6 +368,13 @@
 
             foreach (var discovery in discoveries)
             {
+                int randomNumber = random.Next(0, 2);
+
+                if (randomNumber == 0)
+                {
+                    continue;
+                }
+
                 Publication publication = new Publication
                 {
                     Title = $"Publication Title {discovery.Id}",

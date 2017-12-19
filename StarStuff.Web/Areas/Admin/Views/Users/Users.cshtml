@@ -11,7 +11,7 @@
     <h2>@ViewData["Title"] @(Model.UserRole != null ? $"in Role {Model.UserRole}" : string.Empty)</h2>
 
     <form class="form-inline" asp-area="Admin" asp-controller="Users" asp-action="Users">
-        <input type="hidden" name="role" value="@Model.UserRole" />
+        <input type="hidden" asp-for="UserRole" />
         <input class="form-control" asp-for="Search" placeholder="Search..." />
         <input class="btn btn-success" type="submit" value="Search" />
     </form>

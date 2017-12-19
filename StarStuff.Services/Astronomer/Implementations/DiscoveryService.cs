@@ -6,7 +6,6 @@
     using Infrastructure.Extensions;
     using Models.Astronomers;
     using Models.Discoveries;
-    using StarStuff.Services.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -25,18 +24,20 @@
             return this.db.Discoveries.Any(d => d.StarSystem == starSystem);
         }
 
-        public int Total(bool? confirmed)
+        public int Total(string search, bool? confirmed)
         {
             return this.db
                 .Discoveries
+                .Filter(search)
                 .Confirmed(confirmed)
                 .Count();
         }
 
-        public int Total(bool? confirmed, AstronomerType astronomerType, int astronomerId)
+        public int Total(string search, bool? confirmed, int astronomerId, AstronomerType astronomerType)
         {
             return this.db
                 .Discoveries
+                .Filter(search)
                 .Confirmed(confirmed)
                 .ByAstronomerType(astronomerId, astronomerType)
                 .Count();
@@ -63,7 +64,7 @@
                 .Count;
         }
 
-        public int Create(string starSystem, int telescopeId, int astronomerId, IEnumerable<int> astronomerIds)
+        public int Create(string starSystem, long distance, int telescopeId, int astronomerId, IEnumerable<int> astronomerIds)
         {
             if (this.db.Discoveries.Any(d => d.StarSystem == starSystem)
                 || !this.db.Telescopes.Any(t => t.Id == telescopeId))
@@ -83,6 +84,7 @@
             Discovery discovery = new Discovery
             {
                 StarSystem = starSystem,
+                Distance = distance,
                 DateMade = DateTime.UtcNow.Date,
                 TelescopeId = telescopeId
             };
@@ -101,7 +103,7 @@
             return discovery.Id;
         }
 
-        public bool Edit(int id, string starSystem)
+        public bool Edit(int id, string starSystem, long distance)
         {
             Discovery discovery = this.db.Discoveries.Find(id);
 
@@ -113,6 +115,7 @@
             }
 
             discovery.StarSystem = starSystem;
+            discovery.Distance = distance;
 
             this.db.SaveChanges();
 
@@ -134,7 +137,7 @@
             return true;
         }
 
-        public bool Confirm(int discoveryId, int userId)
+        public bool Confirm(int discoveryId, int astronomerId)
         {
             var discoveryInfo = this.db
                 .Discoveries
@@ -142,31 +145,30 @@
                 .Select(d => new
                 {
                     d.IsConfirmed,
-                    Observers = d.Observers
-                        .Select(o => new
-                        {
-                            o.ObserverId
-                        })
+                    IsObserver = d.Observers.Any(o => o.ObserverId == astronomerId),
+                    IsPioneer = d.Pioneers.Any(p => p.PioneerId == astronomerId),
+                    ObserversCount = d.Observers.Count
                 })
                 .FirstOrDefault();
 
             if (discoveryInfo == null
                 || discoveryInfo.IsConfirmed
-                || discoveryInfo.Observers
-                    .Any(o => o.ObserverId == userId))
+                || discoveryInfo.IsObserver
+                || discoveryInfo.IsPioneer
+                || discoveryInfo.ObserversCount >= 3)
             {
                 return false;
             }
 
             Observers observer = new Observers
             {
-                ObserverId = userId,
+                ObserverId = astronomerId,
                 DiscoveryId = discoveryId
             };
 
             this.db.Add(observer);
 
-            if (discoveryInfo.Observers.Count() == 2)
+            if (discoveryInfo.ObserversCount == 2)
             {
                 this.db
                     .Discoveries
@@ -242,11 +244,12 @@
                 .ToList();
         }
 
-        public IEnumerable<ListDiscoveriesServiceModel> All(int page, int pageSize, bool? confirmed = null)
+        public IEnumerable<ListDiscoveriesServiceModel> All(int page, int pageSize, string search, bool? confirmed)
         {
             return this.db
                 .Discoveries
                 .OrderByDescending(d => d.DateMade)
+                .Filter(search)
                 .Confirmed(confirmed)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -257,13 +260,15 @@
         public IEnumerable<ListDiscoveriesServiceModel> All(
             int page,
             int pageSize,
+            string search,
+            bool? confirmed,
             int astronomerId,
-            AstronomerType astronomerType,
-            bool? confirmed)
+            AstronomerType astronomerType)
         {
             return this.db
                 .Discoveries
                 .OrderByDescending(d => d.DateMade)
+                .Filter(search)
                 .Confirmed(confirmed)
                 .ByAstronomerType(astronomerId, astronomerType)
                 .Skip((page - 1) * pageSize)

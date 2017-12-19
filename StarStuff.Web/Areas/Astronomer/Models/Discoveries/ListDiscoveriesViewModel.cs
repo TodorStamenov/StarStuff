@@ -6,6 +6,8 @@
 
     public class ListDiscoveriesViewModel : BasePageViewModel
     {
+        public string Search { get; set; }
+
         public bool? Confirmed { get; set; }
 
         public IEnumerable<ListDiscoveriesServiceModel> Discoveries { get; set; }

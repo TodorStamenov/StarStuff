@@ -342,6 +342,7 @@
             actual.TelescopeId.Should().Be(expected.TelescopeId);
             actual.TelescopeName.Should().Be(expected.TelescopeName);
             actual.StarSystemName.Should().Be(expected.StarSystemName);
+            actual.Distance.Should().Be(expected.Distance);
             actual.AuthorName.Should().Be(expected.AuthorName);
             actual.ReleaseDate.Year.Should().Be(expected.ReleaseDate.Year);
             actual.ReleaseDate.Month.Should().Be(expected.ReleaseDate.Month);
@@ -375,6 +376,7 @@
                 TelescopeName = "Telescope Name",
                 AuthorName = "Author Name",
                 StarSystemName = "Star System Name",
+                Distance = 200000,
                 ReleaseDate = DateTime.UtcNow.AddMonths(-1)
             };
         }

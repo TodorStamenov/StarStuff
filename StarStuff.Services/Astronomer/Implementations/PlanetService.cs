@@ -23,8 +23,20 @@
 
         public bool Create(int discoveryId, string name, double mass)
         {
-            if (!this.db.Discoveries.Any(d => d.Id == discoveryId)
-                || this.db.Planets.Any(p => p.Name == name))
+            var discoveryInfo = this.db
+                .Discoveries
+                .Where(d => d.Id == discoveryId)
+                .Select(d => new
+                {
+                    HasStars = d.Stars.Any()
+                })
+                .FirstOrDefault();
+
+            bool hasPlanet = this.db.Planets.Any(p => p.Name == name);
+
+            if (discoveryInfo == null
+                || hasPlanet
+                || !discoveryInfo.HasStars)
             {
                 return false;
             }

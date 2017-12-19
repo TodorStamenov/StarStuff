@@ -28,6 +28,9 @@
             public const int MaxStarsPerDiscovery = 3;
             public const int StarSystemMaxLength = 255;
 
+            public const long MinStarSystemDistance = 1;
+            public const long MaxStarSystemDistance = 15000000000;
+
             public const string MaxStarsPerDiscoveryErrorMessage = "Maximum allowed Stars count per Discovery is {0}";
         }
 

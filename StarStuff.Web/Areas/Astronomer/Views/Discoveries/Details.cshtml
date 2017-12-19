@@ -6,8 +6,31 @@
 <div class="row">
     <h2>@ViewData["Title"]</h2>
     <h3>Star System Name: @Model.Discovery.StarSystem</h3>
+    <h3>Distance From Earth: @Model.Discovery.Distance Light Years</h3>
     <h3>Telescope Name: <a asp-area="" asp-controller="Telescopes" asp-action="Details" asp-route-id="@Model.Discovery.TelescopeId">@Model.Discovery.TelescopeName</a></h3>
     <h3>Discovery Date: @Model.Discovery.DateMade.ToShortDateString()</h3>
+    <h4>
+        Confirmed:
+        @if (Model.Discovery.IsConfirmed)
+        {
+            <span class="glyphicon glyphicon-ok text-success"></span>
+        }
+        else
+        {
+            <span class="glyphicon glyphicon-remove text-danger"></span>
+        }
+    </h4>
+    <h4>
+        Publication:
+        @if (Model.Discovery.HasPublication)
+        {
+            <span class="glyphicon glyphicon-ok text-success"></span>
+        }
+        else
+        {
+            <span class="glyphicon glyphicon-remove text-danger"></span>
+        }
+    </h4>
     @if (!(Model.IsObserver || Model.IsPioneer) && !Model.Discovery.IsConfirmed)
     {
         <form method="post" asp-area="Astronomer" asp-controller="Discoveries" asp-action="Confirm" asp-route-id="@Model.Discovery.Id">
@@ -51,7 +74,10 @@
                         {
                             <td>
                                 <a class="btn btn-warning btn-xs" asp-area="Astronomer" asp-controller="Stars" asp-action="Edit" asp-route-id="@star.Id" asp-route-discoveryId="@Model.Discovery.Id">Edit</a>
-                                <a class="btn btn-danger btn-xs" asp-area="Astronomer" asp-controller="Stars" asp-action="Delete" asp-route-id="@star.Id" asp-route-discoveryId="@Model.Discovery.Id">Delete</a>
+                                @if (Model.Stars.Count() > 1)
+                                {
+                                    <a class="btn btn-danger btn-xs" asp-area="Astronomer" asp-controller="Stars" asp-action="Delete" asp-route-id="@star.Id" asp-route-discoveryId="@Model.Discovery.Id">Delete</a>
+                                }
                             </td>
                         }
                     </tr>
@@ -93,7 +119,7 @@
                 }
             </tbody>
         </table>
-        @if (Model.IsPioneer)
+        @if (Model.IsPioneer && Model.Stars.Any())
         {
             <a class="btn btn-success btn-sm" asp-area="Astronomer" asp-controller="Planets" asp-action="Create" asp-route-id="@Model.Discovery.Id">Add Planet</a>
         }

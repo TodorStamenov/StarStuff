@@ -2,12 +2,15 @@
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Services.Astronomer.Models.Discoveries;
+    using Services.Astronomer.Models.Stars;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class DiscoveryFormViewModel
     {
         public DiscoveryFormServiceModel Discovery { get; set; }
+
+        public StarFormServiceModel Star { get; set; }
 
         [Display(Name = "Telescope")]
         public int TelescopeId { get; set; }

@@ -19,7 +19,7 @@
             this.SeedDatabase(db);
 
             // Act
-            string name = this.GetFakePlanets().FirstOrDefault(p => p.Id == 1).Name;
+            string name = this.GetFakePlanets().First().Name;
             bool result = planetService.Exists(name);
 
             // Assert
@@ -33,7 +33,7 @@
             StarStuffDbContext db = this.Database;
             PlanetService planetService = new PlanetService(db);
 
-            string name = this.GetFakePlanets().FirstOrDefault(p => p.Id == 1).Name;
+            string name = this.GetFakePlanets().First().Name;
 
             // Act
             bool result = planetService.Exists(name);
@@ -50,13 +50,12 @@
             PlanetService planetService = new PlanetService(db);
 
             const int discoveryId = 1;
-            Discovery discovery = new Discovery { Id = discoveryId };
+            this.SeedDiscovery(db, true);
 
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
+            Planet expected = this.GetFakePlanets().First();
 
             // Act
-            bool result = planetService.Create(discoveryId, "Not Existing 1", 20.5);
+            bool result = planetService.Create(discoveryId, expected.Name, expected.Mass);
 
             // Assert
             Assert.True(result);
@@ -70,20 +69,9 @@
             PlanetService planetService = new PlanetService(db);
 
             const int discoveryId = 1;
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId
-            };
+            this.SeedDiscovery(db, true);
 
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
-
-            Planet expected = new Planet
-            {
-                Id = 1,
-                Name = "Not Existing 1",
-                Mass = 22.5
-            };
+            Planet expected = this.GetFakePlanets().First();
 
             // Act
             planetService.Create(discoveryId, expected.Name, expected.Mass);
@@ -103,12 +91,9 @@
             this.SeedDatabase(db);
 
             const int discoveryId = 1;
-            Discovery discovery = new Discovery { Id = discoveryId };
+            this.SeedDiscovery(db, true);
 
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
-
-            Planet planet = this.GetFakePlanets().FirstOrDefault(p => p.Id == 1);
+            Planet planet = this.GetFakePlanets().First();
 
             // Act
             bool result = planetService.Create(discoveryId, planet.Name, planet.Mass);
@@ -124,8 +109,27 @@
             StarStuffDbContext db = this.Database;
             PlanetService planetService = new PlanetService(db);
 
+            Planet planet = this.GetFakePlanets().First();
+
             // Act
-            bool result = planetService.Create(1, "Not Existing 1", 20.5);
+            bool result = planetService.Create(1, planet.Name, planet.Mass);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void Create_WithExistingDicoveryWithoutStars_ShouldReturnFalse()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PlanetService planetService = new PlanetService(db);
+            this.SeedDiscovery(db, false);
+
+            Planet planet = this.GetFakePlanets().First();
+
+            // Act
+            bool result = planetService.Create(1, planet.Name, planet.Mass);
 
             // Assert
             Assert.False(result);
@@ -139,8 +143,10 @@
             PlanetService planetService = new PlanetService(db);
             this.SeedDatabase(db);
 
+            Planet planet = this.GetFakePlanets().First();
+
             // Act
-            bool result = planetService.Edit(1, "Not Existing 1", 20.5);
+            bool result = planetService.Edit(planet.Id, planet.Name, planet.Mass);
 
             // Assert
             Assert.True(result);
@@ -164,7 +170,7 @@
 
             // Act
             bool result = planetService.Edit(planetId, expected.Name, expected.Mass);
-            Planet actual = db.Planets.FirstOrDefault(p => p.Id == planetId);
+            Planet actual = db.Planets.Find(planetId);
 
             // Assert
             Assert.True(this.ComparePlanets(expected, actual));
@@ -193,10 +199,11 @@
             PlanetService planetService = new PlanetService(db);
             this.SeedDatabase(db);
 
-            Planet planet = this.GetFakePlanets().FirstOrDefault(p => p.Id == 1);
+            Planet planet = this.GetFakePlanets().First();
+            planet.Mass = 3.14;
 
             // Act
-            bool result = planetService.Edit(planet.Id, planet.Name, 20.5);
+            bool result = planetService.Edit(planet.Id, planet.Name, planet.Mass);
 
             // Assert
             Assert.True(result);
@@ -210,19 +217,12 @@
             PlanetService planetService = new PlanetService(db);
             this.SeedDatabase(db);
 
-            const int planetId = 1;
-            string name = this.GetFakePlanets().FirstOrDefault(p => p.Id == planetId).Name;
-
-            Planet expected = new Planet
-            {
-                Id = planetId,
-                Name = name,
-                Mass = 20.5
-            };
+            Planet expected = this.GetFakePlanets().First();
+            expected.Mass = 3.14;
 
             // Act
             planetService.Edit(expected.Id, expected.Name, expected.Mass);
-            Planet actual = db.Planets.Find(planetId);
+            Planet actual = db.Planets.Find(expected.Id);
 
             // Assert
             Assert.True(this.ComparePlanets(expected, actual));
@@ -266,15 +266,17 @@
             // Arrange
             StarStuffDbContext db = this.Database;
             PlanetService planetService = new PlanetService(db);
+            int planetsCount = this.GetFakePlanets().Count;
+            const int planetId = 1;
             this.SeedDatabase(db);
 
             // Act
-            planetService.Delete(1);
-            Planet planet = db.Planets.Find(1);
+            planetService.Delete(planetId);
+            Planet planet = db.Planets.Find(planetId);
 
             // Assert
-            Assert.Equal(9, db.Planets.Count());
             Assert.Null(planet);
+            Assert.Equal(planetsCount - 1, db.Planets.Count());
         }
 
         [Fact]
@@ -283,13 +285,32 @@
             // Arrange
             StarStuffDbContext db = this.Database;
             PlanetService planetService = new PlanetService(db);
+
+            int planetsCount = this.GetFakePlanets().Count;
             this.SeedDatabase(db);
 
             // Act
-            bool result = planetService.Delete(11);
+            bool result = planetService.Delete(planetsCount + 1);
 
             // Assert
             Assert.False(result);
+        }
+
+        [Fact]
+        public void Delete_WithNotExistingId_ShouldNotRemovePlanet()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PlanetService planetService = new PlanetService(db);
+
+            int planetsCount = this.GetFakePlanets().Count;
+            this.SeedDatabase(db);
+
+            // Act
+            planetService.Delete(11);
+
+            // Assert
+            Assert.Equal(planetsCount, db.Planets.Count());
         }
 
         [Fact]
@@ -301,7 +322,7 @@
             this.SeedDatabase(db);
 
             // Act
-            Planet planet = this.GetFakePlanets().FirstOrDefault(p => p.Id == 1);
+            Planet planet = this.GetFakePlanets().First();
             string actual = planetService.GetName(planet.Id);
 
             // Assert
@@ -330,10 +351,10 @@
             StarStuffDbContext db = this.Database;
             PlanetService planetService = new PlanetService(db);
             this.SeedDatabase(db);
-            Planet expected = this.GetFakePlanets().FirstOrDefault(p => p.Id == 1);
+            Planet expected = this.GetFakePlanets().First();
 
             // Act
-            PlanetFormServiceModel actual = planetService.GetForm(1);
+            PlanetFormServiceModel actual = planetService.GetForm(expected.Id);
 
             // Assert
             Assert.True(this.ComparePlanets(expected, actual));
@@ -363,14 +384,7 @@
 
             const int discoveryId = 1;
 
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId,
-                Planets = this.GetFakePlanets()
-            };
-
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
+            this.SeedDiscovery(db, false, true);
 
             // Act
             IEnumerable<ListPlanetsServiceModel> planets = planetService.Planets(discoveryId);
@@ -391,16 +405,7 @@
             StarStuffDbContext db = this.Database;
             PlanetService planetService = new PlanetService(db);
 
-            const int discoveryId = 1;
-
-            Discovery discovery = new Discovery
-            {
-                Id = discoveryId,
-                Planets = this.GetFakePlanets()
-            };
-
-            db.Discoveries.Add(discovery);
-            db.SaveChanges();
+            this.SeedDiscovery(db, false, true);
 
             // Act
             IEnumerable<ListPlanetsServiceModel> planets = planetService.Planets(2);
@@ -435,6 +440,25 @@
             db.SaveChanges();
         }
 
+        private void SeedDiscovery(StarStuffDbContext db, bool withStar, bool withPlanets = false)
+        {
+            Discovery discovery = new Discovery { Id = 1 };
+
+            db.Discoveries.Add(discovery);
+
+            if (withStar)
+            {
+                discovery.Stars.Add(new Star { Id = 1 });
+            }
+
+            if (withPlanets)
+            {
+                discovery.Planets.AddRange(this.GetFakePlanets());
+            }
+
+            db.SaveChanges();
+        }
+
         private List<Planet> GetFakePlanets()
         {
             List<Planet> planets = new List<Planet>();
@@ -449,7 +473,7 @@
                 });
             }
 
-            return planets;
+            return planets.OrderBy(p => p.Id).ToList();
         }
     }
 }

@@ -15,6 +15,8 @@
 
         public string StarSystemName { get; set; }
 
+        public long Distance { get; set; }
+
         public int TelescopeId { get; set; }
 
         public string TelescopeName { get; set; }
@@ -31,6 +33,7 @@
         {
             mapper.CreateMap<Publication, PublicationDetailsServiceModel>()
                 .ForMember(p => p.StarSystemName, cfg => cfg.MapFrom(p => p.Discovery.StarSystem))
+                .ForMember(p => p.Distance, cfg => cfg.MapFrom(p => p.Discovery.Distance))
                 .ForMember(p => p.TelescopeName, cfg => cfg.MapFrom(p => p.Discovery.Telescope.Name))
                 .ForMember(p => p.TelescopeId, cfg => cfg.MapFrom(p => p.Discovery.TelescopeId))
                 .ForMember(p => p.JournalName, cfg => cfg.MapFrom(p => p.Journal.Name))

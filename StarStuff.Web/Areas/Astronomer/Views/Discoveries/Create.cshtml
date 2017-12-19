@@ -14,6 +14,21 @@
                 <span asp-validation-for="Discovery.StarSystem" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Discovery.Distance"></label>
+                <input asp-for="Discovery.Distance" class="form-control" />
+                <span asp-validation-for="Discovery.Distance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Star.Name"></label>
+                <input asp-for="Star.Name" class="form-control" />
+                <span asp-validation-for="Star.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Star.Temperature"></label>
+                <input asp-for="Star.Temperature" class="form-control" />
+                <span asp-validation-for="Star.Temperature" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="TelescopeId"></label>
                 <select asp-for="TelescopeId" asp-items="@Model.Telescopes" class="form-control"></select>
                 <span asp-validation-for="TelescopeId" class="text-danger"></span>

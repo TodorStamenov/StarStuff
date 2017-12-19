@@ -21,6 +21,7 @@
     {
         private const int DiscoveriesPerPage = 20;
         private const string Discovery = "Discovery";
+        private const string Star = "Star";
         private const string StarSystem = "Star System";
 
         private readonly IDiscoveryService discoveryService;
@@ -72,10 +73,9 @@
         [HttpPost]
         public IActionResult Confirm(int id)
         {
-            int userId = int.Parse(this.userManager.GetUserId(User));
+            int astronomerId = int.Parse(this.userManager.GetUserId(User));
 
-            bool success = this.discoveryService
-                .Confirm(id, userId);
+            bool success = this.discoveryService.Confirm(id, astronomerId);
 
             if (!success)
             {
@@ -87,13 +87,10 @@
 
         public IActionResult Create()
         {
-            int userId = int.Parse(this.userManager.GetUserId(User));
+            int astronomerId = int.Parse(this.userManager.GetUserId(User));
 
-            DiscoveryFormViewModel model = new DiscoveryFormViewModel
-            {
-                Telescopes = this.GetTelescopes(),
-                Astronomers = this.GetAstronomers(userId)
-            };
+            DiscoveryFormViewModel model = new DiscoveryFormViewModel();
+            this.PopulateCreateViewModel(astronomerId, model);
 
             return View(model);
         }
@@ -102,39 +99,51 @@
         [Log(LogType.Create, Discoveries)]
         public IActionResult Create(DiscoveryFormViewModel model)
         {
-            int userId = int.Parse(this.userManager.GetUserId(User));
+            int astronomerId = int.Parse(this.userManager.GetUserId(User));
 
             if (!ModelState.IsValid)
             {
-                model.Telescopes = this.GetTelescopes();
-                model.Astronomers = this.GetAstronomers(userId);
+                this.PopulateCreateViewModel(astronomerId, model);
                 return View(model);
             }
 
             if (this.discoveryService.Exists(model.Discovery.StarSystem))
             {
-                model.Telescopes = this.GetTelescopes();
-                model.Astronomers = this.GetAstronomers(userId);
-
+                this.PopulateCreateViewModel(astronomerId, model);
                 TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, StarSystem));
-
                 return View(model);
             }
 
-            int id = this.discoveryService.Create(
+            if (this.starService.Exists(model.Star.Name))
+            {
+                this.PopulateCreateViewModel(astronomerId, model);
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Star));
+                return View(model);
+            }
+
+            int discoveryId = this.discoveryService.Create(
                 model.Discovery.StarSystem,
+                model.Discovery.Distance,
                 model.TelescopeId,
-                userId,
+                astronomerId,
                 model.AstronomerIds);
 
-            if (id <= 0)
+            if (discoveryId <= 0)
             {
+                return BadRequest();
+            }
+
+            bool success = this.starService.Create(discoveryId, model.Star.Name, model.Star.Temperature);
+
+            if (!success)
+            {
+                this.discoveryService.Delete(discoveryId);
                 return BadRequest();
             }
 
             TempData.AddSuccessMessage(string.Format(WebConstants.SuccessfullEntityOperation, Discovery, WebConstants.Added));
 
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Details), new { id = discoveryId });
         }
 
         public IActionResult Edit(int id)
@@ -170,7 +179,7 @@
                 return View(model);
             }
 
-            bool success = this.discoveryService.Edit(id, model.StarSystem);
+            bool success = this.discoveryService.Edit(id, model.StarSystem, model.Distance);
 
             if (!success)
             {
@@ -204,7 +213,7 @@
             return RedirectToAction(nameof(All));
         }
 
-        public IActionResult Mine(int page, bool? confirmed, string astronomer)
+        public IActionResult Mine(int page, string search, bool? confirmed, string astronomer)
         {
             if (page <= 0)
             {
@@ -222,39 +231,47 @@
                 astronomerType = AstronomerType.Observer;
             }
 
-            int userId = int.Parse(this.userManager.GetUserId(User));
-            int totalDiscoveries = this.discoveryService.Total(confirmed, astronomerType, userId);
+            int astronomerId = int.Parse(this.userManager.GetUserId(User));
+            int totalDiscoveries = this.discoveryService.Total(search, confirmed, astronomerId, astronomerType);
 
             ListMyDiscoveriesViewModel model = new ListMyDiscoveriesViewModel
             {
                 Confirmed = confirmed,
                 CurrentPage = page,
-                AstronomerType = astronomerType.ToString(),
+                Search = search,
+                Astronomer = astronomerType.ToString(),
                 TotalPages = ControllerHelpers.GetTotalPages(totalDiscoveries, DiscoveriesPerPage),
-                Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, userId, astronomerType, confirmed)
+                Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, search, confirmed, astronomerId, astronomerType)
             };
 
             return View(model);
         }
 
-        public IActionResult All(int page, bool? confirmed)
+        public IActionResult All(int page, string search, bool? confirmed)
         {
             if (page <= 0)
             {
                 page = 1;
             }
 
-            int totalDiscoveries = this.discoveryService.Total(confirmed);
+            int totalDiscoveries = this.discoveryService.Total(search, confirmed);
 
             ListDiscoveriesViewModel model = new ListDiscoveriesViewModel
             {
                 Confirmed = confirmed,
                 CurrentPage = page,
+                Search = search,
                 TotalPages = ControllerHelpers.GetTotalPages(totalDiscoveries, DiscoveriesPerPage),
-                Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, confirmed)
+                Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, search, confirmed)
             };
 
             return View(model);
+        }
+
+        private void PopulateCreateViewModel(int astronomerId, DiscoveryFormViewModel model)
+        {
+            model.Astronomers = this.GetAstronomers(astronomerId);
+            model.Telescopes = this.GetTelescopes();
         }
 
         private IEnumerable<SelectListItem> GetAstronomers(int astronomerId)

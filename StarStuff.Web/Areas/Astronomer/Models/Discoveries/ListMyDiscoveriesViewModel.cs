@@ -2,6 +2,6 @@
 {
     public class ListMyDiscoveriesViewModel : ListDiscoveriesViewModel
     {
-        public string AstronomerType { get; set; }
+        public string Astronomer { get; set; }
     }
 }

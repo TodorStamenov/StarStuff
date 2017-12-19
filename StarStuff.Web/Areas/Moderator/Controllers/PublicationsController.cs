@@ -11,6 +11,7 @@
     using Services.Astronomer;
     using Services.Moderator;
     using Services.Moderator.Models.Publications;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class PublicationsController : BaseModeratorController
@@ -137,7 +138,12 @@
         private void PopulateCreateViewModel(int journalId, PublicationFormViewModel model)
         {
             model.JournalName = this.journalService.GetName(journalId);
-            model.Discoveries = this.discoveryService
+            model.Discoveries = this.GetDiscoveryDropdown(journalId);
+        }
+
+        private IEnumerable<SelectListItem> GetDiscoveryDropdown(int journalId)
+        {
+            return this.discoveryService
                 .DiscoveryDropdown(journalId)
                 .Select(d => new SelectListItem
                 {

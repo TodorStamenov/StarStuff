@@ -6,6 +6,17 @@
 
     public static class DiscoveryExtensions
     {
+        public static IQueryable<Discovery> Filter(this IQueryable<Discovery> discoveries, string search)
+        {
+            if (!string.IsNullOrEmpty(search))
+            {
+                return discoveries
+                    .Where(d => d.StarSystem.ToLower().Contains(search.ToLower()));
+            }
+
+            return discoveries;
+        }
+
         public static IQueryable<Discovery> Confirmed(this IQueryable<Discovery> discoveries, bool? confirmed)
         {
             if (confirmed != null)
