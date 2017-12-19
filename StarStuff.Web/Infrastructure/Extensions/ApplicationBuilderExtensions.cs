@@ -367,7 +367,9 @@
             {
                 Publication publication = new Publication
                 {
+                    Title = $"Publication Title {discovery.Id}",
                     Content = WebConstants.Lorem,
+                    Views = random.Next(1, 101),
                     DiscoveryId = discovery.Id,
                     JournalId = journalIds[random.Next(0, journalIds.Count)],
                     AuthorId = moderatorIds[random.Next(0, moderatorIds.Count)],

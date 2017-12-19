@@ -62,10 +62,11 @@
         }
 
         [Fact]
-        public void CreateGet_ShouldReturnViewWithCorrectDiscoveryDropdownItems()
+        public void CreateGet_ShouldReturnCorrectViewModel()
         {
             // Arrange
             Mock<IDiscoveryService> discoveryService = new Mock<IDiscoveryService>();
+            Mock<IJournalService> journalService = new Mock<IJournalService>();
 
             const int journalId = 1;
 
@@ -73,7 +74,11 @@
                 .Setup(d => d.DiscoveryDropdown(It.IsAny<int>()))
                 .Returns(this.GetDiscoveriesDropdown());
 
-            PublicationsController publicationsController = new PublicationsController(null, discoveryService.Object, null, null);
+            journalService
+                .Setup(j => j.GetName(It.IsAny<int>()))
+                .Returns("Journal Name");
+
+            PublicationsController publicationsController = new PublicationsController(null, discoveryService.Object, journalService.Object, null);
 
             // Act
             IActionResult result = publicationsController.Create(journalId);
@@ -85,14 +90,19 @@
             model.Should().BeOfType<PublicationFormViewModel>();
 
             PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
+
+            returnModel.JournalName.Should().Be("Journal Name");
             this.AssertDiscoveriesSelectList(returnModel.Discoveries);
         }
 
         [Fact]
-        public void CreatePost_WithNotValidModelState_ShouldReturnViewWithCorrectDiscoveryDropdownItems()
+        public void CreatePost_WithNotValidModelState_ShouldReturnCorrectViewModel()
         {
             // Arrange
             Mock<IDiscoveryService> discoveryService = new Mock<IDiscoveryService>();
+            Mock<IJournalService> journalService = new Mock<IJournalService>();
+
+            PublicationFormViewModel formModel = this.GetPublicationFormViewModel();
 
             const int journalId = 1;
 
@@ -100,8 +110,11 @@
                 .Setup(d => d.DiscoveryDropdown(It.IsAny<int>()))
                 .Returns(this.GetDiscoveriesDropdown());
 
-            PublicationFormViewModel formModel = this.GetPublicationFormViewModel();
-            PublicationsController publicationsController = new PublicationsController(null, discoveryService.Object, null, null);
+            journalService
+               .Setup(j => j.GetName(It.IsAny<int>()))
+               .Returns(formModel.JournalName);
+
+            PublicationsController publicationsController = new PublicationsController(null, discoveryService.Object, journalService.Object, null);
             publicationsController.ModelState.AddModelError(string.Empty, "Error");
 
             // Act
@@ -114,20 +127,130 @@
             model.Should().BeOfType<PublicationFormViewModel>();
 
             PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
-            this.AssertDiscoveriesSelectList(returnModel.Discoveries);
+            this.AssertPublicationFormViewModel(formModel, returnModel);
+        }
+
+        [Fact]
+        public void CreatePost_WithExistingPublicationTitle_ShouldReturnCorrectViewModel()
+        {
+            // Arrange
+            Mock<IDiscoveryService> discoveryService = new Mock<IDiscoveryService>();
+            Mock<IJournalService> journalService = new Mock<IJournalService>();
+            Mock<IPublicationService> publicationService = new Mock<IPublicationService>();
+            Mock<ITempDataDictionary> tempData = new Mock<ITempDataDictionary>();
+
+            PublicationFormViewModel formModel = this.GetPublicationFormViewModel();
+
+            const int journalId = 1;
+
+            discoveryService
+                .Setup(d => d.DiscoveryDropdown(It.IsAny<int>()))
+                .Returns(this.GetDiscoveriesDropdown());
+
+            journalService
+               .Setup(j => j.GetName(It.IsAny<int>()))
+               .Returns(formModel.JournalName);
+
+            publicationService
+               .Setup(p => p.TitleExists(It.IsAny<string>()))
+               .Returns(true);
+
+            string errorMessage = null;
+
+            tempData
+                .SetupSet(t => t[WebConstants.TempDataErrorMessage] = It.IsAny<string>())
+                .Callback((string key, object message) => errorMessage = message as string);
+
+            PublicationsController publicationsController = new PublicationsController(publicationService.Object, discoveryService.Object, journalService.Object, null);
+            publicationsController.TempData = tempData.Object;
+
+            // Act
+            IActionResult result = publicationsController.Create(journalId, formModel);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+            object model = result.As<ViewResult>().Model;
+
+            model.Should().BeOfType<PublicationFormViewModel>();
+
+            PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
+            this.AssertPublicationFormViewModel(formModel, returnModel);
+            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Publication));
+        }
+
+        [Fact]
+        public void CreatePost_WithExistingPublicationFromJournalForDiscovery_ShouldReturnCorrectViewModel()
+        {
+            // Arrange
+            Mock<IDiscoveryService> discoveryService = new Mock<IDiscoveryService>();
+            Mock<IJournalService> journalService = new Mock<IJournalService>();
+            Mock<IPublicationService> publicationService = new Mock<IPublicationService>();
+            Mock<ITempDataDictionary> tempData = new Mock<ITempDataDictionary>();
+
+            PublicationFormViewModel formModel = this.GetPublicationFormViewModel();
+
+            const int journalId = 1;
+
+            discoveryService
+                .Setup(d => d.DiscoveryDropdown(It.IsAny<int>()))
+                .Returns(this.GetDiscoveriesDropdown());
+
+            journalService
+               .Setup(j => j.GetName(It.IsAny<int>()))
+               .Returns(formModel.JournalName);
+
+            publicationService
+               .Setup(p => p.TitleExists(It.IsAny<string>()))
+               .Returns(false);
+
+            publicationService
+               .Setup(p => p.Exists(It.IsAny<int>(), It.IsAny<int>()))
+               .Returns(true);
+
+            string errorMessage = null;
+
+            tempData
+                .SetupSet(t => t[WebConstants.TempDataErrorMessage] = It.IsAny<string>())
+                .Callback((string key, object message) => errorMessage = message as string);
+
+            PublicationsController publicationsController = new PublicationsController(publicationService.Object, discoveryService.Object, journalService.Object, null);
+            publicationsController.TempData = tempData.Object;
+
+            // Act
+            IActionResult result = publicationsController.Create(journalId, formModel);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+            object model = result.As<ViewResult>().Model;
+
+            model.Should().BeOfType<PublicationFormViewModel>();
+
+            PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
+            this.AssertPublicationFormViewModel(formModel, returnModel);
+            errorMessage.Should().Be("Publication from this Journal for this Discovery already exists!");
         }
 
         [Fact]
         public void CreatePost_WithNotSuccessfullyCreatedPublication_ShouldReturnBadRequest()
         {
             // Arrange
+            Mock<IJournalService> journalService = new Mock<IJournalService>();
             Mock<IPublicationService> publicationService = new Mock<IPublicationService>();
             Mock<UserManager<User>> userManager = UserManagerMock.New;
 
             const int journalId = 1;
 
             publicationService
-                .Setup(d => d.Create(
+                .Setup(p => p.TitleExists(It.IsAny<string>()))
+                .Returns(false);
+
+            publicationService
+                .Setup(p => p.Exists(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(false);
+
+            publicationService
+                .Setup(p => p.Create(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -159,7 +282,16 @@
             const int journalId = 1;
 
             publicationService
-                .Setup(d => d.Create(
+                .Setup(p => p.TitleExists(It.IsAny<string>()))
+                .Returns(false);
+
+            publicationService
+                .Setup(p => p.Exists(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(false);
+
+            publicationService
+                .Setup(p => p.Create(
+                    It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<int>(),
                     It.IsAny<int>(),
@@ -200,7 +332,7 @@
             PublicationFormServiceModel formModel = null;
 
             publicationService
-                .Setup(d => d.GetForm(It.IsAny<int>()))
+                .Setup(p => p.GetForm(It.IsAny<int>()))
                 .Returns(formModel);
 
             PublicationsController publicationsController = new PublicationsController(publicationService.Object, null, null, null);
@@ -222,7 +354,7 @@
             PublicationFormServiceModel formModel = this.GetPublicationFormServiceModel();
 
             publicationService
-                .Setup(d => d.GetForm(It.IsAny<int>()))
+                .Setup(p => p.GetForm(It.IsAny<int>()))
                 .Returns(formModel);
 
             PublicationsController publicationsController = new PublicationsController(publicationService.Object, null, null, null);
@@ -241,6 +373,73 @@
         }
 
         [Fact]
+        public void EditPost_WithNotExistingId_ShouldReturnBadRequest()
+        {
+            // Arrange
+            Mock<IPublicationService> publicationService = new Mock<IPublicationService>();
+
+            const int journalId = 1;
+            PublicationFormServiceModel formModel = this.GetPublicationFormServiceModel();
+
+            string title = null;
+
+            publicationService
+                .Setup(p => p.GetTitle(It.IsAny<int>()))
+                .Returns(title);
+
+            PublicationsController publicationsController = new PublicationsController(publicationService.Object, null, null, null);
+
+            // Act
+            IActionResult result = publicationsController.Edit(journalId, formModel);
+
+            // Assert
+            result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public void EditPost_WithNewExistingTitle_ShouldReturnCorrectView()
+        {
+            // Arrange
+            Mock<IPublicationService> publicationService = new Mock<IPublicationService>();
+            Mock<ITempDataDictionary> tempData = new Mock<ITempDataDictionary>();
+
+            const int journalId = 1;
+            PublicationFormServiceModel formModel = this.GetPublicationFormServiceModel();
+
+            publicationService
+                .Setup(p => p.GetTitle(It.IsAny<int>()))
+                .Returns(formModel.Title);
+
+            formModel.Title = "New Title";
+
+            publicationService
+                .Setup(p => p.TitleExists(It.IsAny<string>()))
+                .Returns(true);
+
+            string errorMessage = null;
+
+            tempData
+                .SetupSet(t => t[WebConstants.TempDataErrorMessage] = It.IsAny<string>())
+                .Callback((string key, object message) => errorMessage = message as string);
+
+            PublicationsController publicationsController = new PublicationsController(publicationService.Object, null, null, null);
+            publicationsController.TempData = tempData.Object;
+
+            // Act
+            IActionResult result = publicationsController.Edit(journalId, formModel);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+            object model = result.As<ViewResult>().Model;
+
+            model.Should().BeOfType<PublicationFormServiceModel>();
+
+            PublicationFormServiceModel returnModel = model.As<PublicationFormServiceModel>();
+            this.AssertPublications(formModel, returnModel);
+            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Publication));
+        }
+
+        [Fact]
         public void EditPost_WithNotSuccessfullEdit_ShouldReturnBadRequest()
         {
             // Arrange
@@ -250,7 +449,15 @@
             PublicationFormServiceModel formModel = this.GetPublicationFormServiceModel();
 
             publicationService
-                .Setup(d => d.Edit(It.IsAny<int>(), It.IsAny<string>()))
+                .Setup(p => p.GetTitle(It.IsAny<int>()))
+                .Returns(formModel.Title);
+
+            publicationService
+                .Setup(p => p.TitleExists(It.IsAny<string>()))
+                .Returns(false);
+
+            publicationService
+                .Setup(p => p.Edit(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(false);
 
             PublicationsController publicationsController = new PublicationsController(publicationService.Object, null, null, null);
@@ -267,15 +474,22 @@
         {
             // Arrange
             Mock<IPublicationService> publicationService = new Mock<IPublicationService>();
+            Mock<ITempDataDictionary> tempData = new Mock<ITempDataDictionary>();
 
             const int journalId = 1;
             PublicationFormServiceModel formModel = this.GetPublicationFormServiceModel();
 
             publicationService
-                .Setup(d => d.Edit(It.IsAny<int>(), It.IsAny<string>()))
-                .Returns(true);
+                .Setup(p => p.GetTitle(It.IsAny<int>()))
+                .Returns("Fake Title");
 
-            Mock<ITempDataDictionary> tempData = new Mock<ITempDataDictionary>();
+            publicationService
+                .Setup(p => p.TitleExists(It.IsAny<string>()))
+                .Returns(false);
+
+            publicationService
+                .Setup(p => p.Edit(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(true);
 
             string successmessage = null;
 
@@ -298,7 +512,16 @@
 
         private void AssertPublications(PublicationFormServiceModel expected, PublicationFormServiceModel actual)
         {
+            actual.Title.Should().Be(expected.Title);
             actual.Content.Should().Be(expected.Content);
+        }
+
+        private void AssertPublicationFormViewModel(PublicationFormViewModel expected, PublicationFormViewModel actual)
+        {
+            actual.JournalName.Should().Be(expected.JournalName);
+            actual.DiscoveryId.Should().Be(expected.DiscoveryId);
+            this.AssertPublications(expected.Publication, actual.Publication);
+            this.AssertDiscoveriesSelectList(actual.Discoveries);
         }
 
         private void AssertRedirect(int publicationId, RedirectToActionResult result)
@@ -322,7 +545,8 @@
         {
             return new PublicationFormServiceModel
             {
-                Content = "Test Content"
+                Title = "Publication Title",
+                Content = "Publication Content"
             };
         }
 
@@ -330,6 +554,7 @@
         {
             return new PublicationFormViewModel
             {
+                JournalName = "Journal Name",
                 DiscoveryId = 1,
                 Publication = this.GetPublicationFormServiceModel()
             };

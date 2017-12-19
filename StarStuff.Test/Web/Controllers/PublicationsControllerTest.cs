@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
+    using StarStuff.Data.Models;
     using StarStuff.Services;
     using StarStuff.Services.Models.Comments;
     using StarStuff.Services.Moderator;
@@ -170,7 +171,7 @@
 
             journalService
                 .Setup(j => j.GetName(It.IsAny<int>()))
-                .Returns("Test Name");
+                .Returns("Journal Name");
 
             PublicationsController publicationsController =
                 new PublicationsController(null, journalService.Object, null, publicationService.Object, null);
@@ -240,7 +241,7 @@
 
             telescopeService
                 .Setup(j => j.GetName(It.IsAny<int>()))
-                .Returns("Test Name");
+                .Returns("Journal Name");
 
             PublicationsController publicationsController =
                 new PublicationsController(null, null, telescopeService.Object, publicationService.Object, null);
@@ -326,8 +327,9 @@
         private void AssertPublicationListServiceModel(ListPublicationsServiceModel expected, ListPublicationsServiceModel actual)
         {
             actual.Id.Should().Be(expected.Id);
+            actual.Title.Should().Be(expected.Title);
             actual.Content.Should().Be(expected.Content);
-            actual.StarSystemName.Should().Be(expected.StarSystemName);
+            actual.Views.Should().Be(expected.Views);
             actual.CommentsCount.Should().Be(expected.CommentsCount);
         }
 
@@ -341,7 +343,6 @@
             actual.TelescopeName.Should().Be(expected.TelescopeName);
             actual.StarSystemName.Should().Be(expected.StarSystemName);
             actual.AuthorName.Should().Be(expected.AuthorName);
-            actual.CommentsCount.Should().Be(expected.CommentsCount);
             actual.ReleaseDate.Year.Should().Be(expected.ReleaseDate.Year);
             actual.ReleaseDate.Month.Should().Be(expected.ReleaseDate.Month);
             actual.ReleaseDate.Day.Should().Be(expected.ReleaseDate.Day);
@@ -366,14 +367,14 @@
             return new PublicationDetailsServiceModel
             {
                 Id = 1,
-                Content = "Test Content",
+                Title = $"Publication Title 1",
+                Content = "Publication Content",
                 JournalId = 1,
-                JournalName = "Test Journal Name",
+                JournalName = "Journal Name",
                 TelescopeId = 1,
-                TelescopeName = "Test Telescope Name",
-                AuthorName = "Test Author Name",
-                StarSystemName = "Test Star System Name",
-                CommentsCount = 20,
+                TelescopeName = "Telescope Name",
+                AuthorName = "Author Name",
+                StarSystemName = "Star System Name",
                 ReleaseDate = DateTime.UtcNow.AddMonths(-1)
             };
         }
@@ -406,7 +407,7 @@
                 CurrentPage = 2,
                 TotalPages = 2,
                 JournalId = 1,
-                JournalName = "Test Name",
+                JournalName = "Journal Name",
                 Publications = this.GetPublications()
             };
         }
@@ -418,7 +419,7 @@
                 CurrentPage = 2,
                 TotalPages = 2,
                 TelescopeId = 1,
-                TelescopeName = "Test Name",
+                TelescopeName = "Journal Name",
                 Publications = this.GetPublications()
             };
         }
@@ -432,9 +433,9 @@
                 comments.Add(new ListCommentsServiceModel
                 {
                     Id = i,
-                    Content = $"Test Content {i}",
-                    Username = $"Test Username {i}",
-                    ProfileImage = $"Test Profile Image {i}",
+                    Content = $"Comment Content {i}",
+                    Username = $"Comment Username {i}",
+                    ProfileImage = $"Comment Profile Image {i}",
                     DateAdded = DateTime.UtcNow.AddDays(-i).AddHours(-i).AddMinutes(-i),
                     IsOwner = true
                 });
@@ -445,20 +446,32 @@
 
         private IEnumerable<ListPublicationsServiceModel> GetPublications()
         {
-            List<ListPublicationsServiceModel> publications = new List<ListPublicationsServiceModel>();
+            List<Publication> publications = new List<Publication>();
 
             for (int i = 1; i <= 20; i++)
             {
-                publications.Add(new ListPublicationsServiceModel
+                publications.Add(new Publication
                 {
                     Id = i,
-                    Content = $"Test Content {i}",
-                    StarSystemName = $"Star System {i}",
-                    CommentsCount = 20
+                    Title = $"Publication Title {i}",
+                    Content = $"Publication Content {i}",
+                    Views = i * i
                 });
             }
 
-            return publications.Skip(10).Take(10).ToList();
+            return publications
+                .OrderByDescending(p => p.ReleaseDate)
+                .Skip(10)
+                .Take(10)
+                .Select(p => new ListPublicationsServiceModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    Views = p.Views,
+                    CommentsCount = p.Id * p.Id
+                })
+                .ToList();
         }
     }
 }

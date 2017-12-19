@@ -17,6 +17,28 @@
             this.db = db;
         }
 
+        public bool Exists(int journalId, int discoveryId)
+        {
+            return this.db
+                .Publications
+                .Any(p => p.JournalId == journalId
+                    && p.DiscoveryId == discoveryId);
+        }
+
+        public bool TitleExists(string title)
+        {
+            return this.db.Publications.Any(p => p.Title == title);
+        }
+
+        public string GetTitle(int id)
+        {
+            return this.db
+                .Publications
+                .Where(p => p.Id == id)
+                .Select(p => p.Title)
+                .FirstOrDefault();
+        }
+
         public int Total()
         {
             return this.db.Publications.Count();
@@ -32,7 +54,7 @@
             return this.db.Publications.Count(p => p.Discovery.TelescopeId == telescopeId);
         }
 
-        public int Create(string content, int discoveryId, int journalId, int authorId)
+        public int Create(string title, string content, int discoveryId, int journalId, int authorId)
         {
             bool hasJournal = this.db
                 .Journals
@@ -47,9 +69,7 @@
                 .Users
                 .Any(u => u.Id == authorId);
 
-            if (!hasJournal
-                || !hasDiscovery
-                || !hasModerator)
+            if (!hasJournal || !hasDiscovery || !hasModerator)
             {
                 return -1;
             }
@@ -66,6 +86,7 @@
 
             Publication publication = new Publication
             {
+                Title = title,
                 Content = content,
                 JournalId = journalId,
                 DiscoveryId = discoveryId,
@@ -79,7 +100,7 @@
             return publication.Id;
         }
 
-        public bool Edit(int id, string content)
+        public bool Edit(int id, string title, string content)
         {
             Publication publication = this.db
                 .Publications
@@ -90,6 +111,7 @@
                 return false;
             }
 
+            publication.Title = title;
             publication.Content = content;
 
             this.db.SaveChanges();
@@ -108,6 +130,16 @@
 
         public PublicationDetailsServiceModel Details(int id)
         {
+            Publication publication = this.db.Publications.Find(id);
+
+            if (publication == null)
+            {
+                return null;
+            }
+
+            publication.Views++;
+            this.db.SaveChanges();
+
             return this.db
                 .Publications
                 .Where(p => p.Id == id)

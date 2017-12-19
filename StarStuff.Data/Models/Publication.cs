@@ -11,7 +11,13 @@
         public DateTime ReleaseDate { get; set; }
 
         [Required]
+        [MaxLength(DataConstants.PublicationConstants.TitleMaxLength)]
+        public string Title { get; set; }
+
+        [Required]
         public string Content { get; set; }
+
+        public int Views { get; set; }
 
         public int JournalId { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿namespace StarStuff.Web.Areas.Moderator.Controllers
 {
     using Data.Models;
+    using Infrastructure;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Identity;
@@ -10,8 +11,6 @@
     using Services.Astronomer;
     using Services.Moderator;
     using Services.Moderator.Models.Publications;
-    using StarStuff.Web.Infrastructure;
-    using System.Collections.Generic;
     using System.Linq;
 
     public class PublicationsController : BaseModeratorController
@@ -38,10 +37,8 @@
 
         public IActionResult Create(int id)
         {
-            PublicationFormViewModel model = new PublicationFormViewModel
-            {
-                Discoveries = this.GetDiscoveries(id)
-            };
+            PublicationFormViewModel model = new PublicationFormViewModel();
+            this.PopulateCreateViewModel(id, model);
 
             return View(model);
         }
@@ -52,13 +49,28 @@
         {
             if (!ModelState.IsValid)
             {
-                model.Discoveries = this.GetDiscoveries(id);
+                this.PopulateCreateViewModel(id, model);
+                return View(model);
+            }
+
+            if (this.publicationService.TitleExists(model.Publication.Title))
+            {
+                this.PopulateCreateViewModel(id, model);
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Publication));
+                return View(model);
+            }
+
+            if (this.publicationService.Exists(id, model.DiscoveryId))
+            {
+                this.PopulateCreateViewModel(id, model);
+                TempData.AddErrorMessage("Publication from this Journal for this Discovery already exists!");
                 return View(model);
             }
 
             int authorId = int.Parse(this.userManager.GetUserId(User));
 
             int publicationId = this.publicationService.Create(
+                model.Publication.Title,
                 model.Publication.Content,
                 model.DiscoveryId,
                 id,
@@ -91,8 +103,25 @@
         [Log(LogType.Edit, Publications)]
         public IActionResult Edit(int id, PublicationFormServiceModel model)
         {
+            string oldTitle = this.publicationService.GetTitle(id);
+
+            if (oldTitle == null)
+            {
+                return BadRequest();
+            }
+
+            string newTitle = model.Title;
+
+            if (this.publicationService.TitleExists(newTitle)
+                && oldTitle != newTitle)
+            {
+                TempData.AddErrorMessage(string.Format(WebConstants.EntryExists, Publication));
+                return View(model);
+            }
+
             bool success = this.publicationService.Edit(
                 id,
+                model.Title,
                 model.Content);
 
             if (!success)
@@ -105,9 +134,10 @@
             return RedirectToAction(Details, Publications, new { id, area = string.Empty });
         }
 
-        private IEnumerable<SelectListItem> GetDiscoveries(int journalId)
+        private void PopulateCreateViewModel(int journalId, PublicationFormViewModel model)
         {
-            return this.discoveryService
+            model.JournalName = this.journalService.GetName(journalId);
+            model.Discoveries = this.discoveryService
                 .DiscoveryDropdown(journalId)
                 .Select(d => new SelectListItem
                 {

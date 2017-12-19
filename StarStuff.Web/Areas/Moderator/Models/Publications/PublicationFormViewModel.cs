@@ -9,6 +9,8 @@
     {
         public PublicationFormServiceModel Publication { get; set; }
 
+        public string JournalName { get; set; }
+
         [Display(Name = "Star System Name")]
         public int DiscoveryId { get; set; }
 

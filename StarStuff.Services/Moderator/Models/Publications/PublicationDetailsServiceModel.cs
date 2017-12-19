@@ -9,9 +9,11 @@
     {
         public int Id { get; set; }
 
-        public string StarSystemName { get; set; }
+        public string Title { get; set; }
 
         public string Content { get; set; }
+
+        public string StarSystemName { get; set; }
 
         public int TelescopeId { get; set; }
 
@@ -23,8 +25,6 @@
 
         public string AuthorName { get; set; }
 
-        public int CommentsCount { get; set; }
-
         public DateTime ReleaseDate { get; set; }
 
         public void ConfigureMapping(Profile mapper)
@@ -33,7 +33,6 @@
                 .ForMember(p => p.StarSystemName, cfg => cfg.MapFrom(p => p.Discovery.StarSystem))
                 .ForMember(p => p.TelescopeName, cfg => cfg.MapFrom(p => p.Discovery.Telescope.Name))
                 .ForMember(p => p.TelescopeId, cfg => cfg.MapFrom(p => p.Discovery.TelescopeId))
-                .ForMember(p => p.CommentsCount, cfg => cfg.MapFrom(p => p.Comments.Count))
                 .ForMember(p => p.JournalName, cfg => cfg.MapFrom(p => p.Journal.Name))
                 .ForMember(p => p.AuthorName, cfg => cfg.MapFrom(p => p.Author.UserName));
         }

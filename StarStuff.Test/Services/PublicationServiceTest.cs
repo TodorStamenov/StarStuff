@@ -12,6 +12,155 @@
     public class PublicationServiceTest : BaseServiceTest
     {
         [Fact]
+        public void Exists_WithExistingJournalAndDiscovery_ShouldReturnTrue()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            const int discoveryId = 1;
+            const int journalId = 1;
+
+            Publication publication = db.Publications.Find(1);
+            publication.DiscoveryId = discoveryId;
+            publication.JournalId = journalId;
+            db.SaveChanges();
+
+            // Act
+            bool result = publicationService.Exists(journalId, discoveryId);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void Exists_WithNotExistingJournal_ShouldReturnFalse()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            const int discoveryId = 1;
+            const int journalId = 1;
+
+            Publication publication = db.Publications.Find(1);
+            publication.DiscoveryId = discoveryId;
+            db.SaveChanges();
+
+            // Act
+            bool result = publicationService.Exists(journalId, discoveryId);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void Exists_WithNotExistingDiscovery_ShouldReturnFalse()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            const int discoveryId = 1;
+            const int journalId = 1;
+
+            Publication publication = db.Publications.Find(1);
+            publication.JournalId = journalId;
+            db.SaveChanges();
+
+            // Act
+            bool result = publicationService.Exists(journalId, discoveryId);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void Exists_WithNotExistingJournalAndDiscovery_ShouldReturnFalse()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            const int discoveryId = 1;
+            const int journalId = 1;
+
+            // Act
+            bool result = publicationService.Exists(journalId, discoveryId);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void TitleExists_WithExistingPublicationTitle_ShouldReturnTrue()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            string title = this.GetFakePublications().First().Title;
+
+            // Act
+            bool result = publicationService.TitleExists(title);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void TitleExists_WithNotExistingPublicationTitle_ShouldReturnFalse()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+
+            string title = this.GetFakePublications().First().Title;
+
+            // Act
+            bool result = publicationService.TitleExists(title);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void GetTitle_WithExistingPublicationId_ShouldReturnPublicationTitle()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            string expected = this.GetFakePublications().First().Title;
+
+            // Act
+            string actual = publicationService.GetTitle(1);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void GetTitle_WithNotExistingPublicationId_ShouldReturnNull()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+
+            // Act
+            string result = publicationService.GetTitle(1);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
         public void Total_ShouldReturnPublicationsCount()
         {
             // Arrange
@@ -93,7 +242,7 @@
         }
 
         [Fact]
-        public void Create_WithExistingJournalUserAndDiscovery_ShouldReturnPublicationId()
+        public void Create_WithExistingJournalUserDiscoveryAndNotExistingTitle_ShouldReturnPublicationId()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -111,14 +260,14 @@
             Publication publication = this.GetFakePublications().First();
 
             // Act
-            int actual = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
+            int actual = publicationService.Create(publication.Title, publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.Equal(publicationId, actual);
         }
 
         [Fact]
-        public void Create_WithExistingUserJournalAndDiscovery_ShouldAddPublication()
+        public void Create_WithExistingUserJournalDiscoveryAndNotExistingTitle_ShouldAddPublication()
         {
             // Arrange
             StarStuffDbContext db = this.Database;
@@ -133,17 +282,12 @@
             this.SeedUser(db);
             this.SeedDiscovery(db, true);
 
-            Publication expected = new Publication
-            {
-                Id = publicationId,
-                Content = "Test Content",
-                DiscoveryId = discoveryId,
-                JournalId = journalId,
-                ReleaseDate = DateTime.UtcNow.Date
-            };
+            Publication expected = this.GetFakePublications().First();
+            expected.Views = 0;
+            expected.ReleaseDate = DateTime.UtcNow;
 
             // Act
-            publicationService.Create(expected.Content, discoveryId, journalId, authorId);
+            publicationService.Create(expected.Title, expected.Content, discoveryId, journalId, authorId);
             Publication actual = db.Publications.Find(publicationId);
 
             // Assert
@@ -167,7 +311,7 @@
             Publication publication = this.GetFakePublications().First();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
+            int result = publicationService.Create(publication.Title, publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -190,7 +334,7 @@
             Publication publication = this.GetFakePublications().First();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
+            int result = publicationService.Create(publication.Title, publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -213,7 +357,7 @@
             Publication publication = this.GetFakePublications().First();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
+            int result = publicationService.Create(publication.Title, publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -237,7 +381,32 @@
             Publication publication = this.GetFakePublications().First();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
+            int result = publicationService.Create(publication.Title, publication.Content, discoveryId, journalId, authorId);
+
+            // Assert
+            Assert.True(result <= 0);
+        }
+
+        [Fact]
+        public void Create_WithExistingTitle_ShouldReturnNegativeId()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            const int discoveryId = 1;
+            const int journalId = 1;
+            const int authorId = 1;
+
+            this.SeedJournal(db);
+            this.SeedUser(db);
+            this.SeedDiscovery(db, false);
+
+            Publication publication = this.GetFakePublications().First();
+
+            // Act
+            int result = publicationService.Create(publication.Title, publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -266,7 +435,7 @@
             db.SaveChanges();
 
             // Act
-            int result = publicationService.Create(publication.Content, discoveryId, journalId, authorId);
+            int result = publicationService.Create(publication.Title, publication.Content, discoveryId, journalId, authorId);
 
             // Assert
             Assert.True(result <= 0);
@@ -285,7 +454,7 @@
             Publication publication = this.GetFakePublications().First();
 
             // Act
-            bool result = publicationService.Edit(publicationId, publication.Content);
+            bool result = publicationService.Edit(publicationId, publication.Title, publication.Content);
 
             // Assert
             Assert.True(result);
@@ -304,14 +473,14 @@
             Publication expected = new Publication
             {
                 Id = publicationId,
-                Content = "Test Content",
-                ReleaseDate = this.GetFakePublications()
-                    .FirstOrDefault(p => p.Id == publicationId)
-                    .ReleaseDate
+                Title = "Fake Title",
+                Content = "Fake Content",
+                Views = this.GetFakePublications().First().Views,
+                ReleaseDate = this.GetFakePublications().First().ReleaseDate
             };
 
             // Act
-            publicationService.Edit(publicationId, expected.Content);
+            publicationService.Edit(publicationId, expected.Title, expected.Content);
             Publication actual = db.Publications.Find(publicationId);
 
             // Assert
@@ -330,7 +499,7 @@
             Publication publication = this.GetFakePublications().First();
 
             // Act
-            bool result = publicationService.Edit(publicationId, publication.Content);
+            bool result = publicationService.Edit(publicationId, publication.Title, publication.Content);
 
             // Assert
             Assert.False(result);
@@ -416,13 +585,34 @@
             db.Publications.AddRange(publications);
             db.SaveChanges();
 
-            Publication expected = publications.FirstOrDefault(p => p.Id == publicationId);
+            Publication expected = publications.First();
 
             // Act
             PublicationDetailsServiceModel actual = publicationService.Details(publicationId);
 
             // Assert
             Assert.True(this.ComparePublications(expected, actual));
+        }
+
+        [Fact]
+        public void Details_ShouldIncreaseViews()
+        {
+            // Arrange
+            StarStuffDbContext db = this.Database;
+            PublicationService publicationService = new PublicationService(db);
+            this.SeedDatabase(db);
+
+            const int publicationId = 1;
+
+            int expected = 2;
+
+            // Act
+            publicationService.Details(publicationId);
+
+            Publication publication = db.Publications.Find(publicationId);
+
+            // Assert
+            Assert.Equal(expected, publication.Views);
         }
 
         [Fact]
@@ -487,15 +677,9 @@
                 .Take(pageSize)
                 .ToList();
 
-            int i = -1;
-
             // Assert
-            foreach (var actual in publications)
-            {
-                Publication expected = fakePublications[++i];
-
-                Assert.True(this.ComparePublications(expected, actual));
-            }
+            Assert.True(this.ComparePublications(fakePublications.First(), publications.First()));
+            Assert.True(this.ComparePublications(fakePublications.Last(), publications.Last()));
         }
 
         [Fact]
@@ -529,15 +713,9 @@
                 .Take(pageSize)
                 .ToList();
 
-            int i = -1;
-
             // Assert
-            foreach (var actual in publications)
-            {
-                Publication expected = fakePublications[++i];
-
-                Assert.True(this.ComparePublications(expected, actual));
-            }
+            Assert.True(this.ComparePublications(fakePublications.First(), publications.First()));
+            Assert.True(this.ComparePublications(fakePublications.Last(), publications.Last()));
         }
 
         [Fact]
@@ -575,27 +753,24 @@
                 .Take(pageSize)
                 .ToList();
 
-            int i = -1;
-
             // Assert
-            foreach (var actual in publications)
-            {
-                Publication expected = fakePublications[++i];
-
-                Assert.True(this.ComparePublications(expected, actual));
-            }
+            Assert.True(this.ComparePublications(fakePublications.First(), publications.First()));
+            Assert.True(this.ComparePublications(fakePublications.Last(), publications.Last()));
         }
 
         private bool ComparePublications(Publication expected, Publication actual)
         {
             return expected.Id == actual.Id
                 && expected.Content == actual.Content
-                && expected.ReleaseDate == actual.ReleaseDate;
+                && expected.ReleaseDate.Year == actual.ReleaseDate.Year
+                && expected.ReleaseDate.Month == actual.ReleaseDate.Month
+                && expected.ReleaseDate.Day == actual.ReleaseDate.Day;
         }
 
         private bool ComparePublications(Publication expected, PublicationDetailsServiceModel actual)
         {
             return expected.Id == actual.Id
+                && expected.Title == actual.Title
                 && expected.Content == actual.Content
                 && expected.ReleaseDate == actual.ReleaseDate
                 && expected.JournalId == actual.JournalId
@@ -606,13 +781,16 @@
 
         private bool ComparePublications(Publication expected, PublicationFormServiceModel actual)
         {
-            return expected.Content == actual.Content;
+            return expected.Title == actual.Title
+                && expected.Content == actual.Content;
         }
 
         private bool ComparePublications(Publication expected, ListPublicationsServiceModel actual)
         {
             return expected.Id == actual.Id
-                && expected.Content == actual.Content;
+                && expected.Title == actual.Title
+                && expected.Content == actual.Content
+                && expected.Views == actual.Views;
         }
 
         private void SeedDiscovery(StarStuffDbContext db, bool confirmed)
@@ -653,7 +831,9 @@
                 publications.Add(new Publication
                 {
                     Id = i,
+                    Title = $"Publication Title {i}",
                     Content = $"Publication Content {i}",
+                    Views = i * i,
                     ReleaseDate = DateTime.UtcNow.Date.AddDays(-i)
                 });
             }

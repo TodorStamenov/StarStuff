@@ -5,15 +5,21 @@
 
     public interface IPublicationService
     {
+        bool Exists(int journalId, int discoveryId);
+
+        bool TitleExists(string title);
+
+        string GetTitle(int id);
+
         int Total();
 
         int TotalByJournal(int journalId);
 
         int TotalByTelescope(int telescopeId);
 
-        int Create(string content, int discoveryId, int journalId, int authorId);
+        int Create(string title, string content, int discoveryId, int journalId, int authorId);
 
-        bool Edit(int id, string content);
+        bool Edit(int id, string title, string content);
 
         PublicationFormServiceModel GetForm(int id);
 

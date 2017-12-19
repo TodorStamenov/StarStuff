@@ -7,13 +7,12 @@
 }
 
 <div class="row">
+    <h2>@Model.Publication.Title</h2>
     <h2>Star System: @Model.Publication.StarSystemName</h2>
     <h3>Journal: <a asp-area="" asp-controller="Journals" asp-action="Details" asp-route-id="@Model.Publication.JournalId">@Model.Publication.JournalName</a></h3>
     <h3>Telescope: <a asp-area="" asp-controller="Telescopes" asp-action="Details" asp-route-id="@Model.Publication.TelescopeId">@Model.Publication.TelescopeName</a></h3>
     <p>@Model.Publication.Content</p>
     <div class="pull-right">
-        @Model.Publication.CommentsCount @(Model.Publication.CommentsCount == 1 ? "Comment" : "Comments")
-        <br />
         Release Date: @Model.Publication.ReleaseDate.ToShortDateString()
         <br />
         Published By: @Model.Publication.AuthorName

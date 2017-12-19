@@ -14,6 +14,10 @@
                 .HasForeignKey(c => c.PublicationId);
 
             builder
+                .HasIndex(p => p.Title)
+                .IsUnique(true);
+
+            builder
                 .Property(p => p.ReleaseDate)
                 .HasColumnType("Date");
         }

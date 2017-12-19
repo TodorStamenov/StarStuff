@@ -45,6 +45,11 @@
             public const int TemperatureMaxValue = int.MaxValue;
         }
 
+        public static class PublicationConstants
+        {
+            public const int TitleMaxLength = 100;
+        }
+
         public const int ImageUrlMinLength = 10;
         public const int ImageUrlMaxLength = 2000;
 
