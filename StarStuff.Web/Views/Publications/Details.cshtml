@@ -17,16 +17,15 @@
         Release Date: @Model.Publication.ReleaseDate.ToShortDateString()
         <br />
         Published By: @Model.Publication.AuthorName
-        <br />
-        @if (User.IsInRole(WebConstants.ModeratorRole))
-        {
-            <a asp-area="Moderator" asp-controller="Publications" asp-action="Edit" asp-route-id="@Model.Publication.Id" class="btn btn-warning btn-xs">Edit</a>
-        }
     </div>
     <div class="pull-left">
         @if (User.Identity.IsAuthenticated)
         {
             <a asp-area="" asp-controller="Comments" asp-action="Create" asp-route-id="@Model.Publication.Id" asp-route-page="@Model.CurrentPage" class="btn btn-success">Comment</a>
+        }
+        @if (User.IsInRole(WebConstants.ModeratorRole))
+        {
+            <a asp-area="Moderator" asp-controller="Publications" asp-action="Edit" asp-route-id="@Model.Publication.Id" class="btn btn-warning">Edit</a>
         }
     </div>
 </div>
@@ -73,7 +72,7 @@
                     <span class="sr-only">Previous</span>
                 </a>
             </li>
-            @for (int i = 1; i <= Model.TotalPages; i++)
+            @for (int i = Model.FirstPage; i <= Model.LastPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : string.Empty)">
                     <a class="page-link @(Model.CurrentPage == i ? "disabled" : string.Empty)" asp-area="" asp-controller="Publications" asp-action="Details" asp-route-id="@Model.Publication.Id" asp-route-page="@i">@i</a>

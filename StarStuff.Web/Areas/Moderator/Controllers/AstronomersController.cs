@@ -1,8 +1,8 @@
 ﻿namespace StarStuff.Web.Areas.Moderator.Controllers
 {
     using Data.Models;
+    using Infrastructure.Extensions;
     using Infrastructure.Filters;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Services.Models.Users;
     using Services.Moderator;
@@ -13,12 +13,10 @@
         private const string Users = "Users";
 
         private readonly IModeratorUserService userService;
-        private readonly UserManager<User> userManager;
 
-        public AstronomersController(IModeratorUserService userService, UserManager<User> userManager)
+        public AstronomersController(IModeratorUserService userService)
         {
             this.userService = userService;
-            this.userManager = userManager;
         }
 
         public IActionResult ApplicationDetails(int id)
@@ -33,7 +31,16 @@
         [Log(LogType.Approve, Users)]
         public IActionResult Approve(int id)
         {
+            string username = this.userService.GetUsername(id);
+
+            if (username == null)
+            {
+                return BadRequest();
+            }
+
             this.userService.Approve(id);
+
+            TempData.AddSuccessMessage($"Astronomer application for user {username} was successfully approved");
 
             return RedirectToAction(nameof(Applications));
         }
@@ -42,7 +49,16 @@
         [Log(LogType.Deny, Users)]
         public IActionResult Deny(int id)
         {
+            string username = this.userService.GetUsername(id);
+
+            if (username == null)
+            {
+                return BadRequest();
+            }
+
             this.userService.Deny(id);
+
+            TempData.AddSuccessMessage($"Astronomer application for user {username} was successfully denied");
 
             return RedirectToAction(nameof(Applications));
         }

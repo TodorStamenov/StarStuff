@@ -14,6 +14,7 @@
     public class CommentsController : Controller
     {
         private const string Comment = "Comment";
+        private const string Comments = "Comments";
         private const string Publications = "Publications";
 
         private readonly ICommentService commentService;
@@ -108,6 +109,7 @@
 
         [ActionName(nameof(Delete))]
         [Authorize(Roles = WebConstants.ModeratorRole)]
+        [Log(LogType.Delete, Comments)]
         [HttpPost]
         public IActionResult DeletePost(int id, int publicationId)
         {

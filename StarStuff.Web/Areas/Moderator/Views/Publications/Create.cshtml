@@ -1,12 +1,12 @@
 ﻿@model PublicationFormViewModel
 
 @{
-    ViewData["Title"] = $"Add Publication from {Model.JournalName} Journal";
+    ViewData["Title"] = $"Add Publication from {Model.JournalName}";
 }
 
 <div class="row">
-    <h2>@ViewData["Title"]</h2>
-    <div class="col-md-4">
+    <div class="col-md-offset-2 col-md-6">
+        <h2>@ViewData["Title"]</h2>
         <form method="post">
             <hr />
             <div class="form-group">

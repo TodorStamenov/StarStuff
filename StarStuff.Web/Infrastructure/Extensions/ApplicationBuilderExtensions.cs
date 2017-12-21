@@ -19,7 +19,7 @@
         private const int UsersCount = 20;
         private const int TelescopesCount = 11;
         private const int JournalsCount = 11;
-        private const int DiscoveriesCount = 750;
+        private const int DiscoveriesCount = 1000;
 
         private static readonly Random random = new Random();
 
@@ -122,7 +122,7 @@
                     continue;
                 }
 
-                bool sendApplication = random.Next(0, 2) == 1 ? true : false;
+                bool sendApplication = GetRandomBool();
 
                 user = new User
                 {
@@ -368,25 +368,28 @@
 
             foreach (var discovery in discoveries)
             {
-                int randomNumber = random.Next(0, 2);
-
-                if (randomNumber == 0)
+                if (GetRandomBool())
                 {
                     continue;
                 }
 
-                Publication publication = new Publication
-                {
-                    Title = $"Publication Title {discovery.Id}",
-                    Content = WebConstants.Lorem,
-                    Views = random.Next(1, 101),
-                    DiscoveryId = discovery.Id,
-                    JournalId = journalIds[random.Next(0, journalIds.Count)],
-                    AuthorId = moderatorIds[random.Next(0, moderatorIds.Count)],
-                    ReleaseDate = discovery.DateMade.AddMonths(5)
-                };
+                int journalsCount = random.Next(1, 4);
 
-                await db.Publications.AddAsync(publication);
+                for (int i = 1; i <= journalsCount; i++)
+                {
+                    Publication publication = new Publication
+                    {
+                        Title = $"Publication Title {CreateGuid()}",
+                        Content = WebConstants.Lorem,
+                        Views = random.Next(1, 101),
+                        DiscoveryId = discovery.Id,
+                        JournalId = journalIds[random.Next(0, journalIds.Count)],
+                        AuthorId = moderatorIds[random.Next(0, moderatorIds.Count)],
+                        ReleaseDate = discovery.DateMade.AddMonths(5)
+                    };
+
+                    await db.Publications.AddAsync(publication);
+                }
             }
 
             await db.SaveChangesAsync();
@@ -434,6 +437,11 @@
             }
 
             await db.SaveChangesAsync();
+        }
+
+        private static bool GetRandomBool()
+        {
+            return random.Next(0, 2) == 1 ? true : false;
         }
 
         private static string CreateGuid()

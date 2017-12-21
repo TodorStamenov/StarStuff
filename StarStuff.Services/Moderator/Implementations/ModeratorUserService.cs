@@ -18,6 +18,15 @@
             this.db = db;
         }
 
+        public string GetUsername(int id)
+        {
+            return this.db
+                .Users
+                .Where(u => u.Id == id)
+                .Select(u => u.UserName)
+                .FirstOrDefault();
+        }
+
         public void Approve(int id)
         {
             User user = this.db.Users.Find(id);

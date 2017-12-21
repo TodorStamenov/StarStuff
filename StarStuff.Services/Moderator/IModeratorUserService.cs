@@ -5,6 +5,8 @@
 
     public interface IModeratorUserService
     {
+        string GetUsername(int id);
+
         void Approve(int id);
 
         void Deny(int id);

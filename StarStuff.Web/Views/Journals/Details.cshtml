@@ -9,12 +9,12 @@
     <img src="@Model.ImageUrl" alt="Journal Image" width="250" class="site-image" />
     <p>@Model.Description</p>
     <p>@Model.Publications @(Model.Publications == 1 ? "Publication" : "Publications")</p>
-    <a class="btn btn-success" asp-area="" asp-controller="Publications" asp-action="ByJournal" asp-route-id="@Model.Id">Publications</a>
-    @if (User.IsInRole(WebConstants.ModeratorRole))
-    {
-        <div class="pull-right">
+    <div>
+        <a class="btn btn-success" asp-area="" asp-controller="Publications" asp-action="ByJournal" asp-route-id="@Model.Id">Publications</a>
+        @if (User.IsInRole(WebConstants.ModeratorRole))
+        {
             <a asp-area="Moderator" asp-controller="Publications" asp-action="Create" asp-route-id="@Model.Id" class="btn btn-default">Create Publication</a>
             <a asp-area="Moderator" asp-controller="Journals" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-        </div>
-    }
+        }
+    </div>
 </div>

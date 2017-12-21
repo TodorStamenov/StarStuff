@@ -44,8 +44,15 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRole(int userId, string roleName)
+        public IActionResult AddRole(int userId, string roleName)
         {
+            string username = this.userService.GetUsername(userId);
+
+            if (username == null)
+            {
+                return BadRequest();
+            }
+
             bool success = this.userService.AddToRole(userId, roleName);
 
             if (!success)
@@ -53,16 +60,21 @@
                 return BadRequest();
             }
 
-            User user = await this.userManager.FindByIdAsync(userId.ToString());
-
-            TempData.AddSuccessMessage($"User {user.UserName} successfully added to role {roleName}");
+            TempData.AddSuccessMessage($"User {username} successfully added to role {roleName}");
 
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveRole(int userId, string roleName)
+        public IActionResult RemoveRole(int userId, string roleName)
         {
+            string username = this.userService.GetUsername(userId);
+
+            if (username == null)
+            {
+                return BadRequest();
+            }
+
             bool success = this.userService.RemoveFromRole(userId, roleName);
 
             if (!success)
@@ -70,9 +82,7 @@
                 return BadRequest();
             }
 
-            User user = await this.userManager.FindByIdAsync(userId.ToString());
-
-            TempData.AddSuccessMessage($"User {user.UserName} successfully removed from role {roleName}");
+            TempData.AddSuccessMessage($"User {username} successfully removed from role {roleName}");
 
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }
@@ -148,22 +158,22 @@
             return View(model);
         }
 
-        public IActionResult Users(int page, string role, string search)
+        public IActionResult Users(int page, string userRole, string search)
         {
             if (page <= 0)
             {
                 page = 1;
             }
 
-            int totalUsers = this.userService.Total(role, search);
+            int totalUsers = this.userService.Total(userRole, search);
 
             ListUsersViewModel model = new ListUsersViewModel
             {
                 Search = search,
                 CurrentPage = page,
-                UserRole = role,
+                UserRole = userRole,
                 TotalPages = ControllerHelpers.GetTotalPages(totalUsers, UsersPerPage),
-                Users = this.userService.All(page, role, search, UsersPerPage),
+                Users = this.userService.All(page, userRole, search, UsersPerPage),
                 Roles = this.userService.AllRoles(),
             };
 

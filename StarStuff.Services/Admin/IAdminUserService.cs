@@ -9,6 +9,8 @@
 
     public interface IAdminUserService
     {
+        string GetUsername(int id);
+
         void Log(string username, LogType logType, string tableName);
 
         bool AddToRole(int userId, string roleName);

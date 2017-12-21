@@ -32,7 +32,7 @@
                     <span class="sr-only">Previous</span>
                 </a>
             </li>
-            @for (int i = 1; i <= Model.TotalPages; i++)
+            @for (int i = Model.FirstPage; i <= Model.LastPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : string.Empty)">
                     <a class="page-link @(Model.CurrentPage == i ? "disabled" : string.Empty)" asp-area="Astronomer" asp-controller="Discoveries" asp-action="Mine" asp-route-page="@i" asp-route-search="@Model.Search" asp-route-confirmed="@Model.Confirmed" asp-route-astronomer="@Model.Astronomer">@i</a>

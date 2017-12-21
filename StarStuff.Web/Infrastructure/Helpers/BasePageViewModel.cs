@@ -2,6 +2,9 @@
 {
     public class BasePageViewModel
     {
+        private const int BackOffset = 5;
+        private const int ForwardOffset = 5;
+
         public int CurrentPage { get; set; }
 
         public int TotalPages { get; set; }
@@ -10,7 +13,7 @@
         {
             get
             {
-                return this.CurrentPage - 10 <= 1 ? 1 : this.CurrentPage - 10;
+                return this.CurrentPage - BackOffset <= 1 ? 1 : this.CurrentPage - BackOffset;
             }
         }
 
@@ -18,7 +21,7 @@
         {
             get
             {
-                return this.CurrentPage + 10 >= this.TotalPages ? this.TotalPages : this.CurrentPage + 10;
+                return this.CurrentPage + ForwardOffset >= this.TotalPages ? this.TotalPages : this.CurrentPage + ForwardOffset;
             }
         }
 

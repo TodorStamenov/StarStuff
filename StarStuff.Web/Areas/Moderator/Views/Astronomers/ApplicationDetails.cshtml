@@ -6,22 +6,26 @@
 <div class="row">
     <div class="col-md-8">
         <h2>@ViewData["Title"] for User @Model.Username</h2>
-        <img src="@Model.ProfileImage" alt="Avatar" width="250" height="250" />
+        <img class="site-image" src="@Model.ProfileImage" alt="Avatar" width="250" height="250" />
         <h3>First Name: @Model.FirstName</h3>
         <h3>Last Name: @Model.LastName</h3>
         <h3>Email: @Model.Email</h3>
         <h3>Phone Number: @Model.PhoneNumber</h3>
         <h3>Birth Date: @Model.BirthDate.Value.ToShortDateString()</h3>
-        <br />
-        <div class="col-md-2">
-            <form action="/moderator/astronomers/approve/@Model.Id" method="post">
-                <input class="btn btn-success" type="submit" value="Approve" />
-            </form>
-        </div>
-        <div class="col-md-2">
-            <form action="/moderator/astronomers/deny/@Model.Id" method="post">
-                <input class="btn btn-danger" type="submit" value="Deny" />
-            </form>
-        </div>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-1">
+        <form asp-area="Moderator" asp-controller="Astronomers" asp-action="Approve" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input class="btn btn-success" type="submit" value="Approve" />
+        </form>
+    </div>
+    <div class="col-md-1">
+        <form asp-area="Moderator" asp-controller="Astronomers" asp-action="Deny" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input class="btn btn-danger" type="submit" value="Deny" />
+        </form>
     </div>
 </div>

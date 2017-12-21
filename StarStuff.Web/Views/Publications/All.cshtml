@@ -20,7 +20,7 @@
                     <span class="sr-only">Previous</span>
                 </a>
             </li>
-            @for (int i = 1; i <= Model.TotalPages; i++)
+            @for (int i = Model.FirstPage; i <= Model.LastPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : string.Empty)">
                     <a class="page-link @(Model.CurrentPage == i ? "disabled" : string.Empty)" asp-area="" asp-controller="Publications" asp-action="All" asp-route-page="@i">@i</a>

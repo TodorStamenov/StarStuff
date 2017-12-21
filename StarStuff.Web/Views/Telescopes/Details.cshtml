@@ -1,4 +1,5 @@
 ﻿@model TelescopeDetailsServiceModel
+
 @{
     ViewData["Title"] = $"{Model.Name} Details";
 }
@@ -11,8 +12,8 @@
     <p>@Model.Description</p>
     <p>@Model.Discoveries @(Model.Discoveries == 1 ? "Discovery" : "Discoveries")</p>
     <p>@Model.Publications @(Model.Publications == 1 ? "Publication" : "Publications")</p>
-    <a class="btn btn-success" asp-area="" asp-controller="Publications" asp-action="ByTelescope" asp-route-id="@Model.Id">Publications</a>
-    <div class="pull-right">
+    <div>
+        <a class="btn btn-success" asp-area="" asp-controller="Publications" asp-action="ByTelescope" asp-route-id="@Model.Id">Publications</a>
         @if (User.IsInRole(WebConstants.ModeratorRole))
         {
             <a asp-area="Moderator" asp-controller="Telescopes" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
