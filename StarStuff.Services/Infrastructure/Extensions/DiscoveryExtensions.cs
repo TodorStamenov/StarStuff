@@ -1,6 +1,6 @@
 ﻿namespace StarStuff.Services.Infrastructure.Extensions
 {
-    using Astronomer.Models.Astronomers;
+    using Areas.Astronomer.Models.Astronomers;
     using Data.Models;
     using System.Linq;
 

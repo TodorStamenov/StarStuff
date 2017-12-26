@@ -1,13 +1,12 @@
 ﻿namespace StarStuff.Test.Web.Areas.Astronomer
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
     using Moq;
     using StarStuff.Data;
-    using StarStuff.Services.Astronomer;
-    using StarStuff.Services.Astronomer.Models.Stars;
+    using StarStuff.Services.Areas.Astronomer;
+    using StarStuff.Services.Areas.Astronomer.Models.Stars;
     using StarStuff.Web.Areas.Astronomer.Controllers;
     using StarStuff.Web.Infrastructure;
     using System;
@@ -31,8 +30,8 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.Roles.Should().Be(WebConstants.AstronomerRole);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.AstronomerRole, attribute.Roles);
         }
 
         [Fact]
@@ -48,8 +47,8 @@
                 as AreaAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.RouteValue.Should().Be(WebConstants.AstronomerArea);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.AstronomerArea, attribute.RouteValue);
         }
 
         [Fact]
@@ -62,7 +61,7 @@
             IActionResult result = starsController.Create();
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -91,15 +90,12 @@
             IActionResult result = starsController.Create(1, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<StarFormServiceModel>();
-
-            StarFormServiceModel returnModel = model.As<StarFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<StarFormServiceModel>(model);
+            StarFormServiceModel returnModel = model as StarFormServiceModel;
             this.AssertStars(formModel, returnModel);
-
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Star));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Star), errorMessage);
         }
 
         [Fact]
@@ -133,17 +129,15 @@
             IActionResult result = starsController.Create(1, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<StarFormServiceModel>();
-
-            StarFormServiceModel returnModel = model.As<StarFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<StarFormServiceModel>(model);
+            StarFormServiceModel returnModel = model as StarFormServiceModel;
             this.AssertStars(formModel, returnModel);
-
-            errorMessage.Should().Be(string.Format(
+            Assert.Equal(string.Format(
                     DataConstants.DiscoveryConstants.MaxStarsPerDiscoveryErrorMessage,
-                    DataConstants.DiscoveryConstants.MaxStarsPerDiscovery));
+                    DataConstants.DiscoveryConstants.MaxStarsPerDiscovery),
+                    errorMessage);
         }
 
         [Fact]
@@ -173,7 +167,7 @@
             IActionResult result = starsController.Create(1, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -213,10 +207,10 @@
             IActionResult result = starsController.Create(discoveryId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(discoveryId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Star, Added));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Star, WebConstants.Added), successmessage);
         }
 
         [Fact]
@@ -236,12 +230,10 @@
             IActionResult result = starsController.Edit(1, 1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<StarFormServiceModel>();
-
-            StarFormServiceModel returnModel = model.As<StarFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<StarFormServiceModel>(model);
+            StarFormServiceModel returnModel = model as StarFormServiceModel;
             this.AssertStars(formModel, returnModel);
         }
 
@@ -262,7 +254,7 @@
             IActionResult result = starsController.Edit(1, 1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -295,15 +287,12 @@
             IActionResult result = starsController.Edit(1, 1, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<StarFormServiceModel>();
-
-            StarFormServiceModel returnModel = model.As<StarFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<StarFormServiceModel>(model);
+            StarFormServiceModel returnModel = model as StarFormServiceModel;
             this.AssertStars(formModel, returnModel);
-
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Star));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Star), errorMessage);
         }
 
         [Fact]
@@ -332,7 +321,7 @@
             IActionResult result = starsController.Edit(1, 1, model);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -371,10 +360,10 @@
             IActionResult result = starsController.Edit(1, discoveryId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(discoveryId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Star, Edited));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Star, WebConstants.Edited), successmessage);
         }
 
         [Fact]
@@ -387,7 +376,7 @@
             IActionResult result = starsController.Delete(1, 1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -417,10 +406,10 @@
             IActionResult result = starsController.DeletePost(1, discoveryId);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(discoveryId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Star, Deleted));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Star, WebConstants.Deleted), successmessage);
         }
 
         [Fact]
@@ -439,21 +428,21 @@
             IActionResult result = starsController.DeletePost(1, 1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         private void AssertStars(StarFormServiceModel expected, StarFormServiceModel actual)
         {
-            actual.Name.Should().Be(expected.Name);
-            actual.Temperature.Should().Be(expected.Temperature);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Temperature, actual.Temperature);
         }
 
         private void AssertRedirect(int discoveryId, RedirectToActionResult result)
         {
-            result.ActionName.Should().Be(nameof(DiscoveriesController.Details));
-            result.ControllerName.Should().Be(Discoveries);
-            result.RouteValues[Id].Should().Be(discoveryId);
-            result.RouteValues[Area].Should().Be(WebConstants.AstronomerArea);
+            Assert.Equal(nameof(DiscoveriesController.Details), result.ActionName);
+            Assert.Equal(Discoveries, result.ControllerName);
+            Assert.Equal(discoveryId, result.RouteValues[Id]);
+            Assert.Equal(WebConstants.AstronomerArea, result.RouteValues[Area]);
         }
 
         private StarFormServiceModel GetStarFormModel()

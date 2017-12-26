@@ -1,10 +1,9 @@
 ﻿namespace StarStuff.Test.Web.Controllers
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Journals;
+    using StarStuff.Services.Areas.Moderator;
+    using StarStuff.Services.Areas.Moderator.Models.Journals;
     using StarStuff.Web.Controllers;
     using StarStuff.Web.Models.Journals;
     using System.Collections.Generic;
@@ -30,7 +29,7 @@
             IActionResult result = journalsController.Details(1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -50,12 +49,10 @@
             IActionResult result = journalsController.Details(1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<JournalDetailsServiceModel>();
-
-            JournalDetailsServiceModel returnModel = model.As<JournalDetailsServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<JournalDetailsServiceModel>(model);
+            JournalDetailsServiceModel returnModel = model as JournalDetailsServiceModel;
             this.AssertJournals(detailsModel, returnModel);
         }
 
@@ -80,22 +77,20 @@
             IActionResult result = journalsController.All(2);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<ListJournalsViewModel>();
-
-            ListJournalsViewModel returnModel = model.As<ListJournalsViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<ListJournalsViewModel>(model);
+            ListJournalsViewModel returnModel = model as ListJournalsViewModel;
             this.AssertPages(listModel, returnModel);
             this.AssertJournals(listModel, returnModel);
         }
 
         private void AssertJournals(ListJournalsServiceModel expected, ListJournalsServiceModel actual)
         {
-            actual.Id.Should().Be(expected.Id);
-            actual.Name.Should().Be(expected.Name);
-            actual.Description.Should().Be(expected.Description);
-            actual.ImageUrl.Should().Be(expected.ImageUrl);
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
         private void AssertJournals(ListJournalsViewModel expected, ListJournalsViewModel actual)

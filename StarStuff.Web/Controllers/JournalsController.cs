@@ -3,8 +3,8 @@
     using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Models.Journals;
-    using Services.Moderator;
-    using Services.Moderator.Models.Journals;
+    using Services.Areas.Moderator;
+    using Services.Areas.Moderator.Models.Journals;
 
     public class JournalsController : Controller
     {

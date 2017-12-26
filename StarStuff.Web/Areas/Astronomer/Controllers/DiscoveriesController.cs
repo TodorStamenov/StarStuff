@@ -10,10 +10,10 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Discoveries;
     using Services;
-    using Services.Astronomer;
-    using Services.Astronomer.Models.Astronomers;
-    using Services.Astronomer.Models.Discoveries;
-    using Services.Moderator;
+    using Services.Areas.Astronomer;
+    using Services.Areas.Astronomer.Models.Astronomers;
+    using Services.Areas.Astronomer.Models.Discoveries;
+    using Services.Areas.Moderator;
     using System.Collections.Generic;
     using System.Linq;
 

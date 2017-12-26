@@ -138,7 +138,7 @@
             Comment actual = db.Comments.Find(1);
 
             // Assert
-            Assert.True(this.CompareComments(expected, actual));
+            this.CompareComments(expected, actual);
         }
 
         [Fact]
@@ -222,7 +222,7 @@
             Comment actual = db.Comments.Find(expected.Id);
 
             // Assert
-            Assert.True(this.CompareComments(expected, actual));
+            this.CompareComments(expected, actual);
         }
 
         [Fact]
@@ -301,7 +301,7 @@
             CommentFormServiceModel actual = commentService.GetForm(commentId);
 
             // Assert
-            Assert.True(this.CompareComments(expected, actual));
+            this.CompareComments(expected, actual);
         }
 
         [Fact]
@@ -331,12 +331,24 @@
             this.SeedPublication(db);
             this.SeedUser(db);
 
+            List<Comment> fakeComments = this.GetFakeComments()
+                .Skip(5)
+                .Take(5)
+                .ToList();
+
+            int i = -1;
+
             // Act
-            IEnumerable<ListCommentsServiceModel> result = commentService.All(1, 2, 5, 1);
+            IEnumerable<ListCommentsServiceModel> comments = commentService.All(1, 2, 5, 1);
 
             // Assert
-            Assert.True(this.CompareComments(this.GetFakeComments().Skip(5).Take(5).First(), result.First()));
-            Assert.True(this.CompareComments(this.GetFakeComments().Skip(5).Take(5).Last(), result.Last()));
+            foreach (var actual in comments)
+            {
+                Comment expected = fakeComments[++i];
+                expected.DateAdded = expected.DateAdded.ToLocalTime();
+
+                this.CompareComments(expected, actual);
+            }
         }
 
         [Fact]
@@ -353,33 +365,25 @@
             Assert.False(result.Any());
         }
 
-        private bool CompareComments(Comment expected, Comment actual)
+        private void CompareComments(Comment expected, Comment actual)
         {
-            return expected.Id == actual.Id
-                && expected.Content == actual.Content
-                && expected.PublicationId == actual.PublicationId
-                && expected.UserId == actual.UserId
-                && expected.DateAdded.Year == actual.DateAdded.Year
-                && expected.DateAdded.Month == actual.DateAdded.Month
-                && expected.DateAdded.Day == actual.DateAdded.Day
-                && expected.DateAdded.Hour == actual.DateAdded.Hour
-                && expected.DateAdded.Minute == actual.DateAdded.Minute;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Content, actual.Content);
+            Assert.Equal(expected.PublicationId, actual.PublicationId);
+            Assert.Equal(expected.UserId, actual.UserId);
+            this.CompareDatesExact(expected.DateAdded, actual.DateAdded);
         }
 
-        private bool CompareComments(Comment expected, ListCommentsServiceModel actual)
+        private void CompareComments(Comment expected, ListCommentsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Content == actual.Content
-                && expected.DateAdded.Year == actual.DateAdded.Year
-                && expected.DateAdded.Month == actual.DateAdded.Month
-                && expected.DateAdded.Day == actual.DateAdded.Day
-                && expected.DateAdded.Hour == actual.DateAdded.Hour
-                && expected.DateAdded.Minute == actual.DateAdded.Minute;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Content, actual.Content);
+            this.CompareDatesExact(expected.DateAdded, actual.DateAdded);
         }
 
-        private bool CompareComments(Comment expected, CommentFormServiceModel actual)
+        private void CompareComments(Comment expected, CommentFormServiceModel actual)
         {
-            return expected.Content == actual.Content;
+            Assert.Equal(expected.Content, actual.Content);
         }
 
         private Comment GetFakeComment()

@@ -2,8 +2,6 @@
 
 @{
     ViewData["Title"] = "Edit Roles";
-}
-@{
     string notProvidedMessage = "Not Provided";
 }
 
@@ -53,25 +51,28 @@
                         </td>
                     </tr>
                 }
-                <tr>
-                    <td>Lock Account</td>
-                    <td>
-                        @if (Model.IsUserLocked)
-                        {
-                            <form method="post" asp-area="Admin" asp-controller="Users" asp-action="Unlock">
-                                <input type="hidden" name="userId" value="@Model.User.Id" />
-                                <input class="btn btn-success" type="submit" value="Unlock" />
-                            </form>
-                        }
-                        else
-                        {
-                            <form method="post" asp-area="Admin" asp-controller="Users" asp-action="Lock">
-                                <input type="hidden" name="userId" value="@Model.User.Id" />
-                                <input class="btn btn-warning" type="submit" value="Lock" />
-                            </form>
-                        }
-                    </td>
-                </tr>
+                @if (!Model.User.Roles.Any(r => r.Name == WebConstants.AdminRole))
+                {
+                    <tr>
+                        <td>Lock Account</td>
+                        <td>
+                            @if (Model.IsUserLocked)
+                            {
+                                <form method="post" asp-area="Admin" asp-controller="Users" asp-action="Unlock">
+                                    <input type="hidden" name="userId" value="@Model.User.Id" />
+                                    <input class="btn btn-success" type="submit" value="Unlock" />
+                                </form>
+                            }
+                            else
+                            {
+                                <form method="post" asp-area="Admin" asp-controller="Users" asp-action="Lock">
+                                    <input type="hidden" name="userId" value="@Model.User.Id" />
+                                    <input class="btn btn-warning" type="submit" value="Lock" />
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

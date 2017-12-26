@@ -1,16 +1,15 @@
 ﻿namespace StarStuff.Test.Web.Controllers
 {
-    using Moq;
-    using System.Collections.Generic;
-    using Xunit;
-    using System.Linq;
-    using StarStuff.Services.Moderator.Models.Telescopes;
-    using FluentAssertions;
-    using StarStuff.Web.Controllers;
-    using StarStuff.Services.Moderator;
     using Microsoft.AspNetCore.Mvc;
-    using StarStuff.Web.Models.Telescopes;
+    using Moq;
     using StarStuff.Data.Models;
+    using StarStuff.Services.Areas.Moderator;
+    using StarStuff.Services.Areas.Moderator.Models.Telescopes;
+    using StarStuff.Web.Controllers;
+    using StarStuff.Web.Models.Telescopes;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
 
     public class TelescopesControllerTest : BaseGlobalControllerTest
     {
@@ -31,7 +30,7 @@
             IActionResult result = telescopesController.Details(1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -51,12 +50,10 @@
             IActionResult result = telescopesController.Details(1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<TelescopeDetailsServiceModel>();
-
-            TelescopeDetailsServiceModel returnModel = model.As<TelescopeDetailsServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<TelescopeDetailsServiceModel>(model);
+            TelescopeDetailsServiceModel returnModel = model as TelescopeDetailsServiceModel;
             this.AssertTelescopeDetails(detailsModel, returnModel);
         }
 
@@ -81,12 +78,10 @@
             IActionResult result = telescopesController.All(2);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<ListTelescopesViewModel>();
-
-            ListTelescopesViewModel returnModel = model.As<ListTelescopesViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<ListTelescopesViewModel>(model);
+            ListTelescopesViewModel returnModel = model as ListTelescopesViewModel;
             this.AssertPages(listModel, returnModel);
             this.AssertTelescopeCollection(listModel.Telescopes, returnModel.Telescopes);
         }
@@ -94,15 +89,15 @@
         private void AssertTelescopeDetails(TelescopeDetailsServiceModel expected, TelescopeDetailsServiceModel actual)
         {
             this.AssertTelescopes(expected, actual);
-            actual.MirrorDiameter.Should().Be(expected.MirrorDiameter);
+            Assert.Equal(expected.MirrorDiameter, actual.MirrorDiameter);
         }
 
         private void AssertTelescopes(ListTelescopesServiceModel expected, ListTelescopesServiceModel actual)
         {
-            actual.Id.Should().Be(expected.Id);
-            actual.Name.Should().Be(expected.Name);
-            actual.Description.Should().Be(expected.Description);
-            actual.ImageUrl.Should().Be(expected.ImageUrl);
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
         private void AssertTelescopeCollection(IEnumerable<ListTelescopesServiceModel> expected, IEnumerable<ListTelescopesServiceModel> actual)

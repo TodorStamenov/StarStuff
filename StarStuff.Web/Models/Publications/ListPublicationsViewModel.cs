@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Models.Publications
 {
     using Infrastructure.Helpers;
-    using Services.Moderator.Models.Publications;
+    using Services.Areas.Moderator.Models.Publications;
     using System.Collections.Generic;
 
     public class ListPublicationsViewModel : BasePageViewModel

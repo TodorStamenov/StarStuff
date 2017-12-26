@@ -2,8 +2,8 @@
 {
     using StarStuff.Data;
     using StarStuff.Data.Models;
-    using StarStuff.Services.Moderator.Implementations;
-    using StarStuff.Services.Moderator.Models.Journals;
+    using StarStuff.Services.Areas.Moderator.Implementations;
+    using StarStuff.Services.Areas.Moderator.Models.Journals;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
@@ -124,7 +124,7 @@
             Journal actual = db.Journals.Find(journalId);
 
             // Assert
-            Assert.True(this.CompareJournals(expected, actual));
+            this.CompareJournals(expected, actual);
         }
 
         [Fact]
@@ -193,7 +193,7 @@
             Journal actual = db.Journals.Find(journalId);
 
             // Assert
-            Assert.True(this.CompareJournals(expected, actual));
+            this.CompareJournals(expected, actual);
         }
 
         [Fact]
@@ -246,7 +246,7 @@
             Journal actual = db.Journals.Find(journalId);
 
             // Assert
-            Assert.True(this.CompareJournals(expected, actual));
+            this.CompareJournals(expected, actual);
         }
 
         [Fact]
@@ -284,7 +284,7 @@
             JournalDetailsServiceModel actual = journalService.Details(journalId);
 
             // Assert
-            Assert.True(this.CompareJournals(expected, actual));
+            this.CompareJournals(expected, actual);
         }
 
         [Fact]
@@ -319,7 +319,7 @@
             JournalFormServiceModel actual = journalService.GetForm(journalId);
 
             // Assert
-            Assert.True(this.CompareJournals(expected, actual));
+            this.CompareJournals(expected, actual);
         }
 
         [Fact]
@@ -349,8 +349,6 @@
             const int page = 2;
             const int pageSize = 5;
 
-            // Act
-            IEnumerable<ListJournalsServiceModel> journals = journalService.All(page, pageSize);
             List<Journal> fakeJournals = this.GetFakeJournals()
                 .OrderBy(j => j.Name)
                 .Skip((page - 1) * pageSize)
@@ -359,44 +357,47 @@
 
             int i = -1;
 
+            // Act
+            IEnumerable<ListJournalsServiceModel> journals = journalService.All(page, pageSize);
+
             // Assert
             foreach (var actual in journals)
             {
                 Journal expected = fakeJournals[++i];
 
-                Assert.True(this.CompareJournals(expected, actual));
+                this.CompareJournals(expected, actual);
             }
         }
 
-        private bool CompareJournals(Journal expected, Journal actual)
+        private void CompareJournals(Journal expected, Journal actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Description == actual.Description
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
-        private bool CompareJournals(Journal expected, JournalDetailsServiceModel actual)
+        private void CompareJournals(Journal expected, JournalDetailsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Description == actual.Description
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
-        private bool CompareJournals(Journal expected, JournalFormServiceModel actual)
+        private void CompareJournals(Journal expected, JournalFormServiceModel actual)
         {
-            return expected.Name == actual.Name
-                && expected.Description == actual.Description
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
-        private bool CompareJournals(Journal expected, ListJournalsServiceModel actual)
+        private void CompareJournals(Journal expected, ListJournalsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Description == actual.Description
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
         private void SeedDatabase(StarStuffDbContext db)
@@ -420,7 +421,7 @@
                 });
             }
 
-            return journals;
+            return journals.OrderBy(j => j.Name).ToList();
         }
     }
 }

@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Models.Logs;
     using Models.Users;
-    using Services.Admin;
+    using Services.Areas.Admin;
     using System;
     using System.Threading.Tasks;
 
@@ -60,7 +60,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage($"User {username} successfully added to role {roleName}");
+            TempData.AddSuccessMessage(string.Format(WebConstants.UserAddedToRole, username, roleName));
 
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }
@@ -82,7 +82,7 @@
                 return BadRequest();
             }
 
-            TempData.AddSuccessMessage($"User {username} successfully removed from role {roleName}");
+            TempData.AddSuccessMessage(string.Format(WebConstants.UserRemovedFormRole, username, roleName));
 
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }
@@ -107,7 +107,7 @@
 
             string username = await this.userManager.GetUserNameAsync(user);
 
-            TempData.AddSuccessMessage($"User {username} successfully Locked");
+            TempData.AddSuccessMessage(string.Format(WebConstants.UserLocked, username));
 
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }
@@ -131,7 +131,7 @@
 
             string username = await this.userManager.GetUserNameAsync(user);
 
-            TempData.AddSuccessMessage($"User {username} successfully Unlocked");
+            TempData.AddSuccessMessage(string.Format(WebConstants.UserUnlocked, username));
 
             return RedirectToAction(nameof(EditRoles), new { id = userId });
         }

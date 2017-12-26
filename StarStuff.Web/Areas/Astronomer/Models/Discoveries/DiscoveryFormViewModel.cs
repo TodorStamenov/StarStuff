@@ -1,8 +1,8 @@
 ﻿namespace StarStuff.Web.Areas.Astronomer.Models.Discoveries
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Services.Astronomer.Models.Discoveries;
-    using Services.Astronomer.Models.Stars;
+    using Services.Areas.Astronomer.Models.Discoveries;
+    using Services.Areas.Astronomer.Models.Stars;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 

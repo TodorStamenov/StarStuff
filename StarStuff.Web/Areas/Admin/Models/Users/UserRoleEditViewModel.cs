@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Areas.Admin.Models.Users
 {
-    using Services.Admin.Models.Roles;
-    using Services.Admin.Models.Users;
+    using Services.Areas.Admin.Models.Roles;
+    using Services.Areas.Admin.Models.Users;
     using System.Collections.Generic;
 
     public class UserRoleEditViewModel

@@ -5,8 +5,8 @@
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Astronomer;
-    using Services.Astronomer.Models.Planets;
+    using Services.Areas.Astronomer;
+    using Services.Areas.Astronomer.Models.Planets;
 
     public class PlanetsController : BaseAstronomerController
     {

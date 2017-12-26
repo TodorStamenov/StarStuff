@@ -3,7 +3,7 @@
     using Data.Models;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
-    using Services.Admin;
+    using Services.Areas.Admin;
 
     public class LogAttribute : ActionFilterAttribute
     {

@@ -5,8 +5,8 @@
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Moderator;
-    using Services.Moderator.Models.Telescopes;
+    using Services.Areas.Moderator;
+    using Services.Areas.Moderator.Models.Telescopes;
 
     public class TelescopesController : BaseModeratorController
     {

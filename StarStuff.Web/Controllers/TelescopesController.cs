@@ -3,8 +3,8 @@
     using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Models.Telescopes;
-    using Services.Moderator;
-    using Services.Moderator.Models.Telescopes;
+    using Services.Areas.Moderator;
+    using Services.Areas.Moderator.Models.Telescopes;
 
     public class TelescopesController : Controller
     {

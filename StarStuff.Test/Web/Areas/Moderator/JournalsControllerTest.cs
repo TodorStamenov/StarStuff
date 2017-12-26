@@ -1,12 +1,11 @@
 ﻿namespace StarStuff.Test.Web.Areas.Moderator
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
     using Moq;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Journals;
+    using StarStuff.Services.Areas.Moderator;
+    using StarStuff.Services.Areas.Moderator.Models.Journals;
     using StarStuff.Web.Areas.Moderator.Controllers;
     using StarStuff.Web.Infrastructure;
     using System;
@@ -31,8 +30,8 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.Roles.Should().Be(WebConstants.ModeratorRole);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorRole, attribute.Roles);
         }
 
         [Fact]
@@ -48,8 +47,8 @@
                 as AreaAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.RouteValue.Should().Be(WebConstants.ModeratorArea);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorArea, attribute.RouteValue);
         }
 
         [Fact]
@@ -62,7 +61,7 @@
             IActionResult result = journalsController.Create();
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -91,14 +90,12 @@
             IActionResult result = journalsController.Create(formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<JournalFormServiceModel>();
-
-            JournalFormServiceModel returnModel = model.As<JournalFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<JournalFormServiceModel>(model);
+            JournalFormServiceModel returnModel = model as JournalFormServiceModel;
             this.AssertJournals(formModel, returnModel);
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Journal));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Journal), errorMessage);
         }
 
         [Fact]
@@ -127,7 +124,7 @@
             IActionResult result = journalsController.Create(formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -165,10 +162,10 @@
             IActionResult result = journalsController.Create(formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(journalId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Journal, Added));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Journal, WebConstants.Added), successmessage);
         }
 
         [Fact]
@@ -189,7 +186,7 @@
             IActionResult result = journalsController.Edit(1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -210,12 +207,10 @@
             IActionResult result = journalsController.Edit(1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<JournalFormServiceModel>();
-
-            JournalFormServiceModel returnModel = model.As<JournalFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<JournalFormServiceModel>(model);
+            JournalFormServiceModel returnModel = model as JournalFormServiceModel;
             this.AssertJournals(formModel, returnModel);
         }
 
@@ -237,7 +232,7 @@
             IActionResult result = journalsController.Edit(1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -270,14 +265,12 @@
             IActionResult result = journalsController.Edit(1, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<JournalFormServiceModel>();
-
-            JournalFormServiceModel returnModel = model.As<JournalFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<JournalFormServiceModel>(model);
+            JournalFormServiceModel returnModel = model as JournalFormServiceModel;
             this.AssertJournals(formModel, returnModel);
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Journal));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Journal), errorMessage);
         }
 
         [Fact]
@@ -310,7 +303,7 @@
             IActionResult result = journalsController.Edit(1, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -354,25 +347,25 @@
             IActionResult result = journalsController.Edit(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(journalId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Journal, Edited));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Journal, WebConstants.Edited), successmessage);
         }
 
         private void AssertJournals(JournalFormServiceModel expected, JournalFormServiceModel actual)
         {
-            actual.Name.Should().Be(expected.Name);
-            actual.Description.Should().Be(expected.Description);
-            actual.ImageUrl.Should().Be(expected.ImageUrl);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
         private void AssertRedirect(int journalId, RedirectToActionResult result)
         {
-            result.ActionName.Should().Be(Details);
-            result.ControllerName.Should().Be(Journals);
-            result.RouteValues[Id].Should().Be(journalId);
-            result.RouteValues[Area].Should().Be(string.Empty);
+            Assert.Equal(Details, result.ActionName);
+            Assert.Equal(Journals, result.ControllerName);
+            Assert.Equal(journalId, result.RouteValues[Id]);
+            Assert.Equal(string.Empty, result.RouteValues[Area]);
         }
 
         private JournalFormServiceModel GetJournalFormModel()

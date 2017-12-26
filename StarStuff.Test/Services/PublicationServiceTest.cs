@@ -2,8 +2,8 @@
 {
     using StarStuff.Data;
     using StarStuff.Data.Models;
-    using StarStuff.Services.Moderator.Implementations;
-    using StarStuff.Services.Moderator.Models.Publications;
+    using StarStuff.Services.Areas.Moderator.Implementations;
+    using StarStuff.Services.Areas.Moderator.Models.Publications;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -291,7 +291,7 @@
             Publication actual = db.Publications.Find(publicationId);
 
             // Assert
-            Assert.True(this.ComparePublications(expected, actual));
+            this.ComparePublications(expected, actual);
         }
 
         [Fact]
@@ -484,7 +484,7 @@
             Publication actual = db.Publications.Find(publicationId);
 
             // Assert
-            Assert.True(this.ComparePublications(expected, actual));
+            this.ComparePublications(expected, actual);
         }
 
         [Fact]
@@ -521,7 +521,7 @@
             PublicationFormServiceModel actual = publicationService.GetForm(publicationId);
 
             // Assert
-            Assert.True(this.ComparePublications(expected, actual));
+            this.ComparePublications(expected, actual);
         }
 
         [Fact]
@@ -591,7 +591,7 @@
             PublicationDetailsServiceModel actual = publicationService.Details(publicationId);
 
             // Assert
-            Assert.True(this.ComparePublications(expected, actual));
+            this.ComparePublications(expected, actual);
         }
 
         [Fact]
@@ -668,18 +668,23 @@
             const int page = 2;
             const int pageSize = 5;
 
-            // Act
-            IEnumerable<ListPublicationsServiceModel> publications = publicationService.All(page, pageSize);
-
             List<Publication> fakePublications = this.GetFakePublications()
-                .OrderByDescending(p => p.ReleaseDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
+            int i = -1;
+
+            // Act
+            IEnumerable<ListPublicationsServiceModel> publications = publicationService.All(page, pageSize);
+
             // Assert
-            Assert.True(this.ComparePublications(fakePublications.First(), publications.First()));
-            Assert.True(this.ComparePublications(fakePublications.Last(), publications.Last()));
+            foreach (var actual in publications)
+            {
+                Publication expected = fakePublications[++i];
+
+                this.ComparePublications(expected, actual);
+            }
         }
 
         [Fact]
@@ -704,18 +709,24 @@
             db.Journals.Add(journal);
             db.SaveChanges();
 
-            // Act
-            IEnumerable<ListPublicationsServiceModel> publications = publicationService.AllByJournal(journalId, page, pageSize);
-
             List<Publication> fakePublications = this.GetFakePublications()
-                .OrderByDescending(p => p.ReleaseDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
+            int i = -1;
+
+            // Act
+            IEnumerable<ListPublicationsServiceModel> publications = publicationService
+                .AllByJournal(journalId, page, pageSize);
+
             // Assert
-            Assert.True(this.ComparePublications(fakePublications.First(), publications.First()));
-            Assert.True(this.ComparePublications(fakePublications.Last(), publications.Last()));
+            foreach (var actual in publications)
+            {
+                Publication expected = fakePublications[++i];
+
+                this.ComparePublications(expected, actual);
+            }
         }
 
         [Fact]
@@ -744,53 +755,57 @@
             db.Telescopes.Add(telescope);
             db.SaveChanges();
 
-            // Act
-            IEnumerable<ListPublicationsServiceModel> publications = publicationService.AllByTelescope(telescopeId, page, pageSize);
-
             List<Publication> fakePublications = this.GetFakePublications()
-                .OrderByDescending(p => p.ReleaseDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
+            int i = -1;
+
+            // Act
+            IEnumerable<ListPublicationsServiceModel> publications = publicationService
+                .AllByTelescope(telescopeId, page, pageSize);
+
             // Assert
-            Assert.True(this.ComparePublications(fakePublications.First(), publications.First()));
-            Assert.True(this.ComparePublications(fakePublications.Last(), publications.Last()));
+            foreach (var actual in publications)
+            {
+                Publication expected = fakePublications[++i];
+
+                this.ComparePublications(expected, actual);
+            }
         }
 
-        private bool ComparePublications(Publication expected, Publication actual)
+        private void ComparePublications(Publication expected, Publication actual)
         {
-            return expected.Id == actual.Id
-                && expected.Content == actual.Content
-                && expected.ReleaseDate.Year == actual.ReleaseDate.Year
-                && expected.ReleaseDate.Month == actual.ReleaseDate.Month
-                && expected.ReleaseDate.Day == actual.ReleaseDate.Day;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Content, actual.Content);
+            this.CompareDates(expected.ReleaseDate, actual.ReleaseDate);
         }
 
-        private bool ComparePublications(Publication expected, PublicationDetailsServiceModel actual)
+        private void ComparePublications(Publication expected, PublicationDetailsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Title == actual.Title
-                && expected.Content == actual.Content
-                && expected.ReleaseDate == actual.ReleaseDate
-                && expected.JournalId == actual.JournalId
-                && expected.Discovery.Telescope.Name == actual.TelescopeName
-                && expected.Discovery.StarSystem == actual.StarSystemName
-                && expected.Discovery.TelescopeId == actual.TelescopeId;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Title, actual.Title);
+            Assert.Equal(expected.Content, actual.Content);
+            Assert.Equal(expected.JournalId, actual.JournalId);
+            Assert.Equal(expected.Discovery.Telescope.Name, actual.TelescopeName);
+            Assert.Equal(expected.Discovery.StarSystem, actual.StarSystemName);
+            Assert.Equal(expected.Discovery.TelescopeId, actual.TelescopeId);
+            this.CompareDates(expected.ReleaseDate, actual.ReleaseDate);
         }
 
-        private bool ComparePublications(Publication expected, PublicationFormServiceModel actual)
+        private void ComparePublications(Publication expected, PublicationFormServiceModel actual)
         {
-            return expected.Title == actual.Title
-                && expected.Content == actual.Content;
+            Assert.Equal(expected.Title, actual.Title);
+            Assert.Equal(expected.Content, actual.Content);
         }
 
-        private bool ComparePublications(Publication expected, ListPublicationsServiceModel actual)
+        private void ComparePublications(Publication expected, ListPublicationsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Title == actual.Title
-                && expected.Content == actual.Content
-                && expected.Views == actual.Views;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Title, actual.Title);
+            Assert.Equal(expected.Content, actual.Content);
+            Assert.Equal(expected.Views, actual.Views);
         }
 
         private void SeedDiscovery(StarStuffDbContext db, bool confirmed)

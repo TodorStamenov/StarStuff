@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Areas.Admin.Models.Users
 {
     using Infrastructure.Helpers;
-    using Services.Admin.Models.Roles;
+    using Services.Areas.Admin.Models.Roles;
     using Services.Models.Users;
     using System.Collections.Generic;
 

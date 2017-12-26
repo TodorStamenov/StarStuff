@@ -4,7 +4,7 @@
     using StarStuff.Data;
     using System;
 
-    public abstract class BaseServiceTest
+    public abstract class BaseServiceTest : BaseTest
     {
         protected BaseServiceTest()
         {

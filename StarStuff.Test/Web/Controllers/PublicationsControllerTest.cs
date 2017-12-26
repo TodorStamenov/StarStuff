@@ -1,14 +1,13 @@
 ﻿namespace StarStuff.Test.Web.Controllers
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Moq;
     using StarStuff.Data.Models;
     using StarStuff.Services;
+    using StarStuff.Services.Areas.Moderator;
+    using StarStuff.Services.Areas.Moderator.Models.Publications;
     using StarStuff.Services.Models.Comments;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Publications;
     using StarStuff.Web.Controllers;
     using StarStuff.Web.Models.Publications;
     using System;
@@ -61,7 +60,7 @@
             IActionResult result = publicationsController.Details(publicationId, 1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -111,12 +110,10 @@
             IActionResult result = publicationsController.Details(publicationId, 2);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PublicationDetailsViewModel>();
-
-            PublicationDetailsViewModel returnModel = model.As<PublicationDetailsViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PublicationDetailsViewModel>(model);
+            PublicationDetailsViewModel returnModel = model as PublicationDetailsViewModel;
             this.AssertPublicationDetailsViewModel(this.GetPublicationDetailsViewModel(), returnModel);
         }
 
@@ -142,12 +139,10 @@
             IActionResult result = publicationsController.All(2);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<ListPublicationsViewModel>();
-
-            ListPublicationsViewModel returnModel = model.As<ListPublicationsViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<ListPublicationsViewModel>(model);
+            ListPublicationsViewModel returnModel = model as ListPublicationsViewModel;
             this.AssertPages(listModel, returnModel);
             this.AssertListPublicationsViewModel(listModel, returnModel);
         }
@@ -180,12 +175,10 @@
             IActionResult result = publicationsController.ByJournal(1, 2);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<ListPublicationsByJournalViewModel>();
-
-            ListPublicationsByJournalViewModel returnModel = model.As<ListPublicationsByJournalViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<ListPublicationsByJournalViewModel>(model);
+            ListPublicationsByJournalViewModel returnModel = model as ListPublicationsByJournalViewModel;
             this.AssertPages(listModel, returnModel);
             this.AssertListPublicationsByJournalViewModel(listModel, returnModel);
         }
@@ -219,7 +212,7 @@
             IActionResult result = publicationsController.ByJournal(1, 2);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -250,12 +243,11 @@
             IActionResult result = publicationsController.ByTelescope(1, 2);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
 
-            model.Should().BeOfType<ListPublicationsByTelescopeViewModel>();
-
-            ListPublicationsByTelescopeViewModel returnModel = model.As<ListPublicationsByTelescopeViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<ListPublicationsByTelescopeViewModel>(model);
+            ListPublicationsByTelescopeViewModel returnModel = model as ListPublicationsByTelescopeViewModel;
             this.AssertPages(listModel, returnModel);
             this.AssertListPublicationsByTelescopeViewModel(listModel, returnModel);
         }
@@ -289,7 +281,7 @@
             IActionResult result = publicationsController.ByTelescope(1, 2);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         private void AssertListPublicationsViewModel(ListPublicationsViewModel expected, ListPublicationsViewModel actual)
@@ -300,8 +292,8 @@
 
         private void AssertListPublicationsByJournalViewModel(ListPublicationsByJournalViewModel expected, ListPublicationsByJournalViewModel actual)
         {
-            actual.JournalId.Should().Be(expected.JournalId);
-            actual.JournalName.Should().Be(expected.JournalName);
+            Assert.Equal(expected.JournalId, expected.JournalId);
+            Assert.Equal(expected.JournalName, expected.JournalName);
 
             this.AssertPublicationListServiceModel(expected.Publications.First(), actual.Publications.First());
             this.AssertPublicationListServiceModel(expected.Publications.Last(), actual.Publications.Last());
@@ -309,8 +301,8 @@
 
         private void AssertListPublicationsByTelescopeViewModel(ListPublicationsByTelescopeViewModel expected, ListPublicationsByTelescopeViewModel actual)
         {
-            actual.TelescopeId.Should().Be(expected.TelescopeId);
-            actual.TelescopeName.Should().Be(expected.TelescopeName);
+            Assert.Equal(expected.TelescopeId, expected.TelescopeId);
+            Assert.Equal(expected.TelescopeName, expected.TelescopeName);
 
             this.AssertPublicationListServiceModel(expected.Publications.First(), actual.Publications.First());
             this.AssertPublicationListServiceModel(expected.Publications.Last(), actual.Publications.Last());
@@ -326,41 +318,35 @@
 
         private void AssertPublicationListServiceModel(ListPublicationsServiceModel expected, ListPublicationsServiceModel actual)
         {
-            actual.Id.Should().Be(expected.Id);
-            actual.Title.Should().Be(expected.Title);
-            actual.Content.Should().Be(expected.Content);
-            actual.Views.Should().Be(expected.Views);
-            actual.CommentsCount.Should().Be(expected.CommentsCount);
+            Assert.Equal(expected.Id, expected.Id);
+            Assert.Equal(expected.Title, expected.Title);
+            Assert.Equal(expected.Content, expected.Content);
+            Assert.Equal(expected.Views, expected.Views);
+            Assert.Equal(expected.CommentsCount, expected.CommentsCount);
         }
 
         private void AssertPublicationDetailsServiceModel(PublicationDetailsServiceModel expected, PublicationDetailsServiceModel actual)
         {
-            actual.Id.Should().Be(expected.Id);
-            actual.Content.Should().Be(expected.Content);
-            actual.JournalId.Should().Be(expected.JournalId);
-            actual.JournalName.Should().Be(expected.JournalName);
-            actual.TelescopeId.Should().Be(expected.TelescopeId);
-            actual.TelescopeName.Should().Be(expected.TelescopeName);
-            actual.StarSystemName.Should().Be(expected.StarSystemName);
-            actual.Distance.Should().Be(expected.Distance);
-            actual.AuthorName.Should().Be(expected.AuthorName);
-            actual.ReleaseDate.Year.Should().Be(expected.ReleaseDate.Year);
-            actual.ReleaseDate.Month.Should().Be(expected.ReleaseDate.Month);
-            actual.ReleaseDate.Day.Should().Be(expected.ReleaseDate.Day);
+            Assert.Equal(expected.Id, expected.Id);
+            Assert.Equal(expected.Content, expected.Content);
+            Assert.Equal(expected.JournalId, expected.JournalId);
+            Assert.Equal(expected.JournalName, expected.JournalName);
+            Assert.Equal(expected.TelescopeId, expected.TelescopeId);
+            Assert.Equal(expected.TelescopeName, expected.TelescopeName);
+            Assert.Equal(expected.StarSystemName, expected.StarSystemName);
+            Assert.Equal(expected.Distance, expected.Distance);
+            Assert.Equal(expected.AuthorName, expected.AuthorName);
+            this.CompareDates(expected.ReleaseDate, actual.ReleaseDate);
         }
 
         private void AssertComment(ListCommentsServiceModel expected, ListCommentsServiceModel actual)
         {
-            actual.Id.Should().Be(expected.Id);
-            actual.Content.Should().Be(expected.Content);
-            actual.IsOwner.Should().Be(expected.IsOwner);
-            actual.ProfileImage.Should().Be(expected.ProfileImage);
-            actual.IsOwner.Should().Be(expected.IsOwner);
-            actual.DateAdded.Year.Should().Be(expected.DateAdded.Year);
-            actual.DateAdded.Month.Should().Be(expected.DateAdded.Month);
-            actual.DateAdded.Day.Should().Be(expected.DateAdded.Day);
-            actual.DateAdded.Hour.Should().Be(expected.DateAdded.Hour);
-            actual.DateAdded.Minute.Should().Be(expected.DateAdded.Minute);
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Content, actual.Content);
+            Assert.Equal(expected.IsOwner, actual.IsOwner);
+            Assert.Equal(expected.ProfileImage, actual.ProfileImage);
+            Assert.Equal(expected.IsOwner, actual.IsOwner);
+            this.CompareDatesExact(expected.DateAdded, actual.DateAdded);
         }
 
         private PublicationDetailsServiceModel GetPublicationDetailsServiceModel()

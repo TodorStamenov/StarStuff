@@ -1,12 +1,11 @@
 ﻿namespace StarStuff.Test.Web.Areas.Moderator
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
     using Moq;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Telescopes;
+    using StarStuff.Services.Areas.Moderator;
+    using StarStuff.Services.Areas.Moderator.Models.Telescopes;
     using StarStuff.Web.Areas.Moderator.Controllers;
     using StarStuff.Web.Infrastructure;
     using System;
@@ -31,8 +30,8 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.Roles.Should().Be(WebConstants.ModeratorRole);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorRole, attribute.Roles);
         }
 
         [Fact]
@@ -48,8 +47,8 @@
                 as AreaAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.RouteValue.Should().Be(WebConstants.ModeratorArea);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorArea, attribute.RouteValue);
         }
 
         [Fact]
@@ -62,7 +61,7 @@
             IActionResult result = telescopesController.Create();
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -91,14 +90,12 @@
             IActionResult result = telescopesController.Create(formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<TelescopeFormServiceModel>();
-
-            TelescopeFormServiceModel returnModel = model.As<TelescopeFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<TelescopeFormServiceModel>(model);
+            TelescopeFormServiceModel returnModel = model as TelescopeFormServiceModel;
             this.AssertTelescopes(formModel, returnModel);
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Telescope));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Telescope), errorMessage);
         }
 
         [Fact]
@@ -128,7 +125,7 @@
             IActionResult result = telescopesController.Create(formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -168,10 +165,10 @@
             IActionResult result = telescopesController.Create(formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(telescopeId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Telescope, Added));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Telescope, WebConstants.Added), successmessage);
         }
 
         [Fact]
@@ -192,7 +189,7 @@
             IActionResult result = telescopesController.Edit(1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -213,12 +210,10 @@
             IActionResult result = telescopesController.Edit(1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<TelescopeFormServiceModel>();
-
-            TelescopeFormServiceModel returnModel = model.As<TelescopeFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<TelescopeFormServiceModel>(model);
+            TelescopeFormServiceModel returnModel = model as TelescopeFormServiceModel;
             this.AssertTelescopes(formModel, returnModel);
         }
 
@@ -240,7 +235,7 @@
             IActionResult result = telescopesController.Edit(1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -273,14 +268,12 @@
             IActionResult result = telescopesController.Edit(1, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<TelescopeFormServiceModel>();
-
-            TelescopeFormServiceModel returnModel = model.As<TelescopeFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<TelescopeFormServiceModel>(model);
+            TelescopeFormServiceModel returnModel = model as TelescopeFormServiceModel;
             this.AssertTelescopes(formModel, returnModel);
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Telescope));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Telescope), errorMessage);
         }
 
         [Fact]
@@ -315,7 +308,7 @@
             IActionResult result = telescopesController.Edit(1, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -361,27 +354,27 @@
             IActionResult result = telescopesController.Edit(telescopeId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(telescopeId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Telescope, Edited));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Telescope, WebConstants.Edited), successmessage);
         }
 
         private void AssertTelescopes(TelescopeFormServiceModel expected, TelescopeFormServiceModel actual)
         {
-            actual.Name.Should().Be(expected.Name);
-            actual.Location.Should().Be(expected.Location);
-            actual.Description.Should().Be(expected.Description);
-            actual.MirrorDiameter.Should().Be(expected.MirrorDiameter);
-            actual.ImageUrl.Should().Be(expected.ImageUrl);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Location, actual.Location);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.MirrorDiameter, actual.MirrorDiameter);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
         private void AssertRedirect(int telescopeId, RedirectToActionResult result)
         {
-            result.ActionName.Should().Be(Details);
-            result.ControllerName.Should().Be(Telescopes);
-            result.RouteValues[Id].Should().Be(telescopeId);
-            result.RouteValues[Area].Should().Be(string.Empty);
+            Assert.Equal(result.ActionName, Details);
+            Assert.Equal(result.ControllerName, Telescopes);
+            Assert.Equal(result.RouteValues[Id], telescopeId);
+            Assert.Equal(result.RouteValues[Area], string.Empty);
         }
 
         private TelescopeFormServiceModel GetTelescopeFormModel()

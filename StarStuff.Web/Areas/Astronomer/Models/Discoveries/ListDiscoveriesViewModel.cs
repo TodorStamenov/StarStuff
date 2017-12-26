@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Areas.Astronomer.Models.Discoveries
 {
     using Infrastructure.Helpers;
-    using Services.Astronomer.Models.Discoveries;
+    using Services.Areas.Astronomer.Models.Discoveries;
     using System.Collections.Generic;
 
     public class ListDiscoveriesViewModel : BasePageViewModel

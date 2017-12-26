@@ -6,7 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Models.Publications;
     using Services;
-    using Services.Moderator;
+    using Services.Areas.Moderator;
 
     public class PublicationsController : Controller
     {

@@ -1,6 +1,5 @@
 ﻿namespace StarStuff.Test.Web.Controllers
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -41,7 +40,7 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
+            Assert.NotNull(attribute);
         }
 
         [Fact]
@@ -54,7 +53,7 @@
             IActionResult result = commentsController.Create(1, 1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -78,7 +77,7 @@
             IActionResult result = commentsController.Create(1, 1, new CommentFormServiceModel { });
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -113,10 +112,10 @@
             IActionResult result = commentsController.Create(publicationId, page, new CommentFormServiceModel { });
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(publicationId, page, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Added));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Added), successmessage);
         }
 
         [Fact]
@@ -160,7 +159,7 @@
             IActionResult result = commentsController.Edit(commentId, publicationId, page);
 
             // Assert
-            result.Should().BeOfType<UnauthorizedResult>();
+            Assert.IsType<UnauthorizedResult>(result);
         }
 
         [Fact]
@@ -210,7 +209,7 @@
             IActionResult result = commentsController.Edit(commentId, publicationId, page);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -222,7 +221,7 @@
             Mock<ClaimsPrincipal> claimsMock = new Mock<ClaimsPrincipal>();
             Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
 
-            CommentFormServiceModel fromModel = this.GetCommentFormServiceModel();
+            CommentFormServiceModel formModel = this.GetCommentFormServiceModel();
 
             commentService
                 .Setup(c => c.CanEdit(It.IsAny<int>(), It.IsAny<int>()))
@@ -230,7 +229,7 @@
 
             commentService
                 .Setup(c => c.GetForm(It.IsAny<int>()))
-                .Returns(fromModel);
+                .Returns(formModel);
 
             userManager
                 .Setup(u => u.GetUserId(It.IsAny<ClaimsPrincipal>()))
@@ -260,13 +259,11 @@
             IActionResult result = commentsController.Edit(commentId, publicationId, page);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<CommentFormServiceModel>();
-
-            CommentFormServiceModel returnModel = model.As<CommentFormServiceModel>();
-            this.AssertComment(fromModel, returnModel);
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<CommentFormServiceModel>(model);
+            CommentFormServiceModel returnModel = model as CommentFormServiceModel;
+            this.AssertComment(formModel, returnModel);
         }
 
         [Fact]
@@ -310,7 +307,7 @@
             IActionResult result = commentsController.Edit(commentId, publicationId, page, new CommentFormServiceModel { });
 
             // Assert
-            result.Should().BeOfType<UnauthorizedResult>();
+            Assert.IsType<UnauthorizedResult>(result);
         }
 
         [Fact]
@@ -358,7 +355,7 @@
             IActionResult result = commentsController.Edit(commentId, publicationId, page, new CommentFormServiceModel { });
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -414,10 +411,10 @@
             IActionResult result = commentsController.Edit(commentId, publicationId, page, new CommentFormServiceModel { });
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(publicationId, page, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Edited));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Edited), successmessage);
         }
 
         [Fact]
@@ -434,8 +431,8 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.Roles.Should().Be(WebConstants.ModeratorRole);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorRole, attribute.Roles);
         }
 
         [Fact]
@@ -448,7 +445,7 @@
             IActionResult result = commentsController.Delete(1, 1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -465,8 +462,8 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.Roles.Should().Be(WebConstants.ModeratorRole);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorRole, attribute.Roles);
         }
 
         [Fact]
@@ -485,7 +482,7 @@
             IActionResult result = commentsController.DeletePost(1, 1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -514,15 +511,15 @@
             IActionResult result = commentsController.DeletePost(1, 1);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(publicationId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Deleted));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Comment, WebConstants.Deleted), successmessage);
         }
 
         private void AssertComment(CommentFormServiceModel expected, CommentFormServiceModel actual)
         {
-            actual.Content.Should().Be(expected.Content);
+            Assert.Equal(expected.Content, actual.Content);
         }
 
         private CommentFormServiceModel GetCommentFormServiceModel()
@@ -535,16 +532,16 @@
 
         private void AssertRedirect(int publicationId, RedirectToActionResult result)
         {
-            result.ActionName.Should().Be(Details);
-            result.ControllerName.Should().Be(Publications);
-            result.RouteValues[Id].Should().Be(publicationId);
-            result.RouteValues[Area].Should().Be(string.Empty);
+            Assert.Equal(result.ActionName, Details);
+            Assert.Equal(result.ControllerName, Publications);
+            Assert.Equal(result.RouteValues[Id], publicationId);
+            Assert.Equal(result.RouteValues[Area], string.Empty);
         }
 
         private void AssertRedirect(int publicationId, int page, RedirectToActionResult result)
         {
             this.AssertRedirect(publicationId, result);
-            result.RouteValues[Page].Should().Be(page);
+            Assert.Equal(result.RouteValues[Page], page);
         }
     }
 }

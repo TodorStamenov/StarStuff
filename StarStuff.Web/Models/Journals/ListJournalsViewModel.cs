@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Models.Journals
 {
     using Infrastructure.Helpers;
-    using Services.Moderator.Models.Journals;
+    using Services.Areas.Moderator.Models.Journals;
     using System.Collections.Generic;
 
     public class ListJournalsViewModel : BasePageViewModel

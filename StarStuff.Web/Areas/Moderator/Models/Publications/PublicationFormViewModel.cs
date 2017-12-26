@@ -1,7 +1,7 @@
 ﻿namespace StarStuff.Web.Areas.Moderator.Models.Publications
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
-    using Services.Moderator.Models.Publications;
+    using Services.Areas.Moderator.Models.Publications;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 

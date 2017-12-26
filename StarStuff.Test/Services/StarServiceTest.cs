@@ -2,8 +2,8 @@
 {
     using StarStuff.Data;
     using StarStuff.Data.Models;
-    using StarStuff.Services.Astronomer.Implementations;
-    using StarStuff.Services.Astronomer.Models.Stars;
+    using StarStuff.Services.Areas.Astronomer.Implementations;
+    using StarStuff.Services.Areas.Astronomer.Models.Stars;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
@@ -81,7 +81,7 @@
             Star actual = db.Stars.Find(starId);
 
             // Assert
-            Assert.True(this.CompareStars(expected, actual));
+            this.CompareStars(expected, actual);
         }
 
         [Fact]
@@ -181,7 +181,7 @@
             Star actual = db.Stars.Find(starId);
 
             // Assert
-            Assert.True(this.CompareStars(expected, actual));
+            this.CompareStars(expected, actual);
         }
 
         [Fact]
@@ -218,7 +218,7 @@
             Star actual = db.Stars.Find(expected.Id);
 
             // Assert
-            Assert.True(this.CompareStars(expected, actual));
+            this.CompareStars(expected, actual);
         }
 
         [Fact]
@@ -391,7 +391,7 @@
             StarFormServiceModel actual = starService.GetForm(starId);
 
             // Assert
-            Assert.True(this.CompareStars(expected, actual));
+            this.CompareStars(expected, actual);
         }
 
         [Fact]
@@ -426,15 +426,18 @@
             db.Discoveries.Add(discovery);
             db.SaveChanges();
 
+            List<Star> fakeStars = this.GetFakeStars();
+            int i = -1;
+
             // Act
             IEnumerable<ListStarsServiceModel> stars = starService.Stars(discoveryId).OrderBy(s => s.Id);
 
             // Assert
-            foreach (var expected in this.GetFakeStars())
+            foreach (var actual in stars)
             {
-                ListStarsServiceModel actual = stars.FirstOrDefault(s => s.Id == expected.Id);
+                Star expected = fakeStars[++i];
 
-                Assert.True(this.CompareStars(expected, actual));
+                this.CompareStars(expected, actual);
             }
         }
 
@@ -454,24 +457,24 @@
             Assert.False(stars.Any());
         }
 
-        private bool CompareStars(Star expected, Star actual)
+        private void CompareStars(Star expected, Star actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Temperature == actual.Temperature;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Temperature, actual.Temperature);
         }
 
-        private bool CompareStars(Star expected, StarFormServiceModel actual)
+        private void CompareStars(Star expected, StarFormServiceModel actual)
         {
-            return expected.Name == actual.Name
-                && expected.Temperature == actual.Temperature;
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Temperature, actual.Temperature);
         }
 
-        private bool CompareStars(Star expected, ListStarsServiceModel actual)
+        private void CompareStars(Star expected, ListStarsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Temperature == actual.Temperature;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Temperature, actual.Temperature);
         }
 
         private void SeedDatabase(StarStuffDbContext db)

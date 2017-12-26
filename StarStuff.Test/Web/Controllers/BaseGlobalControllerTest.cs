@@ -1,16 +1,16 @@
 ﻿namespace StarStuff.Test.Web.Controllers
 {
-    using FluentAssertions;
     using StarStuff.Web.Infrastructure.Helpers;
+    using Xunit;
 
-    public class BaseGlobalControllerTest
+    public class BaseGlobalControllerTest : BaseTest
     {
         protected void AssertPages(BasePageViewModel expected, BasePageViewModel actual)
         {
-            actual.CurrentPage.Should().Be(expected.CurrentPage);
-            actual.NextPage.Should().Be(expected.NextPage);
-            actual.PrevPage.Should().Be(expected.PrevPage);
-            actual.TotalPages.Should().Be(expected.TotalPages);
+            Assert.Equal(expected.CurrentPage, actual.CurrentPage);
+            Assert.Equal(expected.NextPage, actual.NextPage);
+            Assert.Equal(expected.PrevPage, actual.PrevPage);
+            Assert.Equal(expected.TotalPages, actual.TotalPages);
         }
     }
 }

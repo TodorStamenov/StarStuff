@@ -2,8 +2,8 @@
 {
     using StarStuff.Data;
     using StarStuff.Data.Models;
-    using StarStuff.Services.Moderator.Implementations;
-    using StarStuff.Services.Moderator.Models.Telescopes;
+    using StarStuff.Services.Areas.Moderator.Implementations;
+    using StarStuff.Services.Areas.Moderator.Models.Telescopes;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
@@ -138,7 +138,7 @@
             Telescope actual = db.Telescopes.Find(telescopeId);
 
             // Assert
-            Assert.True(this.CompareTelescopes(expected, actual));
+            this.CompareTelescopes(expected, actual);
         }
 
         [Fact]
@@ -220,7 +220,7 @@
             Telescope actual = db.Telescopes.Find(telescopeId);
 
             // Assert
-            Assert.True(this.CompareTelescopes(expected, actual));
+            this.CompareTelescopes(expected, actual);
         }
 
         [Fact]
@@ -282,7 +282,7 @@
             Telescope actual = db.Telescopes.Find(telescopeId);
 
             // Assert
-            Assert.True(this.CompareTelescopes(expected, actual));
+            this.CompareTelescopes(expected, actual);
         }
 
         [Fact]
@@ -350,7 +350,7 @@
             TelescopeDetailsServiceModel actual = telescopeService.Details(telescopeId);
 
             // Assert
-            Assert.True(this.CompareTelescopes(expected, actual));
+            this.CompareTelescopes(expected, actual);
         }
 
         [Fact]
@@ -384,7 +384,7 @@
             TelescopeFormServiceModel actual = telescopeService.GetForm(telescopeId);
 
             // Assert
-            Assert.True(this.CompareTelescopes(expected, actual));
+            this.CompareTelescopes(expected, actual);
         }
 
         [Fact]
@@ -410,16 +410,19 @@
             TelescopeService telescopeService = new TelescopeService(db);
             this.SeedDatabase(db);
 
+            List<Telescope> fakeTelescopes = this.GetFakeTelescopes();
+
+            int i = -1;
+
             // Act
             IEnumerable<TelescopeServiceModel> telescopes = telescopeService.TelescopeDropdown();
-            List<Telescope> fakeTelescopes = this.GetFakeTelescopes().ToList();
 
             // Assert
             foreach (var actual in telescopes)
             {
-                Telescope expected = fakeTelescopes.FirstOrDefault(t => t.Id == actual.Id);
+                Telescope expected = fakeTelescopes[++i];
 
-                Assert.True(this.CompareTelescopes(expected, actual));
+                this.CompareTelescopes(expected, actual);
             }
         }
 
@@ -434,8 +437,6 @@
             const int page = 2;
             const int pageSize = 5;
 
-            // Act
-            IEnumerable<ListTelescopesServiceModel> telescopes = telescopeService.All(page, pageSize);
             List<Telescope> fakeTelescopes = this.GetFakeTelescopes()
                 .OrderBy(t => t.MirrorDiameter)
                 .Skip((page - 1) * pageSize)
@@ -444,56 +445,59 @@
 
             int i = -1;
 
+            // Act
+            IEnumerable<ListTelescopesServiceModel> telescopes = telescopeService.All(page, pageSize);
+
             // Assert
             foreach (var actual in telescopes)
             {
                 Telescope expected = fakeTelescopes[++i];
 
-                Assert.True(this.CompareTelescopes(expected, actual));
+                this.CompareTelescopes(expected, actual);
             }
         }
 
-        private bool CompareTelescopes(Telescope expected, TelescopeServiceModel actual)
+        private void CompareTelescopes(Telescope expected, TelescopeServiceModel actual)
         {
-            return expected.Id == actual.Id
-               && expected.Name == actual.Name;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
         }
 
-        private bool CompareTelescopes(Telescope expected, TelescopeFormServiceModel actual)
+        private void CompareTelescopes(Telescope expected, TelescopeFormServiceModel actual)
         {
-            return expected.Name == actual.Name
-                && expected.Location == actual.Location
-                && expected.Description == actual.Description
-                && expected.MirrorDiameter == actual.MirrorDiameter
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Location, actual.Location);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.MirrorDiameter, actual.MirrorDiameter);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
-        private bool CompareTelescopes(Telescope expected, TelescopeDetailsServiceModel actual)
+        private void CompareTelescopes(Telescope expected, TelescopeDetailsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Location == actual.Location
-                && expected.Description == actual.Description
-                && expected.MirrorDiameter == actual.MirrorDiameter
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Location, actual.Location);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.MirrorDiameter, actual.MirrorDiameter);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
-        private bool CompareTelescopes(Telescope expected, ListTelescopesServiceModel actual)
+        private void CompareTelescopes(Telescope expected, ListTelescopesServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Description == actual.Description
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
-        private bool CompareTelescopes(Telescope expected, Telescope actual)
+        private void CompareTelescopes(Telescope expected, Telescope actual)
         {
-            return expected.Id == actual.Id
-                && expected.Name == actual.Name
-                && expected.Location == actual.Location
-                && expected.Description == actual.Description
-                && expected.MirrorDiameter == actual.MirrorDiameter
-                && expected.ImageUrl == actual.ImageUrl;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Location, actual.Location);
+            Assert.Equal(expected.Description, actual.Description);
+            Assert.Equal(expected.MirrorDiameter, actual.MirrorDiameter);
+            Assert.Equal(expected.ImageUrl, actual.ImageUrl);
         }
 
         private void SeedDatabase(StarStuffDbContext db)
@@ -519,7 +523,7 @@
                 });
             }
 
-            return telescopes;
+            return telescopes.OrderBy(t => t.Id).ToList();
         }
     }
 }

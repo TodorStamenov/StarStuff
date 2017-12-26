@@ -102,7 +102,7 @@
                 {
                     Id = c.Id,
                     Content = c.Content,
-                    DateAdded = c.DateAdded,
+                    DateAdded = c.DateAdded.ToLocalTime(),
                     Username = c.User.UserName,
                     ProfileImage = ServiceConstants.DataImage + Convert.ToBase64String(c.User.ProfileImage),
                     IsOwner = c.UserId == userId

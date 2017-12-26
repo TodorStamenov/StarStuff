@@ -4,6 +4,7 @@
     using Data;
     using Data.Models;
     using Infrastructure.Extensions;
+    using Infrastructure.Mapping;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -40,7 +41,7 @@
 
             services.AddRouting(routing => routing.LowercaseUrls = true);
             services.AddDomainServices();
-            services.AddAutoMapper();
+            services.AddAutoMapper(options => options.AddProfile<AutoMapperProfile>());
             services.AddMvc(
                 options => options.Filters.Add<ValidateAntiForgeryTokenAttribute>());
         }

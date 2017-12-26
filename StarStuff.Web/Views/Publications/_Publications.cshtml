@@ -10,7 +10,7 @@
         </div>
         <div class="panel-body">
             <div>
-                @publication.Content.Slice(800)
+                @publication.Content.Slice(WebConstants.JournalDescriptionSliceLength)
             </div>
             <div class="pull-right">
                 <span class="glyphicon glyphicon-eye-open"></span>@publication.Views

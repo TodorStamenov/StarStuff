@@ -5,8 +5,8 @@
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Moderator;
-    using Services.Moderator.Models.Journals;
+    using Services.Areas.Moderator;
+    using Services.Areas.Moderator.Models.Journals;
 
     public class JournalsController : BaseModeratorController
     {

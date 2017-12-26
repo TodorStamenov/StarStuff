@@ -2,8 +2,8 @@
 {
     using Data;
     using Data.Models;
-    using StarStuff.Services.Astronomer.Implementations;
-    using StarStuff.Services.Astronomer.Models.Planets;
+    using StarStuff.Services.Areas.Astronomer.Implementations;
+    using StarStuff.Services.Areas.Astronomer.Models.Planets;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
@@ -79,7 +79,7 @@
 
             // Assert
             Assert.Equal(1, db.Planets.Count());
-            Assert.True(this.ComparePlanets(expected, actual));
+            this.ComparePlanets(expected, actual);
         }
 
         [Fact]
@@ -173,7 +173,7 @@
             Planet actual = db.Planets.Find(planetId);
 
             // Assert
-            Assert.True(this.ComparePlanets(expected, actual));
+            this.ComparePlanets(expected, actual);
         }
 
         [Fact]
@@ -225,7 +225,7 @@
             Planet actual = db.Planets.Find(expected.Id);
 
             // Assert
-            Assert.True(this.ComparePlanets(expected, actual));
+            this.ComparePlanets(expected, actual);
         }
 
         [Fact]
@@ -357,7 +357,7 @@
             PlanetFormServiceModel actual = planetService.GetForm(expected.Id);
 
             // Assert
-            Assert.True(this.ComparePlanets(expected, actual));
+            this.ComparePlanets(expected, actual);
         }
 
         [Fact]
@@ -386,15 +386,19 @@
 
             this.SeedDiscovery(db, false, true);
 
+            List<Planet> fakePlanets = this.GetFakePlanets();
+
+            int i = -1;
+
             // Act
             IEnumerable<ListPlanetsServiceModel> planets = planetService.Planets(discoveryId);
 
             // Assert
-            foreach (var expected in GetFakePlanets())
+            foreach (var actual in planets)
             {
-                ListPlanetsServiceModel actual = planets.FirstOrDefault(p => p.Id == expected.Id);
+                Planet expected = fakePlanets[++i];
 
-                Assert.True(this.ComparePlanets(expected, actual));
+                this.ComparePlanets(expected, actual);
             }
         }
 
@@ -414,24 +418,24 @@
             Assert.False(planets.Any());
         }
 
-        private bool ComparePlanets(Planet expected, Planet actual)
+        private void ComparePlanets(Planet expected, Planet actual)
         {
-            return expected.Id == actual.Id
-                && expected.Mass == actual.Mass
-                && expected.Name == actual.Name;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Mass, actual.Mass);
+            Assert.Equal(expected.Name, actual.Name);
         }
 
-        private bool ComparePlanets(Planet expected, PlanetFormServiceModel actual)
+        private void ComparePlanets(Planet expected, PlanetFormServiceModel actual)
         {
-            return expected.Mass == actual.Mass
-                && expected.Name == actual.Name;
+            Assert.Equal(expected.Mass, actual.Mass);
+            Assert.Equal(expected.Name, actual.Name);
         }
 
-        private bool ComparePlanets(Planet expected, ListPlanetsServiceModel actual)
+        private void ComparePlanets(Planet expected, ListPlanetsServiceModel actual)
         {
-            return expected.Id == actual.Id
-                && expected.Mass == actual.Mass
-                && expected.Name == actual.Name;
+            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected.Mass, actual.Mass);
+            Assert.Equal(expected.Name, actual.Name);
         }
 
         private void SeedDatabase(StarStuffDbContext db)

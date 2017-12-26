@@ -1,6 +1,5 @@
 ﻿namespace StarStuff.Test.Web.Areas.Moderator
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -8,10 +7,10 @@
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
     using Moq;
     using StarStuff.Data.Models;
-    using StarStuff.Services.Astronomer;
-    using StarStuff.Services.Astronomer.Models.Discoveries;
-    using StarStuff.Services.Moderator;
-    using StarStuff.Services.Moderator.Models.Publications;
+    using StarStuff.Services.Areas.Astronomer;
+    using StarStuff.Services.Areas.Astronomer.Models.Discoveries;
+    using StarStuff.Services.Areas.Moderator;
+    using StarStuff.Services.Areas.Moderator.Models.Publications;
     using StarStuff.Test.Mocks;
     using StarStuff.Web.Areas.Moderator.Controllers;
     using StarStuff.Web.Areas.Moderator.Models.Publications;
@@ -40,8 +39,8 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.Roles.Should().Be(WebConstants.ModeratorRole);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorRole, attribute.Roles);
         }
 
         [Fact]
@@ -57,8 +56,8 @@
                 as AreaAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.RouteValue.Should().Be(WebConstants.ModeratorArea);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.ModeratorArea, attribute.RouteValue);
         }
 
         [Fact]
@@ -68,6 +67,8 @@
             Mock<IDiscoveryService> discoveryService = new Mock<IDiscoveryService>();
             Mock<IJournalService> journalService = new Mock<IJournalService>();
 
+            PublicationFormViewModel formModel = this.GetPublicationFormViewModel();
+
             const int journalId = 1;
 
             discoveryService
@@ -76,7 +77,7 @@
 
             journalService
                 .Setup(j => j.GetName(It.IsAny<int>()))
-                .Returns("Journal Name");
+                .Returns(formModel.JournalName);
 
             PublicationsController publicationsController = new PublicationsController(null, discoveryService.Object, journalService.Object, null);
 
@@ -84,14 +85,11 @@
             IActionResult result = publicationsController.Create(journalId);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PublicationFormViewModel>();
-
-            PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
-
-            returnModel.JournalName.Should().Be("Journal Name");
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PublicationFormViewModel>(model);
+            PublicationFormViewModel returnModel = model as PublicationFormViewModel;
+            Assert.Equal(formModel.JournalName, returnModel.JournalName);
             this.AssertDiscoveriesSelectList(returnModel.Discoveries);
         }
 
@@ -121,12 +119,10 @@
             IActionResult result = publicationsController.Create(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PublicationFormViewModel>();
-
-            PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PublicationFormViewModel>(model);
+            PublicationFormViewModel returnModel = model as PublicationFormViewModel;
             this.AssertPublicationFormViewModel(formModel, returnModel);
         }
 
@@ -168,14 +164,12 @@
             IActionResult result = publicationsController.Create(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PublicationFormViewModel>();
-
-            PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PublicationFormViewModel>(model);
+            PublicationFormViewModel returnModel = model as PublicationFormViewModel;
             this.AssertPublicationFormViewModel(formModel, returnModel);
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Publication));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Publication), errorMessage);
         }
 
         [Fact]
@@ -190,10 +184,15 @@
             PublicationFormViewModel formModel = this.GetPublicationFormViewModel();
 
             const int journalId = 1;
+            const string discoveryName = "Fake Discovery Name";
 
             discoveryService
                 .Setup(d => d.DiscoveryDropdown(It.IsAny<int>()))
                 .Returns(this.GetDiscoveriesDropdown());
+
+            discoveryService
+                .Setup(d => d.GetName(It.IsAny<int>()))
+                .Returns(discoveryName);
 
             journalService
                .Setup(j => j.GetName(It.IsAny<int>()))
@@ -220,14 +219,12 @@
             IActionResult result = publicationsController.Create(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PublicationFormViewModel>();
-
-            PublicationFormViewModel returnModel = model.As<PublicationFormViewModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PublicationFormViewModel>(model);
+            PublicationFormViewModel returnModel = model as PublicationFormViewModel;
             this.AssertPublicationFormViewModel(formModel, returnModel);
-            errorMessage.Should().Be("Publication from this Journal for this Discovery already exists!");
+            Assert.Equal(string.Format(WebConstants.PublicationFromJournalExists, formModel.JournalName, discoveryName), errorMessage);
         }
 
         [Fact]
@@ -268,7 +265,7 @@
             IActionResult result = publicationsController.Create(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -316,10 +313,10 @@
             IActionResult result = publicationsController.Create(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(journalId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Publication, Added));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Publication, WebConstants.Added), successmessage);
         }
 
         [Fact]
@@ -341,7 +338,7 @@
             IActionResult result = publicationsController.Edit(journalId);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -363,12 +360,10 @@
             IActionResult result = publicationsController.Edit(journalId);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PublicationFormServiceModel>();
-
-            PublicationFormServiceModel returnModel = model.As<PublicationFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PublicationFormServiceModel>(model);
+            PublicationFormServiceModel returnModel = model as PublicationFormServiceModel;
             this.AssertPublications(formModel, returnModel);
         }
 
@@ -393,7 +388,7 @@
             IActionResult result = publicationsController.Edit(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -429,14 +424,12 @@
             IActionResult result = publicationsController.Edit(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PublicationFormServiceModel>();
-
-            PublicationFormServiceModel returnModel = model.As<PublicationFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PublicationFormServiceModel>(model);
+            PublicationFormServiceModel returnModel = model as PublicationFormServiceModel;
             this.AssertPublications(formModel, returnModel);
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Publication));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Publication), errorMessage);
         }
 
         [Fact]
@@ -466,7 +459,7 @@
             IActionResult result = publicationsController.Edit(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -504,41 +497,47 @@
             IActionResult result = publicationsController.Edit(journalId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(journalId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Publication, Edited));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Publication, WebConstants.Edited), successmessage);
         }
 
         private void AssertPublications(PublicationFormServiceModel expected, PublicationFormServiceModel actual)
         {
-            actual.Title.Should().Be(expected.Title);
-            actual.Content.Should().Be(expected.Content);
+            Assert.Equal(expected.Title, actual.Title);
+            Assert.Equal(expected.Content, actual.Content);
         }
 
         private void AssertPublicationFormViewModel(PublicationFormViewModel expected, PublicationFormViewModel actual)
         {
-            actual.JournalName.Should().Be(expected.JournalName);
-            actual.DiscoveryId.Should().Be(expected.DiscoveryId);
+            Assert.Equal(expected.JournalName, actual.JournalName);
+            Assert.Equal(expected.DiscoveryId, actual.DiscoveryId);
             this.AssertPublications(expected.Publication, actual.Publication);
             this.AssertDiscoveriesSelectList(actual.Discoveries);
         }
 
         private void AssertRedirect(int publicationId, RedirectToActionResult result)
         {
-            result.ActionName.Should().Be(Details);
-            result.ControllerName.Should().Be(Publications);
-            result.RouteValues[Id].Should().Be(publicationId);
-            result.RouteValues[Area].Should().Be(string.Empty);
+            Assert.Equal(result.ActionName, Details);
+            Assert.Equal(result.ControllerName, Publications);
+            Assert.Equal(result.RouteValues[Id], publicationId);
+            Assert.Equal(result.RouteValues[Area], string.Empty);
         }
 
         private void AssertDiscoveriesSelectList(IEnumerable<SelectListItem> discoveries)
         {
-            discoveries.Should().Match(items => items.Count() == 2);
-            discoveries.First().Should().Match(d => d.As<SelectListItem>().Value == this.GetDiscoveriesDropdown().First().Id.ToString());
-            discoveries.First().Should().Match(d => d.As<SelectListItem>().Text == this.GetDiscoveriesDropdown().First().StarSystem);
-            discoveries.Last().Should().Match(d => d.As<SelectListItem>().Value == this.GetDiscoveriesDropdown().Last().Id.ToString());
-            discoveries.Last().Should().Match(d => d.As<SelectListItem>().Text == this.GetDiscoveriesDropdown().Last().StarSystem);
+            Assert.Equal(2, discoveries.Count());
+            List<DiscoveryDropdownServiceModel> fakeDiscoveries = this.GetDiscoveriesDropdown().ToList();
+            int i = -1;
+
+            foreach (var actual in discoveries)
+            {
+                DiscoveryDropdownServiceModel expected = fakeDiscoveries[++i];
+
+                Assert.Equal(expected.Id.ToString(), actual.Value);
+                Assert.Equal(expected.StarSystem, actual.Text);
+            }
         }
 
         private PublicationFormServiceModel GetPublicationFormServiceModel()
@@ -560,12 +559,12 @@
             };
         }
 
-        private IEnumerable<DiscoveryServiceModel> GetDiscoveriesDropdown()
+        private IEnumerable<DiscoveryDropdownServiceModel> GetDiscoveriesDropdown()
         {
-            return new List<DiscoveryServiceModel>
+            return new List<DiscoveryDropdownServiceModel>
             {
-                new DiscoveryServiceModel { Id = 1, StarSystem = "First StarSystem" },
-                new DiscoveryServiceModel { Id = 2, StarSystem = "Second StarSystem" }
+                new DiscoveryDropdownServiceModel { Id = 1, StarSystem = "First StarSystem" },
+                new DiscoveryDropdownServiceModel { Id = 2, StarSystem = "Second StarSystem" }
             };
         }
     }

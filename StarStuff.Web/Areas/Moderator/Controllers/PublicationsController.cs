@@ -8,9 +8,9 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Publications;
-    using Services.Astronomer;
-    using Services.Moderator;
-    using Services.Moderator.Models.Publications;
+    using Services.Areas.Astronomer;
+    using Services.Areas.Moderator;
+    using Services.Areas.Moderator.Models.Publications;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -64,7 +64,9 @@
             if (this.publicationService.Exists(id, model.DiscoveryId))
             {
                 this.PopulateCreateViewModel(id, model);
-                TempData.AddErrorMessage("Publication from this Journal for this Discovery already exists!");
+                string journalName = this.journalService.GetName(id);
+                string discoveryName = this.discoveryService.GetName(model.DiscoveryId);
+                TempData.AddErrorMessage(string.Format(WebConstants.PublicationFromJournalExists, journalName, discoveryName));
                 return View(model);
             }
 

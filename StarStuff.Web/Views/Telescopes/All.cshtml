@@ -21,7 +21,7 @@
                     <img src="@telescope.ImageUrl" alt="Telescope Image" width="100" height="100" />
                 </div>
                 <div>
-                    @telescope.Description.Slice(800)
+                    @telescope.Description.Slice(WebConstants.TelescopeDescriptionSliceLength)
                 </div>
                 @if (User.IsInRole(WebConstants.ModeratorRole))
                 {

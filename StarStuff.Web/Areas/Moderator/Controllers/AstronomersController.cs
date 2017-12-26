@@ -5,7 +5,7 @@
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Services.Models.Users;
-    using Services.Moderator;
+    using Services.Areas.Moderator;
     using System.Collections.Generic;
 
     public class AstronomersController : BaseModeratorController

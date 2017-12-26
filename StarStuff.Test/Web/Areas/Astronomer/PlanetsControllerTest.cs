@@ -1,12 +1,11 @@
 ﻿namespace StarStuff.Test.Web.Areas.Astronomer
 {
-    using FluentAssertions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
     using Moq;
-    using StarStuff.Services.Astronomer;
-    using StarStuff.Services.Astronomer.Models.Planets;
+    using StarStuff.Services.Areas.Astronomer;
+    using StarStuff.Services.Areas.Astronomer.Models.Planets;
     using StarStuff.Web.Areas.Astronomer.Controllers;
     using StarStuff.Web.Infrastructure;
     using System;
@@ -30,8 +29,8 @@
                 as AuthorizeAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.Roles.Should().Be(WebConstants.AstronomerRole);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.AstronomerRole, attribute.Roles);
         }
 
         [Fact]
@@ -47,8 +46,8 @@
                 as AreaAttribute;
 
             // Assert
-            attribute.Should().NotBeNull();
-            attribute.RouteValue.Should().Be(WebConstants.AstronomerArea);
+            Assert.NotNull(attribute);
+            Assert.Equal(WebConstants.AstronomerArea, attribute.RouteValue);
         }
 
         [Fact]
@@ -61,7 +60,7 @@
             IActionResult result = planetsController.Create();
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -90,15 +89,12 @@
             IActionResult result = planetsController.Create(1, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PlanetFormServiceModel>();
-
-            PlanetFormServiceModel returnModel = model.As<PlanetFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PlanetFormServiceModel>(model);
+            PlanetFormServiceModel returnModel = model as PlanetFormServiceModel;
             this.AssertPlanets(formModel, returnModel);
-
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Planet));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Planet), errorMessage);
         }
 
         [Fact]
@@ -123,7 +119,7 @@
             IActionResult result = planetsController.Create(1, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -157,10 +153,10 @@
             IActionResult result = planetsController.Create(discoveryId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(discoveryId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Planet, Added));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Planet, WebConstants.Added), successmessage);
         }
 
         [Fact]
@@ -180,12 +176,11 @@
             IActionResult result = planetsController.Edit(1, 1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
 
-            model.Should().BeOfType<PlanetFormServiceModel>();
-
-            PlanetFormServiceModel returnModel = model.As<PlanetFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PlanetFormServiceModel>(model);
+            PlanetFormServiceModel returnModel = model as PlanetFormServiceModel;
             this.AssertPlanets(formModel, returnModel);
         }
 
@@ -206,7 +201,7 @@
             IActionResult result = planetsController.Edit(1, 1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -239,14 +234,12 @@
             IActionResult result = planetsController.Edit(1, 1, formModel);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
-            object model = result.As<ViewResult>().Model;
-
-            model.Should().BeOfType<PlanetFormServiceModel>();
-
-            PlanetFormServiceModel returnModel = model.As<PlanetFormServiceModel>();
+            Assert.IsType<ViewResult>(result);
+            object model = (result as ViewResult).Model;
+            Assert.IsType<PlanetFormServiceModel>(model);
+            PlanetFormServiceModel returnModel = model as PlanetFormServiceModel;
             this.AssertPlanets(formModel, returnModel);
-            errorMessage.Should().Be(string.Format(WebConstants.EntryExists, Planet));
+            Assert.Equal(string.Format(WebConstants.EntryExists, Planet), errorMessage);
         }
 
         [Fact]
@@ -275,7 +268,7 @@
             IActionResult result = planetsController.Edit(1, 1, formModel);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -314,10 +307,11 @@
             IActionResult result = planetsController.Edit(1, discoveryId, formModel);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(discoveryId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Planet, Edited));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Planet, WebConstants.Edited), successmessage);
         }
 
         [Fact]
@@ -330,7 +324,7 @@
             IActionResult result = planetsController.Delete(1, 1);
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            Assert.IsType<ViewResult>(result);
         }
 
         [Fact]
@@ -361,10 +355,11 @@
             IActionResult result = planetsController.DeletePost(1, discoveryId);
 
             // Assert
-            result.Should().BeOfType<RedirectToActionResult>();
-            RedirectToActionResult redirectResult = result.As<RedirectToActionResult>();
+
+            Assert.IsType<RedirectToActionResult>(result);
+            RedirectToActionResult redirectResult = result as RedirectToActionResult;
             this.AssertRedirect(discoveryId, redirectResult);
-            successmessage.Should().Be(string.Format(WebConstants.SuccessfullEntityOperation, Planet, Deleted));
+            Assert.Equal(string.Format(WebConstants.SuccessfullEntityOperation, Planet, WebConstants.Deleted), successmessage);
         }
 
         [Fact]
@@ -383,21 +378,21 @@
             IActionResult result = planetsController.DeletePost(1, 1);
 
             // Assert
-            result.Should().BeOfType<BadRequestResult>();
+            Assert.IsType<BadRequestResult>(result);
         }
 
         private void AssertPlanets(PlanetFormServiceModel expected, PlanetFormServiceModel actual)
         {
-            actual.Name.Should().Be(expected.Name);
-            actual.Mass.Should().Be(expected.Mass);
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Mass, actual.Mass);
         }
 
         private void AssertRedirect(int discoveryId, RedirectToActionResult result)
         {
-            result.ActionName.Should().Be(nameof(DiscoveriesController.Details));
-            result.ControllerName.Should().Be(Discoveries);
-            result.RouteValues[Id].Should().Be(discoveryId);
-            result.RouteValues[Area].Should().Be(WebConstants.AstronomerArea);
+            Assert.Equal(nameof(DiscoveriesController.Details), result.ActionName);
+            Assert.Equal(Discoveries, result.ControllerName);
+            Assert.Equal(discoveryId, result.RouteValues[Id]);
+            Assert.Equal(WebConstants.AstronomerArea, result.RouteValues[Area]);
         }
 
         private PlanetFormServiceModel GetPlanetFormModel()
