@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\StarStuff.Data\StarStuff.Data.csproj" />
     <ProjectReference Include="..\StarStuff.Services\StarStuff.Services.csproj" />
-    <ProjectReference Include="..\StarStuffCommon\StarStuff.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.2.1" />
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StarStuff.Common\StarStuff.Common.csproj" />
     <ProjectReference Include="..\StarStuff.Data\StarStuff.Data.csproj" />
-    <ProjectReference Include="..\StarStuffCommon\StarStuff.Common.csproj" />
   </ItemGroup>
 
 </Project>
