@@ -30,7 +30,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Create, Stars)]
+        [Log(nameof(Create), Stars)]
         public IActionResult Create(int id, StarFormServiceModel model)
         {
             if (this.starService.Exists(model.Name))
@@ -74,7 +74,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Edit, Stars)]
+        [Log(nameof(Edit), Stars)]
         public IActionResult Edit(int id, int discoveryId, StarFormServiceModel model)
         {
             string oldName = this.starService.GetName(id);
@@ -112,7 +112,7 @@
 
         [HttpPost]
         [ActionName(nameof(Delete))]
-        [Log(LogType.Delete, Stars)]
+        [Log(nameof(Delete), Stars)]
         public IActionResult DeletePost(int id, int discoveryId)
         {
             bool success = this.starService.Delete(id);

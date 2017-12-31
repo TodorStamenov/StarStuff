@@ -25,9 +25,9 @@
             @foreach (var log in Model.Logs)
             {
                 <tr>
-                    <td>@log.User</td>
+                    <td>@log.Username</td>
                     <td>@log.TableName</td>
-                    <td>@log.LogType.ToString()</td>
+                    <td>@log.Action</td>
                     <td>@log.TimeStamp</td>
                 </tr>
             }

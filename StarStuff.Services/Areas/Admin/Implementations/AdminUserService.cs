@@ -31,12 +31,12 @@
                 .FirstOrDefault();
         }
 
-        public void Log(string username, LogType logType, string tableName)
+        public void Log(string username, string action, string tableName)
         {
             Log log = new Log
             {
-                User = username,
-                LogType = logType,
+                Username = username,
+                Action = action,
                 TableName = tableName,
                 TimeStamp = DateTime.UtcNow
             };
@@ -106,7 +106,7 @@
         {
             return this.db
                 .Logs
-                .Where(l => l.User.ToLower().Contains(search.ToLower()))
+                .Filter(search)
                 .Count();
         }
 
@@ -132,7 +132,7 @@
         {
             return this.db
                 .Logs
-                .Where(l => l.User.ToLower().Contains(search.ToLower()))
+                .Filter(search)
                 .OrderByDescending(l => l.TimeStamp)
                 .Skip((page - 1) * itemsPerPage)
                 .Take(itemsPerPage)

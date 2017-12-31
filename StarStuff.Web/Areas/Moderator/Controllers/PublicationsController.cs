@@ -45,7 +45,7 @@
         }
 
         [HttpPost]
-        [Log(LogType.Create, Publications)]
+        [Log(nameof(Create), Publications)]
         public IActionResult Create(int id, PublicationFormViewModel model)
         {
             if (!ModelState.IsValid)
@@ -103,7 +103,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Edit, Publications)]
+        [Log(nameof(Edit), Publications)]
         public IActionResult Edit(int id, PublicationFormServiceModel model)
         {
             string oldTitle = this.publicationService.GetTitle(id);

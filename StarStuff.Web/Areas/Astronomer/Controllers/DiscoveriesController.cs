@@ -96,7 +96,7 @@
         }
 
         [HttpPost]
-        [Log(LogType.Create, Discoveries)]
+        [Log(nameof(Create), Discoveries)]
         public IActionResult Create(DiscoveryFormViewModel model)
         {
             int astronomerId = int.Parse(this.userManager.GetUserId(User));
@@ -160,7 +160,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Edit, Discoveries)]
+        [Log(nameof(Edit), Discoveries)]
         public IActionResult Edit(int id, DiscoveryFormServiceModel model)
         {
             string oldName = this.discoveryService.GetName(id);
@@ -198,7 +198,7 @@
 
         [HttpPost]
         [ActionName(nameof(Delete))]
-        [Log(LogType.Delete, Discoveries)]
+        [Log(nameof(Delete), Discoveries)]
         public IActionResult DeletePost(int id)
         {
             bool success = this.discoveryService.Delete(id);

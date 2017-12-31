@@ -28,7 +28,7 @@
         }
 
         [HttpPost]
-        [Log(LogType.Approve, Users)]
+        [Log(nameof(Approve), Users)]
         public IActionResult Approve(int id)
         {
             string username = this.userService.GetUsername(id);
@@ -46,7 +46,7 @@
         }
 
         [HttpPost]
-        [Log(LogType.Deny, Users)]
+        [Log(nameof(Deny), Users)]
         public IActionResult Deny(int id)
         {
             string username = this.userService.GetUsername(id);

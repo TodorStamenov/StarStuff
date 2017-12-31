@@ -27,7 +27,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Create, Journals)]
+        [Log(nameof(Create), Journals)]
         public IActionResult Create(JournalFormServiceModel model)
         {
             if (this.journalService.Exists(model.Name))
@@ -65,7 +65,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Edit, Journals)]
+        [Log(nameof(Edit), Journals)]
         public IActionResult Edit(int id, JournalFormServiceModel model)
         {
             string oldName = this.journalService.GetName(id);

@@ -27,7 +27,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Create, Telescopes)]
+        [Log(nameof(Create), Telescopes)]
         public IActionResult Create(TelescopeFormServiceModel model)
         {
             if (this.telescopeService.Exists(model.Name))
@@ -67,7 +67,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Edit, Telescopes)]
+        [Log(nameof(Edit), Telescopes)]
         public IActionResult Edit(int id, TelescopeFormServiceModel model)
         {
             string oldName = this.telescopeService.GetName(id);

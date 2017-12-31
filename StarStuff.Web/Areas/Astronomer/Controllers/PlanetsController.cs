@@ -27,7 +27,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Create, Planets)]
+        [Log(nameof(Create), Planets)]
         public IActionResult Create(int id, PlanetFormServiceModel model)
         {
             if (this.planetService.Exists(model.Name))
@@ -62,7 +62,7 @@
 
         [HttpPost]
         [ValidateModelState]
-        [Log(LogType.Edit, Planets)]
+        [Log(nameof(Edit), Planets)]
         public IActionResult Edit(int id, int discoveryId, PlanetFormServiceModel model)
         {
             string oldName = this.planetService.GetName(id);
@@ -100,7 +100,7 @@
 
         [HttpPost]
         [ActionName(nameof(Delete))]
-        [Log(LogType.Delete, Planets)]
+        [Log(nameof(Delete), Planets)]
         public IActionResult DeletePost(int id, int discoveryId)
         {
             bool success = this.planetService.Delete(id);

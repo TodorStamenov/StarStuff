@@ -7,7 +7,8 @@
     {
         public static IQueryable<User> InRole(this IQueryable<User> users, string role)
         {
-            if (!string.IsNullOrEmpty(role))
+            if (!string.IsNullOrEmpty(role)
+                 && !string.IsNullOrWhiteSpace(role))
             {
                 return users
                     .Where(u => u.Roles
@@ -17,12 +18,13 @@
             return users;
         }
 
-        public static IQueryable<User> Filter(this IQueryable<User> users, string searchTerm)
+        public static IQueryable<User> Filter(this IQueryable<User> users, string search)
         {
-            if (!string.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrEmpty(search)
+                && !string.IsNullOrWhiteSpace(search))
             {
                 return users
-                    .Where(u => u.UserName.ToLower().Contains(searchTerm));
+                    .Where(u => u.UserName.ToLower().Contains(search));
             }
 
             return users;

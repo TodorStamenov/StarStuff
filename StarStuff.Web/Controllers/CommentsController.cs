@@ -109,7 +109,7 @@
 
         [ActionName(nameof(Delete))]
         [Authorize(Roles = WebConstants.ModeratorRole)]
-        [Log(LogType.Delete, Comments)]
+        [Log(nameof(Delete), Comments)]
         [HttpPost]
         public IActionResult DeletePost(int id, int publicationId)
         {

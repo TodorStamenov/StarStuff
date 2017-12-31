@@ -6,11 +6,11 @@
 
     public class ListLogsServiceModel : IMapFrom<Log>
     {
-        public string User { get; set; }
+        public string Username { get; set; }
 
         public string TableName { get; set; }
 
-        public LogType LogType { get; set; }
+        public string Action { get; set; }
 
         public DateTime TimeStamp { get; set; }
     }

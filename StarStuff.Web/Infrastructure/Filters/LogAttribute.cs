@@ -1,18 +1,17 @@
 ﻿namespace StarStuff.Web.Infrastructure.Filters
 {
-    using Data.Models;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
     using Services.Areas.Admin;
 
     public class LogAttribute : ActionFilterAttribute
     {
-        private readonly LogType logType;
+        private readonly string action;
         private readonly string tableName;
 
-        public LogAttribute(LogType logType, string tableName)
+        public LogAttribute(string action, string tableName)
         {
-            this.logType = logType;
+            this.action = action;
             this.tableName = tableName;
         }
 
@@ -29,7 +28,7 @@
                 .Identity
                 .Name;
 
-            logService.Log(username, this.logType, this.tableName);
+            logService.Log(username, this.action, this.tableName);
         }
     }
 }

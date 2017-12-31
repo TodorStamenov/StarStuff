@@ -10,6 +10,7 @@
     using Models.Logs;
     using Models.Users;
     using Services.Areas.Admin;
+    using StarStuff.Web.Infrastructure.Filters;
     using System;
     using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@
     {
         private const int UsersPerPage = 10;
         private const int LogsPerPage = 10;
+        private const string UserRole = "UserRole";
+        private const string UsersTable = "Users";
 
         private readonly IAdminUserService userService;
         private readonly UserManager<User> userManager;
@@ -33,6 +36,11 @@
         {
             User user = await userManager.FindByIdAsync(id.ToString());
 
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
             UserRoleEditViewModel model = new UserRoleEditViewModel
             {
                 IsUserLocked = await userManager.IsLockedOutAsync(user),
@@ -44,6 +52,7 @@
         }
 
         [HttpPost]
+        [Log(nameof(AddRole), UserRole)]
         public IActionResult AddRole(int userId, string roleName)
         {
             string username = this.userService.GetUsername(userId);
@@ -66,6 +75,7 @@
         }
 
         [HttpPost]
+        [Log(nameof(RemoveRole), UserRole)]
         public IActionResult RemoveRole(int userId, string roleName)
         {
             string username = this.userService.GetUsername(userId);
@@ -88,6 +98,7 @@
         }
 
         [HttpPost]
+        [Log(nameof(Lock), UsersTable)]
         public async Task<IActionResult> Lock(int userId)
         {
             User user = await this.userManager.FindByIdAsync(userId.ToString());
@@ -113,6 +124,7 @@
         }
 
         [HttpPost]
+        [Log(nameof(Unlock), UsersTable)]
         public async Task<IActionResult> Unlock(int userId)
         {
             User user = await this.userManager.FindByIdAsync(userId.ToString());
@@ -142,8 +154,6 @@
             {
                 page = 1;
             }
-
-            search = search ?? string.Empty;
 
             int totalLogs = this.userService.Total(search);
 

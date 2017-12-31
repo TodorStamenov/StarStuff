@@ -53,6 +53,12 @@
             public const int TitleMaxLength = 100;
         }
 
+        public static class LogTable
+        {
+            public const int ActionMaxLength = 100;
+            public const int TableNameMaxLength = 100;
+        }
+
         public const int ImageUrlMinLength = 10;
         public const int ImageUrlMaxLength = 2000;
 

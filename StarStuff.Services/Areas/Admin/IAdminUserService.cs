@@ -1,6 +1,5 @@
 ﻿namespace StarStuff.Services.Areas.Admin
 {
-    using Data.Models;
     using Models.Logs;
     using Models.Roles;
     using Models.Users;
@@ -11,7 +10,7 @@
     {
         string GetUsername(int id);
 
-        void Log(string username, LogType logType, string tableName);
+        void Log(string username, string action, string tableName);
 
         bool AddToRole(int userId, string roleName);
 
