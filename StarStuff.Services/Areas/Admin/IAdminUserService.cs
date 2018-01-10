@@ -16,16 +16,16 @@
 
         bool RemoveFromRole(int userId, string roleName);
 
-        int Total(string search);
+        int TotalLogs(string search);
 
-        int Total(string role, string search);
+        int TotalUsers(string role, string search, bool locked);
 
         UserRolesServiceModel Roles(int id);
 
-        IEnumerable<ListLogsServiceModel> Logs(int page, int itemsPerPage, string search);
+        IEnumerable<ListLogsServiceModel> Logs(int page, int pageSize, string search);
 
         IEnumerable<RoleServiceModel> AllRoles();
 
-        IEnumerable<ListUsersServiceModel> All(int page, string role, string search, int usersPerPage);
+        IEnumerable<ListUsersServiceModel> All(int page, int pageSize, string role, string search, bool locked);
     }
 }

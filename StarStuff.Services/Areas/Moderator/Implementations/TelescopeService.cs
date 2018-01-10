@@ -18,12 +18,16 @@
 
         public bool Exists(string name)
         {
-            return this.db.Telescopes.Any(t => t.Name == name);
+            return this.db
+                .Telescopes
+                .Any(t => t.Name == name);
         }
 
         public int Total()
         {
-            return this.db.Telescopes.Count();
+            return this.db
+                .Telescopes
+                .Count();
         }
 
         public string GetName(int telescopeId)
@@ -42,7 +46,7 @@
             double mirrorDiameter,
             string imageUrl)
         {
-            if (this.db.Telescopes.Any(t => t.Name == name))
+            if (this.Exists(name))
             {
                 return -1;
             }
@@ -74,7 +78,7 @@
 
             if (telescope == null
                 || (telescope.Name != name
-                    && this.db.Telescopes.Any(t => t.Name == name)))
+                    && this.Exists(name)))
             {
                 return false;
             }

@@ -18,7 +18,9 @@
 
         public bool Exists(string name)
         {
-            return this.db.Stars.Any(s => s.Name == name);
+            return this.db
+                .Stars
+                .Any(s => s.Name == name);
         }
 
         public bool Create(int discoveryId, string name, int temperature)
@@ -32,10 +34,8 @@
                 })
                 .FirstOrDefault();
 
-            bool hasStar = this.db.Stars.Any(s => s.Name == name);
-
             if (discoveryInfo == null
-                || hasStar
+                || this.Exists(name)
                 || discoveryInfo.StarsCount >= DataConstants.DiscoveryConstants.MaxStarsPerDiscovery)
             {
                 return false;
@@ -60,7 +60,7 @@
 
             if (star == null
                 || (star.Name != name
-                    && this.db.Stars.Any(s => s.Name == name)))
+                    && this.Exists(name)))
             {
                 return false;
             }

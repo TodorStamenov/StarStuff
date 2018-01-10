@@ -1,7 +1,7 @@
 ﻿@model ListUsersViewModel
 
 @{
-    ViewData["Title"] = $"{(Model.Search != null ? string.Empty : "All")} Users";
+    ViewData["Title"] = $"{(Model.Search != null ? string.Empty : "All")} {(Model.Locked ? "Locked" : string.Empty)} Users";
     string previouseDisabled = Model.CurrentPage == 1 ? "disabled" : string.Empty;
     string nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : string.Empty;
     string userRole = Model.UserRole != null ? Model.UserRole : string.Empty;
@@ -12,16 +12,18 @@
 
     <form class="form-inline" asp-area="Admin" asp-controller="Users" asp-action="Users">
         <input type="hidden" asp-for="UserRole" />
+        <input type="hidden" asp-for="Locked" />
         <input class="form-control" asp-for="Search" placeholder="Search..." />
         <input class="btn btn-success" type="submit" value="Search" />
     </form>
     <br />
 
     <a class="btn btn-primary" asp-area="Admin" asp-controller="Users" asp-action="Users">All Users</a>
+    <a class="btn btn-primary" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-locked="@true">Locked Users</a>
 
     @foreach (var role in Model.Roles)
     {
-        <a class="btn btn-primary" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-userRole="@role.Name">@role.Name</a>
+        <a class="btn btn-primary" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-locked="@Model.Locked" asp-route-userRole="@role.Name">@($"{role.Name}s")</a>
     }
     <table class="table table-hover table-striped">
         <thead>
@@ -54,7 +56,7 @@
     <div class="row">
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link @previouseDisabled" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-page="@Model.PrevPage" asp-route-userRole="@userRole" asp-route-search="@Model.Search" aria-label="Previous">
+                <a class="page-link @previouseDisabled" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-page="@Model.PrevPage" asp-route-userRole="@userRole" asp-route-locked="@Model.Locked" asp-route-search="@Model.Search" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                     <span class="sr-only">Previous</span>
                 </a>
@@ -62,11 +64,11 @@
             @for (int i = Model.FirstPage; i <= Model.LastPage; i++)
             {
                 <li class="page-item @(Model.CurrentPage == i ? "active" : string.Empty)">
-                    <a class="page-link @(Model.CurrentPage == i ? "disabled" : string.Empty)" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-page="@i" asp-route-userRole="@userRole" asp-route-search="@Model.Search">@i</a>
+                    <a class="page-link @(Model.CurrentPage == i ? "disabled" : string.Empty)" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-page="@i" asp-route-userRole="@userRole" asp-route-locked="@Model.Locked" asp-route-search="@Model.Search">@i</a>
                 </li>
             }
             <li class="page-item">
-                <a class="page-link @nextDisabled" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-page="@Model.NextPage" asp-route-userRole="@userRole" asp-route-search="@Model.Search" aria-label="Next">
+                <a class="page-link @nextDisabled" asp-area="Admin" asp-controller="Users" asp-action="Users" asp-route-page="@Model.NextPage" asp-route-userRole="@userRole" asp-route-locked="@Model.Locked" asp-route-search="@Model.Search" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                     <span class="sr-only">Next</span>
                 </a>

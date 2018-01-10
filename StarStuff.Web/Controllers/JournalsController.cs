@@ -1,6 +1,5 @@
 ﻿namespace StarStuff.Web.Controllers
 {
-    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Models.Journals;
     using Services.Areas.Moderator;
@@ -41,7 +40,8 @@
             ListJournalsViewModel model = new ListJournalsViewModel
             {
                 CurrentPage = page,
-                TotalPages = ControllerHelpers.GetTotalPages(totalJournals, JournalsPerPage),
+                TotalEntries = totalJournals,
+                EntriesPerPage = JournalsPerPage,
                 Journals = this.journalService.All(page, JournalsPerPage)
             };
 

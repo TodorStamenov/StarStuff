@@ -3,7 +3,7 @@
     using AutoMapper;
     using Common.Mapping;
     using Data.Models;
-    using System;
+    using Infrastructure.Extensions;
 
     public class ListAstronomersServiceModel : IMapFrom<User>, ICustomMapping
     {
@@ -22,8 +22,7 @@
             mapper.CreateMap<User, ListAstronomersServiceModel>()
                 .ForMember(a => a.DiscoveriesCount, cfg => cfg.MapFrom(a => a.Discoveries.Count))
                 .ForMember(a => a.ObservationsCount, cfg => cfg.MapFrom(a => a.Observations.Count))
-                .ForMember(a => a.ProfileImage,
-                    cfg => cfg.MapFrom(a => "data:image/jpeg;base64," + Convert.ToBase64String(a.ProfileImage)));
+                .ForMember(a => a.ProfileImage, cfg => cfg.MapFrom(a => a.ProfileImage.ConvertImage()));
         }
     }
 }

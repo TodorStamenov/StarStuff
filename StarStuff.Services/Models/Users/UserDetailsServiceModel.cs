@@ -3,7 +3,7 @@
     using AutoMapper;
     using Common.Mapping;
     using Data.Models;
-    using Infrastructure;
+    using Infrastructure.Extensions;
     using System;
 
     public class UserDetailsServiceModel : ListUsersServiceModel, ICustomMapping
@@ -18,7 +18,7 @@
         {
             mapper.CreateMap<User, UserDetailsServiceModel>()
                 .ForMember(u => u.ProfileImage,
-                    cfg => cfg.MapFrom(u => ServiceConstants.DataImage + Convert.ToBase64String(u.ProfileImage)));
+                    cfg => cfg.MapFrom(u => u.ProfileImage.ConvertImage()));
         }
     }
 }

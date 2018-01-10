@@ -4,7 +4,6 @@
     using Models;
     using Models.Astronomers;
     using Services;
-    using System;
     using System.Diagnostics;
 
     public class HomeController : Controller
@@ -30,10 +29,13 @@
                 page = 1;
             }
 
+            int totalAstronomers = this.userService.TotalAstronomers();
+
             ListAstronomersViewModel model = new ListAstronomersViewModel
             {
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(this.userService.TotalAstronomers() / (double)AstronomersPerPage),
+                TotalEntries = totalAstronomers,
+                EntriesPerPage = AstronomersPerPage,
                 Astronomers = this.userService.Astronomers(page, AstronomersPerPage)
             };
 

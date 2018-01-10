@@ -3,7 +3,7 @@
     using AutoMapper;
     using Common.Mapping;
     using Data.Models;
-    using Infrastructure;
+    using Infrastructure.Extensions;
     using Roles;
     using System;
     using System.Collections.Generic;
@@ -37,7 +37,7 @@
                         u => u.Roles.Select(r => new RoleServiceModel { Name = r.Role.Name })))
                 .ForMember(u => u.ProfileImage,
                     cfg => cfg.MapFrom(
-                        u => ServiceConstants.DataImage + Convert.ToBase64String(u.ProfileImage)));
+                        u => u.ProfileImage.ConvertImage()));
         }
     }
 }

@@ -10,6 +10,8 @@
 
     public class PublicationService : IPublicationService
     {
+        private const string ModeratorRole = "Moderator";
+
         private readonly StarStuffDbContext db;
 
         public PublicationService(StarStuffDbContext db)
@@ -67,7 +69,8 @@
 
             bool hasModerator = this.db
                 .Users
-                .Any(u => u.Id == authorId);
+                .Any(u => u.Id == authorId
+                    && u.Roles.Any(r => r.Role.Name == ModeratorRole));
 
             if (!hasJournal || !hasDiscovery || !hasModerator)
             {

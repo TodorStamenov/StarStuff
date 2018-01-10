@@ -18,7 +18,9 @@
 
         public bool Exists(string name)
         {
-            return this.db.Planets.Any(p => p.Name == name);
+            return this.db
+                .Planets
+                .Any(p => p.Name == name);
         }
 
         public bool Create(int discoveryId, string name, double mass)
@@ -32,10 +34,8 @@
                 })
                 .FirstOrDefault();
 
-            bool hasPlanet = this.db.Planets.Any(p => p.Name == name);
-
             if (discoveryInfo == null
-                || hasPlanet
+                || this.Exists(name)
                 || !discoveryInfo.HasStars)
             {
                 return false;
@@ -60,7 +60,7 @@
 
             if (planet == null
                 || (planet.Name != name
-                    && this.db.Planets.Any(p => p.Name == name)))
+                    && this.Exists(name)))
             {
                 return false;
             }

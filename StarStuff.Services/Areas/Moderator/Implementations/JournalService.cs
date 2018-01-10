@@ -18,12 +18,16 @@
 
         public bool Exists(string name)
         {
-            return this.db.Journals.Any(j => j.Name == name);
+            return this.db
+                .Journals
+                .Any(j => j.Name == name);
         }
 
         public int Total()
         {
-            return this.db.Journals.Count();
+            return this.db
+                .Journals
+                .Count();
         }
 
         public string GetName(int journalId)
@@ -37,7 +41,7 @@
 
         public int Create(string name, string description, string imageUrl)
         {
-            if (this.db.Journals.Any(j => j.Name == name))
+            if (this.Exists(name))
             {
                 return -1;
             }
@@ -61,7 +65,7 @@
 
             if (journal == null
                 || (journal.Name != name
-                    && this.db.Journals.Any(j => j.Name == name)))
+                    && this.Exists(name)))
             {
                 return false;
             }

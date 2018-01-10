@@ -3,14 +3,13 @@
     using Data.Models;
     using Infrastructure;
     using Infrastructure.Extensions;
-    using Infrastructure.Helpers;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models.Logs;
     using Models.Users;
     using Services.Areas.Admin;
-    using StarStuff.Web.Infrastructure.Filters;
     using System;
     using System.Threading.Tasks;
 
@@ -155,35 +154,38 @@
                 page = 1;
             }
 
-            int totalLogs = this.userService.Total(search);
+            int totalLogs = this.userService.TotalLogs(search);
 
             ListLogsViewModel model = new ListLogsViewModel
             {
                 Search = search,
                 CurrentPage = page,
-                TotalPages = ControllerHelpers.GetTotalPages(totalLogs, LogsPerPage),
+                TotalEntries = totalLogs,
+                EntriesPerPage = LogsPerPage,
                 Logs = this.userService.Logs(page, LogsPerPage, search),
             };
 
             return View(model);
         }
 
-        public IActionResult Users(int page, string userRole, string search)
+        public IActionResult Users(int page, bool locked, string userRole, string search)
         {
             if (page <= 0)
             {
                 page = 1;
             }
 
-            int totalUsers = this.userService.Total(userRole, search);
+            int totalUsers = this.userService.TotalUsers(userRole, search, locked);
 
             ListUsersViewModel model = new ListUsersViewModel
             {
                 Search = search,
                 CurrentPage = page,
                 UserRole = userRole,
-                TotalPages = ControllerHelpers.GetTotalPages(totalUsers, UsersPerPage),
-                Users = this.userService.All(page, userRole, search, UsersPerPage),
+                TotalEntries = totalUsers,
+                Locked = locked,
+                EntriesPerPage = UsersPerPage,
+                Users = this.userService.All(page, UsersPerPage, userRole, search, locked),
                 Roles = this.userService.AllRoles(),
             };
 

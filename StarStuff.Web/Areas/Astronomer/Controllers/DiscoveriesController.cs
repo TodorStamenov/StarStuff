@@ -4,7 +4,6 @@
     using Infrastructure;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
-    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,6 +13,7 @@
     using Services.Areas.Astronomer.Models.Astronomers;
     using Services.Areas.Astronomer.Models.Discoveries;
     using Services.Areas.Moderator;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -220,15 +220,11 @@
                 page = 1;
             }
 
-            AstronomerType astronomerType = AstronomerType.All;
+            bool astronomerParsed = Enum.TryParse(astronomer, true, out AstronomerType astronomerType);
 
-            if (astronomer?.ToLower() == "pioneer")
+            if (!astronomerParsed)
             {
-                astronomerType = AstronomerType.Pioneer;
-            }
-            else if (astronomer?.ToLower() == "observer")
-            {
-                astronomerType = AstronomerType.Observer;
+                astronomerType = AstronomerType.All;
             }
 
             int astronomerId = int.Parse(this.userManager.GetUserId(User));
@@ -240,7 +236,8 @@
                 CurrentPage = page,
                 Search = search,
                 Astronomer = astronomerType.ToString(),
-                TotalPages = ControllerHelpers.GetTotalPages(totalDiscoveries, DiscoveriesPerPage),
+                TotalEntries = totalDiscoveries,
+                EntriesPerPage = DiscoveriesPerPage,
                 Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, search, confirmed, astronomerId, astronomerType)
             };
 
@@ -261,7 +258,8 @@
                 Confirmed = confirmed,
                 CurrentPage = page,
                 Search = search,
-                TotalPages = ControllerHelpers.GetTotalPages(totalDiscoveries, DiscoveriesPerPage),
+                TotalEntries = totalDiscoveries,
+                EntriesPerPage = DiscoveriesPerPage,
                 Discoveries = this.discoveryService.All(page, DiscoveriesPerPage, search, confirmed)
             };
 

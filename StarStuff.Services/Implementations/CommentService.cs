@@ -3,7 +3,7 @@
     using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Models;
-    using Infrastructure;
+    using Infrastructure.Extensions;
     using Models.Comments;
     using System;
     using System.Collections.Generic;
@@ -20,12 +20,16 @@
 
         public int Total(int publicationId)
         {
-            return this.db.Comments.Count(c => c.PublicationId == publicationId);
+            return this.db
+                .Comments
+                .Count(c => c.PublicationId == publicationId);
         }
 
         public bool CanEdit(int id, int userId)
         {
-            return this.db.Comments.Any(c => c.Id == id && c.UserId == userId);
+            return this.db
+                .Comments
+                .Any(c => c.Id == id && c.UserId == userId);
         }
 
         public bool Create(int publicationId, int userId, string content)
@@ -104,7 +108,7 @@
                     Content = c.Content,
                     DateAdded = c.DateAdded.ToLocalTime(),
                     Username = c.User.UserName,
-                    ProfileImage = ServiceConstants.DataImage + Convert.ToBase64String(c.User.ProfileImage),
+                    ProfileImage = c.User.ProfileImage.ConvertImage(),
                     IsOwner = c.UserId == userId
                 })
                 .ToList();

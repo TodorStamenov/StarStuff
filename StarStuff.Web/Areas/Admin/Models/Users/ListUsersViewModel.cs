@@ -11,6 +11,8 @@
 
         public string UserRole { get; set; }
 
+        public bool Locked { get; set; }
+
         public IEnumerable<ListUsersServiceModel> Users { get; set; }
 
         public IEnumerable<RoleServiceModel> Roles { get; set; }

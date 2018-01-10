@@ -1,6 +1,5 @@
 ﻿namespace StarStuff.Web.Controllers
 {
-    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Mvc;
     using Models.Telescopes;
     using Services.Areas.Moderator;
@@ -41,7 +40,8 @@
             ListTelescopesViewModel model = new ListTelescopesViewModel
             {
                 CurrentPage = page,
-                TotalPages = ControllerHelpers.GetTotalPages(totalTelescopes, TelescopesPerPage),
+                TotalEntries = totalTelescopes,
+                EntriesPerPage = TelescopesPerPage,
                 Telescopes = this.telescopeService.All(page, TelescopesPerPage)
             };
 

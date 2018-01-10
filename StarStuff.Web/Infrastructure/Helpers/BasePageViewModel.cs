@@ -1,5 +1,7 @@
 ﻿namespace StarStuff.Web.Infrastructure.Helpers
 {
+    using System;
+
     public class BasePageViewModel
     {
         private const int BackOffset = 5;
@@ -7,7 +9,17 @@
 
         public int CurrentPage { get; set; }
 
-        public int TotalPages { get; set; }
+        public int TotalEntries { get; set; }
+
+        public int EntriesPerPage { get; set; }
+
+        public int TotalPages
+        {
+            get
+            {
+                return (int)Math.Ceiling(this.TotalEntries / (double)this.EntriesPerPage);
+            }
+        }
 
         public int FirstPage
         {

@@ -11,6 +11,7 @@
     using Microsoft.Extensions.Logging;
     using Models.Manage;
     using Services;
+    using Services.Infrastructure.Extensions;
     using System;
     using System.Text;
     using System.Threading.Tasks;
@@ -112,7 +113,7 @@
             IndexViewModel model = new IndexViewModel
             {
                 Username = user.UserName,
-                ProfileImage = this.ConvertUserImage(user.ProfileImage),
+                ProfileImage = user.ProfileImage.ConvertImage(),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
@@ -129,7 +130,7 @@
         {
             User user = await userManager.GetUserAsync(User);
 
-            model.ProfileImage = this.ConvertUserImage(user.ProfileImage);
+            model.ProfileImage = user.ProfileImage.ConvertImage();
 
             if (!ModelState.IsValid)
             {
@@ -272,11 +273,6 @@
         }
 
         #region Helpers
-
-        private string ConvertUserImage(byte[] profileImage)
-        {
-            return WebConstants.DataImage + Convert.ToBase64String(profileImage);
-        }
 
         private void AddErrors(IdentityResult result)
         {

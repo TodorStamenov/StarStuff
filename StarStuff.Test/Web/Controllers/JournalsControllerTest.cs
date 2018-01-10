@@ -115,7 +115,8 @@
             return new ListJournalsViewModel
             {
                 CurrentPage = 2,
-                TotalPages = 2,
+                TotalEntries = 20,
+                EntriesPerPage = 10,
                 Journals = this.GetListJournalsServiceModel()
             };
         }

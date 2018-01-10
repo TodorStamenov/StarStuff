@@ -18,7 +18,12 @@
 
         int Total(string search, bool? confirmed, int astronomerId, AstronomerType astronomerType);
 
-        int Create(string starSystem, long distance, int telescopeId, int astronomerId, IEnumerable<int> astronomerIds);
+        int Create(
+            string starSystem,
+            long distance,
+            int telescopeId,
+            int astronomerId,
+            IEnumerable<int> astronomerIds);
 
         bool Edit(int id, string starSystem, long distance);
 
@@ -40,6 +45,12 @@
 
         IEnumerable<ListDiscoveriesServiceModel> All(int page, int pageSize, string search, bool? confirmed);
 
-        IEnumerable<ListDiscoveriesServiceModel> All(int page, int pageSize, string search, bool? confirmed, int astronomerId, AstronomerType astronomerType);
+        IEnumerable<ListDiscoveriesServiceModel> All(
+            int page,
+            int pageSize,
+            string search,
+            bool? confirmed,
+            int astronomerId,
+            AstronomerType astronomerType);
     }
 }

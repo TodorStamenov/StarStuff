@@ -21,7 +21,9 @@
 
         public bool Exists(string starSystem)
         {
-            return this.db.Discoveries.Any(d => d.StarSystem == starSystem);
+            return this.db
+                .Discoveries
+                .Any(d => d.StarSystem == starSystem);
         }
 
         public int Total(string search, bool? confirmed)
@@ -64,9 +66,14 @@
                 .Count;
         }
 
-        public int Create(string starSystem, long distance, int telescopeId, int astronomerId, IEnumerable<int> astronomerIds)
+        public int Create(
+            string starSystem,
+            long distance,
+            int telescopeId,
+            int astronomerId,
+            IEnumerable<int> astronomerIds)
         {
-            if (this.db.Discoveries.Any(d => d.StarSystem == starSystem)
+            if (this.Exists(starSystem)
                 || !this.db.Telescopes.Any(t => t.Id == telescopeId))
             {
                 return -1;
@@ -109,7 +116,7 @@
 
             if (discovery == null
                 || (discovery.StarSystem != starSystem
-                    && this.db.Discoveries.Any(d => d.StarSystem == starSystem)))
+                    && this.Exists(starSystem)))
             {
                 return false;
             }

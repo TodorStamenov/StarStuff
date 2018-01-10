@@ -1,7 +1,6 @@
 ﻿namespace StarStuff.Web.Controllers
 {
     using Data.Models;
-    using Infrastructure.Helpers;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Models.Publications;
@@ -52,7 +51,8 @@
             PublicationDetailsViewModel model = new PublicationDetailsViewModel
             {
                 CurrentPage = page,
-                TotalPages = ControllerHelpers.GetTotalPages(totalComments, CommentsPerPage),
+                TotalEntries = totalComments,
+                EntriesPerPage = CommentsPerPage,
                 Publication = this.publicationService.Details(id),
                 Comments = this.commentService.All(id, page, CommentsPerPage, userId)
             };
@@ -77,7 +77,8 @@
             ListPublicationsViewModel model = new ListPublicationsViewModel
             {
                 CurrentPage = page,
-                TotalPages = ControllerHelpers.GetTotalPages(totalEntries, PublicationsPerPage),
+                TotalEntries = totalEntries,
+                EntriesPerPage = PublicationsPerPage,
                 Publications = this.publicationService.All(page, PublicationsPerPage)
             };
 
@@ -98,7 +99,8 @@
                 JournalId = id,
                 JournalName = this.journalService.GetName(id),
                 CurrentPage = page,
-                TotalPages = ControllerHelpers.GetTotalPages(totalEntries, PublicationsPerPage),
+                TotalEntries = totalEntries,
+                EntriesPerPage = PublicationsPerPage,
                 Publications = this.publicationService.AllByJournal(id, page, PublicationsPerPage)
             };
 
@@ -124,7 +126,8 @@
                 TelescopeId = id,
                 TelescopeName = this.telescopeService.GetName(id),
                 CurrentPage = page,
-                TotalPages = ControllerHelpers.GetTotalPages(totalEntries, PublicationsPerPage),
+                TotalEntries = totalEntries,
+                EntriesPerPage = PublicationsPerPage,
                 Publications = this.publicationService.AllByTelescope(id, page, PublicationsPerPage)
             };
 

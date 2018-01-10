@@ -372,7 +372,8 @@
             return new PublicationDetailsViewModel
             {
                 CurrentPage = 2,
-                TotalPages = 2,
+                TotalEntries = 20,
+                EntriesPerPage = 10,
                 Publication = this.GetPublicationDetailsServiceModel(),
                 Comments = this.GetComments()
             };
@@ -383,7 +384,8 @@
             return new ListPublicationsViewModel
             {
                 CurrentPage = 2,
-                TotalPages = 2,
+                TotalEntries = 20,
+                EntriesPerPage = 10,
                 Publications = this.GetPublications()
             };
         }
@@ -393,7 +395,8 @@
             return new ListPublicationsByJournalViewModel
             {
                 CurrentPage = 2,
-                TotalPages = 2,
+                TotalEntries = 20,
+                EntriesPerPage = 10,
                 JournalId = 1,
                 JournalName = "Journal Name",
                 Publications = this.GetPublications()
@@ -405,7 +408,8 @@
             return new ListPublicationsByTelescopeViewModel
             {
                 CurrentPage = 2,
-                TotalPages = 2,
+                TotalEntries = 20,
+                EntriesPerPage = 10,
                 TelescopeId = 1,
                 TelescopeName = "Journal Name",
                 Publications = this.GetPublications()

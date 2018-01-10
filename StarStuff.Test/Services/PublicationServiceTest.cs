@@ -4,6 +4,7 @@
     using StarStuff.Data.Models;
     using StarStuff.Services.Areas.Moderator.Implementations;
     using StarStuff.Services.Areas.Moderator.Models.Publications;
+    using StarStuff.Web.Infrastructure;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -255,6 +256,8 @@
 
             this.SeedJournal(db);
             this.SeedUser(db);
+            this.SeedRole(db, WebConstants.ModeratorRole);
+            this.AddUserToRole(db, authorId, WebConstants.ModeratorRole);
             this.SeedDiscovery(db, true);
 
             Publication publication = this.GetFakePublications().First();
@@ -280,6 +283,8 @@
 
             this.SeedJournal(db);
             this.SeedUser(db);
+            this.SeedRole(db, WebConstants.ModeratorRole);
+            this.AddUserToRole(db, authorId, WebConstants.ModeratorRole);
             this.SeedDiscovery(db, true);
 
             Publication expected = this.GetFakePublications().First();
@@ -828,6 +833,31 @@
         private void SeedUser(StarStuffDbContext db)
         {
             db.Users.Add(new User { Id = 1 });
+            db.SaveChanges();
+        }
+
+        private void SeedRole(StarStuffDbContext db, string roleName)
+        {
+            db.Roles.Add(new Role { Id = db.Roles.Count() + 1, Name = roleName });
+            db.SaveChanges();
+        }
+
+        private void AddUserToRole(StarStuffDbContext db, int userId, string rolename)
+        {
+            User user = db.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return;
+            }
+
+            int roleId = db.Roles.FirstOrDefault(r => r.Name == rolename).Id;
+
+            user.Roles.Add(new UserRole
+            {
+                RoleId = roleId
+            });
+
             db.SaveChanges();
         }
 
